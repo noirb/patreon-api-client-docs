@@ -158,6 +158,22 @@
 <h2 id="logs"><a class="header" href="#logs">Logs</a></h2>
 <p>All logs produced by this plugin are created under the <code>PatreonAPIClient</code> log category</p>
 <p><img src="../assets/tutorial/log_category.png" alt="Log Category" /></p>
+<h2 id="c-headers"><a class="header" href="#c-headers">C++ Headers</a></h2>
+<p>If you are working in C++ and keep getting "File not found" errors when attempting to include headers from this plugin,
+make sure you have added the plugin as a dependency for your project in your <code>Build.cs</code> file:</p>
+<pre><code class="language-csharp">public class MyModule : ModuleRules
+{
+	public MyModule(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+
+        // \/  Add NBPatreonAPIClient as a dependency to allow access to plugin header files, etc.
+		PrivateDependencyModuleNames.AddRange(new string[] { "NBPatreonAPIClient" });
+	}
+}
+</code></pre>
 <p><br/><br/>
 <br/><br/></p>
 <hr />

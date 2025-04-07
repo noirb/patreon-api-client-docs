@@ -368,6 +368,22 @@ asking for their access token, passing the same Id so the server can look it up 
 <h2 id="logs"><a class="header" href="#logs">Logs</a></h2>
 <p>All logs produced by this plugin are created under the <code>PatreonAPIClient</code> log category</p>
 <p><img src="how-to/../assets/tutorial/log_category.png" alt="Log Category" /></p>
+<h2 id="c-headers"><a class="header" href="#c-headers">C++ Headers</a></h2>
+<p>If you are working in C++ and keep getting "File not found" errors when attempting to include headers from this plugin,
+make sure you have added the plugin as a dependency for your project in your <code>Build.cs</code> file:</p>
+<pre><code class="language-csharp">public class MyModule : ModuleRules
+{
+	public MyModule(ReadOnlyTargetRules Target) : base(Target)
+	{
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+
+        // \/  Add NBPatreonAPIClient as a dependency to allow access to plugin header files, etc.
+		PrivateDependencyModuleNames.AddRange(new string[] { "NBPatreonAPIClient" });
+	}
+}
+</code></pre>
 <p><br/><br/>
 <br/><br/></p>
 <hr />
@@ -1725,7 +1741,7 @@ FDateTime TokenReceived;
 </li>
 </ul>
 <hr />
-<h1 id="methods"><a class="header" href="#methods"><strong>Methods</strong></a></h1>
+<h1 id="constructors"><a class="header" href="#constructors"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fapitokeninfo"><a class="header" href="#fapitokeninfo"><strong><code>FAPITokenInfo</code></strong></a></h1>
@@ -1776,6 +1792,10 @@ FAPITokenInfo(
 </ul>
   </details>
 </li>
+</ul>
+<hr />
+<h1 id="methods"><a class="header" href="#methods"><strong>Methods</strong></a></h1>
+<ul>
 <li>
 <h1 id="hastokenexpired"><a class="header" href="#hastokenexpired"><strong><code>HasTokenExpired</code></strong></a></h1>
 <pre><code class="language-cpp">//  APITokenInfo.h : 61
@@ -1963,24 +1983,16 @@ FString URL;
 </li>
 </ul>
 <hr />
-<h1 id="methods-1"><a class="header" href="#methods-1"><strong>Methods</strong></a></h1>
+<h1 id="constructors-1"><a class="header" href="#constructors-1"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreontierinfo"><a class="header" href="#fpatreontierinfo"><strong><code>FPatreonTierInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfo.h : 16
+<pre><code class="language-cpp">//  PatreonTierInfo.h : 18
 
 public:
-GENERATED_BODY() FPatreonTierInfo();
+FPatreonTierInfo();
 </code></pre>
   <details>
-<hr />
-<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
-<ul>
-<li>
-<pre><code class="language-cpp">GENERATED_BODY()
-</code></pre>
-</li>
-</ul>
   </details>
 </li>
 </ul>
@@ -2102,24 +2114,16 @@ FString URL;
 </li>
 </ul>
 <hr />
-<h1 id="methods-2"><a class="header" href="#methods-2"><strong>Methods</strong></a></h1>
+<h1 id="constructors-2"><a class="header" href="#constructors-2"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreontierinfoimgs"><a class="header" href="#fpatreontierinfoimgs"><strong><code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 16
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 18
 
 public:
-GENERATED_BODY() FPatreonTierInfoImgs();
+FPatreonTierInfoImgs();
 </code></pre>
   <details>
-<hr />
-<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
-<ul>
-<li>
-<pre><code class="language-cpp">GENERATED_BODY()
-</code></pre>
-</li>
-</ul>
   </details>
 </li>
 <li>
@@ -2356,7 +2360,7 @@ FString VanityName;
 </li>
 </ul>
 <hr />
-<h1 id="methods-3"><a class="header" href="#methods-3"><strong>Methods</strong></a></h1>
+<h1 id="constructors-3"><a class="header" href="#constructors-3"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreonuserinfo"><a class="header" href="#fpatreonuserinfo"><strong><code>FPatreonUserInfo</code></strong></a></h1>
@@ -2398,6 +2402,10 @@ will be uninitialized.</p>
 </ul>
   </details>
 </li>
+</ul>
+<hr />
+<h1 id="methods-1"><a class="header" href="#methods-1"><strong>Methods</strong></a></h1>
+<ul>
 <li>
 <h1 id="hasbenefit"><a class="header" href="#hasbenefit"><strong><code>HasBenefit</code></strong></a></h1>
 <pre><code class="language-cpp">//  PatreonUserInfo.h : 50
@@ -2423,7 +2431,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
+<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2457,7 +2465,7 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
+<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2493,7 +2501,7 @@ FPatreonTierInfo ParseTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
+<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FPatreonTierInfo
@@ -2707,24 +2715,16 @@ FString VanityName;
 </li>
 </ul>
 <hr />
-<h1 id="methods-4"><a class="header" href="#methods-4"><strong>Methods</strong></a></h1>
+<h1 id="constructors-4"><a class="header" href="#constructors-4"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreonuserinfoimgs"><a class="header" href="#fpatreonuserinfoimgs"><strong><code>FPatreonUserInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 17
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 19
 
 public:
-GENERATED_BODY() FPatreonUserInfoImgs();
+FPatreonUserInfoImgs();
 </code></pre>
   <details>
-<hr />
-<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
-<ul>
-<li>
-<pre><code class="language-cpp">GENERATED_BODY()
-</code></pre>
-</li>
-</ul>
   </details>
 </li>
 <li>
@@ -2748,6 +2748,10 @@ FPatreonUserInfoImgs(
 </ul>
   </details>
 </li>
+</ul>
+<hr />
+<h1 id="methods-2"><a class="header" href="#methods-2"><strong>Methods</strong></a></h1>
+<ul>
 <li>
 <h1 id="hasbenefit-1"><a class="header" href="#hasbenefit-1"><strong><code>HasBenefit</code></strong></a></h1>
 <pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 36
@@ -2773,7 +2777,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
+<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2807,7 +2811,7 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
+<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2848,7 +2852,7 @@ class FNBPatreonAPIClientModule
 </code></pre>
 <hr />
 <hr />
-<h1 id="methods-5"><a class="header" href="#methods-5"><strong>Methods</strong></a></h1>
+<h1 id="methods-3"><a class="header" href="#methods-3"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="shutdownmodule"><a class="header" href="#shutdownmodule"><strong><code>ShutdownModule</code></strong></a></h1>
@@ -2926,7 +2930,7 @@ FGetPatreonUserInfoAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-6"><a class="header" href="#methods-6"><strong>Methods</strong></a></h1>
+<h1 id="methods-4"><a class="header" href="#methods-4"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate"><a class="header" href="#activate"><strong><code>Activate</code></strong></a></h1>
@@ -2999,7 +3003,7 @@ static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-17"><a class="header" href="#returns-17"><strong>Returns</strong></a></h1>
+<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserInfoAsyncAction*
@@ -3066,7 +3070,7 @@ FGetPatreonUserInfoImgAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-7"><a class="header" href="#methods-7"><strong>Methods</strong></a></h1>
+<h1 id="methods-5"><a class="header" href="#methods-5"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate-1"><a class="header" href="#activate-1"><strong><code>Activate</code></strong></a></h1>
@@ -3140,7 +3144,7 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-18"><a class="header" href="#returns-18"><strong>Returns</strong></a></h1>
+<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserInfoImgAsyncAction*
@@ -3203,7 +3207,7 @@ FHTTPRequestActionEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-8"><a class="header" href="#methods-8"><strong>Methods</strong></a></h1>
+<h1 id="methods-6"><a class="header" href="#methods-6"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate-2"><a class="header" href="#activate-2"><strong><code>Activate</code></strong></a></h1>
@@ -3275,7 +3279,7 @@ static UHTTPRequestAction* HTTPGetAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-19"><a class="header" href="#returns-19"><strong>Returns</strong></a></h1>
+<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3342,7 +3346,7 @@ static UHTTPRequestAction* HTTPPostAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-20"><a class="header" href="#returns-20"><strong>Returns</strong></a></h1>
+<h1 id="returns-17"><a class="header" href="#returns-17"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3416,7 +3420,7 @@ static UHTTPRequestAction* HTTPRequestAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-21"><a class="header" href="#returns-21"><strong>Returns</strong></a></h1>
+<h1 id="returns-18"><a class="header" href="#returns-18"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3498,7 +3502,7 @@ static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-22"><a class="header" href="#returns-22"><strong>Returns</strong></a></h1>
+<h1 id="returns-19"><a class="header" href="#returns-19"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3524,7 +3528,7 @@ class UNBPatreonAPIClientBPLibrary
 <p><strong><em>Reflection-enabled</em></strong></p>
 <hr />
 <hr />
-<h1 id="methods-9"><a class="header" href="#methods-9"><strong>Methods</strong></a></h1>
+<h1 id="methods-7"><a class="header" href="#methods-7"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="hasbenefit-2"><a class="header" href="#hasbenefit-2"><strong><code>HasBenefit</code></strong></a></h1>
@@ -3569,7 +3573,7 @@ static bool HasBenefit(
 </li>
 </ul>
 <hr />
-<h1 id="returns-23"><a class="header" href="#returns-23"><strong>Returns</strong></a></h1>
+<h1 id="returns-20"><a class="header" href="#returns-20"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3621,7 +3625,7 @@ static bool HasBenefit2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-24"><a class="header" href="#returns-24"><strong>Returns</strong></a></h1>
+<h1 id="returns-21"><a class="header" href="#returns-21"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3674,7 +3678,7 @@ static bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-25"><a class="header" href="#returns-25"><strong>Returns</strong></a></h1>
+<h1 id="returns-22"><a class="header" href="#returns-22"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3727,7 +3731,7 @@ static bool HasTier2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-26"><a class="header" href="#returns-26"><strong>Returns</strong></a></h1>
+<h1 id="returns-23"><a class="header" href="#returns-23"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3772,7 +3776,7 @@ static bool HasTokenExpired(
 </li>
 </ul>
 <hr />
-<h1 id="returns-27"><a class="header" href="#returns-27"><strong>Returns</strong></a></h1>
+<h1 id="returns-24"><a class="header" href="#returns-24"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3817,7 +3821,7 @@ static bool IsTokenValid(
 </li>
 </ul>
 <hr />
-<h1 id="returns-28"><a class="header" href="#returns-28"><strong>Returns</strong></a></h1>
+<h1 id="returns-25"><a class="header" href="#returns-25"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3913,7 +3917,7 @@ static bool ParseTokenInfo(
 </li>
 </ul>
 <hr />
-<h1 id="returns-29"><a class="header" href="#returns-29"><strong>Returns</strong></a></h1>
+<h1 id="returns-26"><a class="header" href="#returns-26"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3995,7 +3999,7 @@ FPerformAuthenticationAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-10"><a class="header" href="#methods-10"><strong>Methods</strong></a></h1>
+<h1 id="methods-8"><a class="header" href="#methods-8"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate-3"><a class="header" href="#activate-3"><strong><code>Activate</code></strong></a></h1>
@@ -4075,7 +4079,7 @@ This can be used to match a specific request to a specific response if necessary
 </li>
 </ul>
 <hr />
-<h1 id="returns-30"><a class="header" href="#returns-30"><strong>Returns</strong></a></h1>
+<h1 id="returns-27"><a class="header" href="#returns-27"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FString
@@ -4149,7 +4153,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-31"><a class="header" href="#returns-31"><strong>Returns</strong></a></h1>
+<h1 id="returns-28"><a class="header" href="#returns-28"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UPerformAuthenticationAsyncAction*
@@ -4236,7 +4240,7 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 </li>
 </ul>
 <hr />
-<h1 id="returns-32"><a class="header" href="#returns-32"><strong>Returns</strong></a></h1>
+<h1 id="returns-29"><a class="header" href="#returns-29"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UPerformAuthenticationAsyncAction*
@@ -4299,7 +4303,7 @@ FRefreshAPITokenAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-11"><a class="header" href="#methods-11"><strong>Methods</strong></a></h1>
+<h1 id="methods-9"><a class="header" href="#methods-9"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate-4"><a class="header" href="#activate-4"><strong><code>Activate</code></strong></a></h1>
@@ -4382,7 +4386,7 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-33"><a class="header" href="#returns-33"><strong>Returns</strong></a></h1>
+<h1 id="returns-30"><a class="header" href="#returns-30"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">URefreshAPITokenAsyncAction*
