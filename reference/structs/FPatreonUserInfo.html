@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="struct-fpatreonuserinfo"><a class="header" href="#struct-fpatreonuserinfo"><strong>Struct: <code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 16
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 17
 
 struct NBPATREONAPICLIENT_API FPatreonUserInfo;
 </code></pre>
@@ -187,6 +187,7 @@ bool CanSeeNSFW;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -204,6 +205,7 @@ FString FirstName;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
 </li>
@@ -218,6 +220,7 @@ FString FullName;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
 </li>
@@ -232,6 +235,7 @@ FString ImageURL;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -249,6 +253,7 @@ bool IsCreator;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -266,6 +271,7 @@ FString LastName;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
 </li>
@@ -280,6 +286,7 @@ FString PatronStatus;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -303,6 +310,7 @@ TArray&lt;FPatreonTierInfo&gt; Tiers;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -322,6 +330,7 @@ FString URL;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -339,6 +348,7 @@ FString VanityName;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
@@ -351,7 +361,7 @@ FString VanityName;
 <ul>
 <li>
 <h1 id="fpatreonuserinfo"><a class="header" href="#fpatreonuserinfo"><strong><code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 24
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 25
 
 public:
 FPatreonUserInfo();
@@ -364,7 +374,7 @@ FPatreonUserInfo();
 </li>
 <li>
 <h1 id="fpatreonuserinfo-1"><a class="header" href="#fpatreonuserinfo-1"><strong><code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 32
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 33
 
 public:
 FPatreonUserInfo(
@@ -391,7 +401,7 @@ will be uninitialized.</p>
 </li>
 <li>
 <h1 id="hasbenefit"><a class="header" href="#hasbenefit"><strong><code>HasBenefit</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 49
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 50
 
 public:
 bool HasBenefit(
@@ -426,7 +436,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 <li>
 <h1 id="hastier"><a class="header" href="#hastier"><strong><code>HasTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 41
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 42
 
 public:
 bool HasTier(
@@ -460,7 +470,7 @@ bool HasTier(
 </li>
 <li>
 <h1 id="parsetier"><a class="header" href="#parsetier"><strong><code>ParseTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 34
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 35
 
 public:
 FPatreonTierInfo ParseTier(
