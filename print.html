@@ -169,9 +169,17 @@
 <h2 id="before-getting-started"><a class="header" href="#before-getting-started">Before Getting Started</a></h2>
 <p>Before using this plugin, you should first <a href="how-to/./Registering.html">Register an API Client</a> with Patreon.</p>
 <p>This plugin supports a few different authentication flows with different trade-offs.</p>
-<h1 id="1-handle-everything-internally"><a class="header" href="#1-handle-everything-internally">1. Handle everything internally</a></h1>
+<h2 id="1-simple--automatic"><a class="header" href="#1-simple--automatic">1. <a href="how-to/./SimpleSetup.html">Simple &amp; Automatic</a></a></h2>
+<p>This is for you if you just want to check that your users are members of your campaign and find out which
+tiers/benefits they are entitled to. This allows you to easily do things like unlock specific in-game
+content for users pledged to specific tiers, display information to the user about their subscription, etc.</p>
 <p><a href="how-to/./SimpleSetup.html">Simple Setup</a></p>
-<h1 id="2-use-an-external-service-to-handle-authentication"><a class="header" href="#2-use-an-external-service-to-handle-authentication">2. Use an external service to handle authentication</a></h1>
+<h2 id="2-custom"><a class="header" href="#2-custom">2. <a href="how-to/./CustomSetup.html">Custom</a></a></h2>
+<p>If your needs are more complex, for example maybe you are building an MMO or competitive online shooter and have your
+own account system you need to link to Patreon, or perhaps you already have your own web service which connects to Patreon
+and just need to be able to pull specific data out of it from the game client.</p>
+<p>Going this route is more complex, but allows you to customize exactly where your tokens are stored, the data fetched from
+Patreon, how that gets tied into whatever other user data you may have, etc.</p>
 <p><a href="how-to/./CustomSetup.html">Custom Setup</a></p>
 <hr />
 <h1 id="running-the-examples"><a class="header" href="#running-the-examples">Running the examples</a></h1>
@@ -229,7 +237,9 @@ when signed in with your regular creator account.</p>
 </li>
 </ol>
 <p>Once you have created a Client, you will need the <code>Client ID</code> and <code>Client Secret</code>.</p>
+<blockquote>
 <p><strong>Do not use the Creator's Access Token!!</strong></p>
+</blockquote>
 <p><img src="how-to/../assets/tutorial/patreon_tokens.png" alt="" /></p>
 <p><br/><br/>
 <br/><br/></p>
@@ -1591,10 +1601,6 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <li><a href="/patreon-api-client-docs/reference/classes/UNBPatreonAPIClientBPLibrary.html"><code>UNBPatreonAPIClientBPLibrary</code></a></li>
 <li><a href="/patreon-api-client-docs/reference/classes/UPerformAuthenticationAsyncAction.html"><code>UPerformAuthenticationAsyncAction</code></a></li>
 <li><a href="/patreon-api-client-docs/reference/classes/URefreshAPITokenAsyncAction.html"><code>URefreshAPITokenAsyncAction</code></a></li>
-</ul>
-<h2 id="functions-4"><a class="header" href="#functions-4">Functions</a></h2>
-<ul>
-<li><a href="/patreon-api-client-docs/reference/functions/DECLARE_LOG_CATEGORY_EXTERN.html"><code>DECLARE_LOG_CATEGORY_EXTERN</code></a></li>
 </ul>
 <h2 id="delegates"><a class="header" href="#delegates">Delegates</a></h2>
 <ul>
@@ -4402,51 +4408,13 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="functions-5"><a class="header" href="#functions-5">Functions</a></h1>
-<ul>
-<li><a href="reference//patreon-api-client-docs/reference/reference/functions/DECLARE_LOG_CATEGORY_EXTERN.html"><code>DECLARE_LOG_CATEGORY_EXTERN</code></a></li>
-</ul>
 <p><br/><br/>
 <br/><br/></p>
 <hr />
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="function-declare_log_category_extern"><a class="header" href="#function-declare_log_category_extern"><strong>Function: <code>DECLARE_LOG_CATEGORY_EXTERN</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonAPILog.h : 5
-
-public:
-DECLARE_LOG_CATEGORY_EXTERN(
-    PatreonAPIClient,
-    Display,
-    All
-);
-</code></pre>
-<hr />
-<h1 id="arguments-27"><a class="header" href="#arguments-27"><strong>Arguments</strong></a></h1>
-<ul>
-<li>
-<p><em>Unnamed</em></p>
-<pre><code class="language-cpp">PatreonAPIClient
-</code></pre>
-</li>
-<li>
-<p><em>Unnamed</em></p>
-<pre><code class="language-cpp">Display
-</code></pre>
-</li>
-<li>
-<p><em>Unnamed</em></p>
-<pre><code class="language-cpp">All
-</code></pre>
-</li>
-</ul>
-<p><br/><br/>
-<br/><br/></p>
-<hr />
-<blockquote>
-<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
-</blockquote>
+<div style="break-before: page; page-break-before: always;"></div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delegates-1"><a class="header" href="#delegates-1">Delegates</a></h1>
 <ul>
 <li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FGetPatreonUserInfoAsyncActionEvent.html"><code>FGetPatreonUserInfoAsyncActionEvent</code></a></li>

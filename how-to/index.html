@@ -158,9 +158,17 @@
 <h2 id="before-getting-started"><a class="header" href="#before-getting-started">Before Getting Started</a></h2>
 <p>Before using this plugin, you should first <a href="./Registering.html">Register an API Client</a> with Patreon.</p>
 <p>This plugin supports a few different authentication flows with different trade-offs.</p>
-<h1 id="1-handle-everything-internally"><a class="header" href="#1-handle-everything-internally">1. Handle everything internally</a></h1>
+<h2 id="1-simple--automatic"><a class="header" href="#1-simple--automatic">1. <a href="./SimpleSetup.html">Simple &amp; Automatic</a></a></h2>
+<p>This is for you if you just want to check that your users are members of your campaign and find out which
+tiers/benefits they are entitled to. This allows you to easily do things like unlock specific in-game
+content for users pledged to specific tiers, display information to the user about their subscription, etc.</p>
 <p><a href="./SimpleSetup.html">Simple Setup</a></p>
-<h1 id="2-use-an-external-service-to-handle-authentication"><a class="header" href="#2-use-an-external-service-to-handle-authentication">2. Use an external service to handle authentication</a></h1>
+<h2 id="2-custom"><a class="header" href="#2-custom">2. <a href="./CustomSetup.html">Custom</a></a></h2>
+<p>If your needs are more complex, for example maybe you are building an MMO or competitive online shooter and have your
+own account system you need to link to Patreon, or perhaps you already have your own web service which connects to Patreon
+and just need to be able to pull specific data out of it from the game client.</p>
+<p>Going this route is more complex, but allows you to customize exactly where your tokens are stored, the data fetched from
+Patreon, how that gets tied into whatever other user data you may have, etc.</p>
 <p><a href="./CustomSetup.html">Custom Setup</a></p>
 <hr />
 <h1 id="running-the-examples"><a class="header" href="#running-the-examples">Running the examples</a></h1>
@@ -189,7 +197,7 @@ to specific tiers, you could also use the <code>IsCreator</code> field to unlock
 when signed in with your regular creator account.</p>
 <p>For an example of accessing and reading information about the Patreon user, see: <code>Plugins/NBPatreonAPIClient Content/Examples/UI/WBP_PatreonUserInfo</code></p>
 <h1 id="pages"><a class="header" href="#pages">Pages</a></h1>
-<ul>
+<ul class="contents">
 <li><a href="/patreon-api-client-docs/how-to/Registering.html">Registering an API Client</a></li>
 <li><a href="/patreon-api-client-docs/how-to/SimpleSetup.html">Simple Setup &amp; Usage</a></li>
 <li><a href="/patreon-api-client-docs/how-to/CustomSetup.html">Custom Setup</a></li>
@@ -205,11 +213,6 @@ when signed in with your regular creator account.</p>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
-                        <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../documentation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-
                             <a rel="next prefetch" href="../how-to/Registering.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
@@ -220,10 +223,6 @@ when signed in with your regular creator account.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../documentation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-
                     <a rel="next prefetch" href="../how-to/Registering.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
