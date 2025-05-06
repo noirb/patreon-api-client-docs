@@ -164,9 +164,9 @@ decrypted at run-time), there will always be a risk that one of your users will 
 <ol>
 <li>You open the Patreon login and consent page for your user (either using their default web browser or the UMG Web Browser widget).</li>
 <li>While they are signing in and granting your application access to their data, we start up an HTTP server.
-  <ol><li>By default the server will listen for a request at <code>http://localhost:8080/login</code>, but you can customize this as you see fit.</li>
+  <ul><li>By default the server will listen for a request at <code>http://localhost:8080/login</code>, but you can customize this as you see fit.</li>
       <li>Whatever you configure the server to use, you need to ensure that your application's configuration on the Patreon side has a matching <code>Redirect URI</code>, e.g. if you set <code>Callback Route</code> to <code>/patreon</code> and <code>Callback Port</code> to <code>9999</code>, you must update the settings in Patreon to include a <code>Redirect URI</code> of <code>http://localhost:9999/patreon</code>.</li>
-  </ol>
+  </ul>
 <blockquote>
 <p>The <code>Callback Route</code> MUST start with <code>"/"</code> and be longer than just <code>"/"</code> but can otherwise be anything you want.</p>
 <p>The <code>Callback Port</code> MUST be a positive integer, and unless you plan to use port <code>80</code> should be larger than <code>1024</code></p>
