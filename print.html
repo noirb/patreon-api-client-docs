@@ -257,7 +257,7 @@ decrypted at run-time), there will always be a risk that one of your users will 
 <ol>
 <li>You open the Patreon login and consent page for your user (either using their default web browser or the UMG Web Browser widget).</li>
 <li>While they are signing in and granting your application access to their data, we start up an HTTP server
-a. By default the server will listen for a request at <code>http://localhost/login:8080</code>, but you can customize this as you see fit
+a. By default the server will listen for a request at <code>http://localhost:8080/login</code>, but you can customize this as you see fit
 b. Whatever you configure the server to use, you need to ensure that your application's configuration on the Patreon side has a matching <code>Redirect URI</code>, e.g. if you set <code>Callback Route</code> to <code>/patreon</code> and <code>Callback Port</code> to <code>9999</code>, you must update the settings in Patreon to include a <code>Redirect URI</code> of <code>http://localhost:9999/patreon</code>.
 <blockquote>
 <p>The <code>Callback Route</code> MUST start with <code>"/"</code> and be longer than just <code>"/"</code> but can otherwise be anything you want.</p>
@@ -280,7 +280,7 @@ b. Whatever you configure the server to use, you need to ensure that your applic
 #define CLIENT_SECRET TEXT("&lt;Your Client Secret&gt;")
 
 void MyClass::DoPatreonLogin() {
-  // create an authentication action expecting a callback at http://localhost/login:8080
+  // create an authentication action expecting a callback at http://localhost:8080/login
   UPerformAuthenticationAsyncAction* authAction = UPerformAuthenticationAsyncAction::PerformAuthenticationAsyncAction(
     this, // world context
     CLIENT_ID,
