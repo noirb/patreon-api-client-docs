@@ -175,7 +175,7 @@ their pledges to determine if specific content should be unlocked for them.</p>
 <blockquote>
 <p>Because everything is being handled within the same process,
 using this action requires that the application have a copy
-of your client_id and client_secret, both of which will be
+of your client_id and client_secret (<a href="https://noirb.github.io/patreon-api-client-docs/how-to/ClientSecret.html">if you use one</a>), both of which will be
 included in HTTP requests sent to Patreon from the user's
 computer. This means that the user may be able to extract these
 values either from the packaged binaries or by analyzing their
@@ -358,6 +358,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 <pre><code class="language-cpp">const FString ClientSecret
 </code></pre>
 <p>Patreon App client_secret</p>
+<p><b>OPTIONAL</b>, set to <code>""</code> if you are using the client_secret.</p>
 </li>
 <li>
 <h2 id="callbackroute"><a class="header" href="#callbackroute"><strong><code>CallbackRoute</code></strong></a></h2>
@@ -445,6 +446,7 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 <pre><code class="language-cpp">const FString ClientSecret
 </code></pre>
 <p>Patreon App client_secret</p>
+<p><b>OPTIONAL</b>, set to <code>""</code> if you are using the client_secret.</p>
 </li>
 <li>
 <h2 id="callbackroute-1"><a class="header" href="#callbackroute-1"><strong><code>CallbackRoute</code></strong></a></h2>

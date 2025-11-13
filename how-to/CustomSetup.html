@@ -165,6 +165,7 @@ other account details your game receives.</p>
 ever being able to extract it is to prevent the application from ever seeing it in the first place. Even without your own account system, you could
 still run a web service which just handles the code exchange to get an access token after a user logs in to Patreon, then either ask the user to
 copy-and-paste this into the game or cache the access tokens on your server and provide an API to fetch them.</p>
+<p>(side note: <a href="./ClientSecret.html">use of the client secret is optional</a>)</p>
 <p>If you find that the information we retrieve from the Patreon API in <a href="../blueprint-api/functions/GetUserInfo.html">Get User Info</a> is insufficient for
 your use case, then you may also want to go the custom route to make the specific API requets you need (if you find yourself going down this road, though,
 please <a href="mailto:nbpsup@gmail.com">drop me a note</a> so I can consider supporting your use case better by default in the future).</p>
