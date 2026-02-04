@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="class-unbpatreonapiclientbplibrary"><a class="header" href="#class-unbpatreonapiclientbplibrary"><strong>Class: <code>UNBPatreonAPIClientBPLibrary</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 9
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 12
 
 class UNBPatreonAPIClientBPLibrary
     : public UBlueprintFunctionLibrary;
@@ -167,8 +167,44 @@ class UNBPatreonAPIClientBPLibrary
 <h1 id="methods"><a class="header" href="#methods"><strong>Methods</strong></a></h1>
 <ul>
 <li>
+<h1 id="copytoclipboard"><a class="header" href="#copytoclipboard"><strong><code>CopyToClipboard</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 182
+
+public:
+static void CopyToClipboard(
+    const FString str
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers"><a class="header" href="#specifiers">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Utils</em></li>
+</ul>
+<h3 id="meta-specifiers"><a class="header" href="#meta-specifiers">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Copy to Clipboard</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Copies the given string to the user's clipboard</p>
+  </summary>
+<hr />
+<h1 id="arguments"><a class="header" href="#arguments"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="str"><a class="header" href="#str"><strong><code>str</code></strong></a></h2>
+<pre><code class="language-cpp">const FString str
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="hasbenefit"><a class="header" href="#hasbenefit"><strong><code>HasBenefit</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 48
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 67
 
 public:
 static bool HasBenefit(
@@ -179,13 +215,13 @@ static bool HasBenefit(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers"><a class="header" href="#specifiers">Specifiers:</a></h3>
+<h3 id="specifiers-1"><a class="header" href="#specifiers-1">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers"><a class="header" href="#meta-specifiers">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-1"><a class="header" href="#meta-specifiers-1">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Has Benefit</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -194,7 +230,7 @@ static bool HasBenefit(
 <p>Checks if the given User is entitled to a specific benefit/reward</p>
   </summary>
 <hr />
-<h1 id="arguments"><a class="header" href="#arguments"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo"><a class="header" href="#userinfo"><strong><code>UserInfo</code></strong></a></h2>
@@ -220,7 +256,7 @@ static bool HasBenefit(
 </li>
 <li>
 <h1 id="hasbenefit2"><a class="header" href="#hasbenefit2"><strong><code>HasBenefit2</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 56
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 75
 
 public:
 static bool HasBenefit2(
@@ -231,13 +267,13 @@ static bool HasBenefit2(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-1"><a class="header" href="#specifiers-1">Specifiers:</a></h3>
+<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-1"><a class="header" href="#meta-specifiers-1">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-2"><a class="header" href="#meta-specifiers-2">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Has Benefit</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -246,7 +282,7 @@ static bool HasBenefit2(
 <p>Checks if the given User is entitled to a specific benefit/reward</p>
   </summary>
 <hr />
-<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo-1"><a class="header" href="#userinfo-1"><strong><code>UserInfo</code></strong></a></h2>
@@ -272,7 +308,7 @@ static bool HasBenefit2(
 </li>
 <li>
 <h1 id="hastier"><a class="header" href="#hastier"><strong><code>HasTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 32
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 35
 
 public:
 static bool HasTier(
@@ -283,22 +319,22 @@ static bool HasTier(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
+<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-2"><a class="header" href="#meta-specifiers-2">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-3"><a class="header" href="#meta-specifiers-3">Meta Specifiers:</a></h3>
 <ul>
-<li><strong>DisplayName</strong> = <em>Has Tier</em></li>
+<li><strong>DisplayName</strong> = <em>Has Tier (by Title)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
   <summary>
 <p>Checks if the given User is pledged to a specific tier.</p>
   </summary>
 <hr />
-<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo-2"><a class="header" href="#userinfo-2"><strong><code>UserInfo</code></strong></a></h2>
@@ -325,7 +361,7 @@ static bool HasTier(
 </li>
 <li>
 <h1 id="hastier2"><a class="header" href="#hastier2"><strong><code>HasTier2</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 40
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 43
 
 public:
 static bool HasTier2(
@@ -336,22 +372,22 @@ static bool HasTier2(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
+<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-3"><a class="header" href="#meta-specifiers-3">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-4"><a class="header" href="#meta-specifiers-4">Meta Specifiers:</a></h3>
 <ul>
-<li><strong>DisplayName</strong> = <em>Has Tier</em></li>
+<li><strong>DisplayName</strong> = <em>Has Tier (by Title)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
   <summary>
 <p>Checks if the given User is pledged to a specific tier.</p>
   </summary>
 <hr />
-<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-4"><a class="header" href="#arguments-4"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo-3"><a class="header" href="#userinfo-3"><strong><code>UserInfo</code></strong></a></h2>
@@ -377,38 +413,46 @@ static bool HasTier2(
   </details>
 </li>
 <li>
-<h1 id="hastokenexpired"><a class="header" href="#hastokenexpired"><strong><code>HasTokenExpired</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 18
+<h1 id="hastierbyid"><a class="header" href="#hastierbyid"><strong><code>HasTierById</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 51
 
 public:
-static bool HasTokenExpired(
-    const FAPITokenInfo&amp; token
+static bool HasTierById(
+    const FPatreonUserInfo&amp; UserInfo,
+    const FString TierId
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
+<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-4"><a class="header" href="#meta-specifiers-4">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-5"><a class="header" href="#meta-specifiers-5">Meta Specifiers:</a></h3>
 <ul>
-<li><strong>DisplayName</strong> = <em>Has API Token Expired</em></li>
+<li><strong>DisplayName</strong> = <em>Has Tier (by ID)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
   <summary>
-<p>Checks if a token's lifetime has expired.</p>
+<p>Checks if the given User is pledged to a specific tier.</p>
   </summary>
 <hr />
-<h1 id="arguments-4"><a class="header" href="#arguments-4"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-5"><a class="header" href="#arguments-5"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="token"><a class="header" href="#token"><strong><code>token</code></strong></a></h2>
-<pre><code class="language-cpp">const FAPITokenInfo&amp; token
+<h2 id="userinfo-4"><a class="header" href="#userinfo-4"><strong><code>UserInfo</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonUserInfo&amp; UserInfo
 </code></pre>
+<p>User to check</p>
+</li>
+<li>
+<h2 id="tierid"><a class="header" href="#tierid"><strong><code>TierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString TierId
+</code></pre>
+<p>ID of tier</p>
 </li>
 </ul>
 <hr />
@@ -422,38 +466,46 @@ static bool HasTokenExpired(
   </details>
 </li>
 <li>
-<h1 id="istokenvalid"><a class="header" href="#istokenvalid"><strong><code>IsTokenValid</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 24
+<h1 id="hastierbyid2"><a class="header" href="#hastierbyid2"><strong><code>HasTierById2</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 59
 
 public:
-static bool IsTokenValid(
-    const FAPITokenInfo&amp; token
+static bool HasTierById2(
+    const FPatreonUserInfoImgs&amp; UserInfo,
+    const FString TierId
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
+<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-5"><a class="header" href="#meta-specifiers-5">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-6"><a class="header" href="#meta-specifiers-6">Meta Specifiers:</a></h3>
 <ul>
-<li><strong>DisplayName</strong> = <em>Is API Token Valid</em></li>
+<li><strong>DisplayName</strong> = <em>Has Tier (by ID)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
   <summary>
-<p>Checks if the access token is present and not yet expired</p>
+<p>Checks if the given User is pledged to a specific tier.</p>
   </summary>
 <hr />
-<h1 id="arguments-5"><a class="header" href="#arguments-5"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-6"><a class="header" href="#arguments-6"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="token-1"><a class="header" href="#token-1"><strong><code>token</code></strong></a></h2>
-<pre><code class="language-cpp">const FAPITokenInfo&amp; token
+<h2 id="userinfo-5"><a class="header" href="#userinfo-5"><strong><code>UserInfo</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonUserInfoImgs&amp; UserInfo
 </code></pre>
+<p>User to check</p>
+</li>
+<li>
+<h2 id="tierid-1"><a class="header" href="#tierid-1"><strong><code>TierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString TierId
+</code></pre>
+<p>ID of tier</p>
 </li>
 </ul>
 <hr />
@@ -467,8 +519,98 @@ static bool IsTokenValid(
   </details>
 </li>
 <li>
+<h1 id="hastokenexpired"><a class="header" href="#hastokenexpired"><strong><code>HasTokenExpired</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 21
+
+public:
+static bool HasTokenExpired(
+    const FAPITokenInfo&amp; token
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintPure</strong></li>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+<h3 id="meta-specifiers-7"><a class="header" href="#meta-specifiers-7">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Has API Token Expired</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a token's lifetime has expired.</p>
+  </summary>
+<hr />
+<h1 id="arguments-7"><a class="header" href="#arguments-7"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="token"><a class="header" href="#token"><strong><code>token</code></strong></a></h2>
+<pre><code class="language-cpp">const FAPITokenInfo&amp; token
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-6"><a class="header" href="#returns-6"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="istokenvalid"><a class="header" href="#istokenvalid"><strong><code>IsTokenValid</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 27
+
+public:
+static bool IsTokenValid(
+    const FAPITokenInfo&amp; token
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-8"><a class="header" href="#specifiers-8">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintPure</strong></li>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+<h3 id="meta-specifiers-8"><a class="header" href="#meta-specifiers-8">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Is API Token Valid</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if the access token is present and not yet expired</p>
+  </summary>
+<hr />
+<h1 id="arguments-8"><a class="header" href="#arguments-8"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="token-1"><a class="header" href="#token-1"><strong><code>token</code></strong></a></h2>
+<pre><code class="language-cpp">const FAPITokenInfo&amp; token
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-7"><a class="header" href="#returns-7"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="openurl"><a class="header" href="#openurl"><strong><code>OpenURL</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 82
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 176
 
 public:
 static void OpenURL(
@@ -478,12 +620,12 @@ static void OpenURL(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
+<h3 id="specifiers-9"><a class="header" href="#specifiers-9">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-6"><a class="header" href="#meta-specifiers-6">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-9"><a class="header" href="#meta-specifiers-9">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Open URL</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -492,7 +634,7 @@ static void OpenURL(
 <p>Opens a given URL in the user's default web browser</p>
   </summary>
 <hr />
-<h1 id="arguments-6"><a class="header" href="#arguments-6"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-9"><a class="header" href="#arguments-9"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="url"><a class="header" href="#url"><strong><code>URL</code></strong></a></h2>
@@ -503,8 +645,67 @@ static void OpenURL(
   </details>
 </li>
 <li>
+<h1 id="parsecampaigninfo"><a class="header" href="#parsecampaigninfo"><strong><code>ParseCampaignInfo</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 170
+
+public:
+static bool ParseCampaignInfo(
+    FString JsonStr,
+    FString&amp; CampaignID,
+    TArray&lt;FPatreonTierInfo&gt;&amp; Tiers
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-10"><a class="header" href="#specifiers-10">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Campaign</em></li>
+</ul>
+<h3 id="meta-specifiers-10"><a class="header" href="#meta-specifiers-10">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Parse Campaign Info</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Parses a JSON string containing a creator's campaign information.</p>
+  </summary>
+<hr />
+<h1 id="arguments-10"><a class="header" href="#arguments-10"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="jsonstr"><a class="header" href="#jsonstr"><strong><code>JsonStr</code></strong></a></h2>
+<pre><code class="language-cpp">FString JsonStr
+</code></pre>
+<p>The JSON string to parse</p>
+</li>
+<li>
+<h2 id="campaignid"><a class="header" href="#campaignid"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">FString&amp; CampaignID
+</code></pre>
+<p>The creator's campaign ID</p>
+</li>
+<li>
+<h2 id="tiers"><a class="header" href="#tiers"><strong><code>Tiers</code></strong></a></h2>
+<pre><code class="language-cpp">TArray&lt;FPatreonTierInfo&gt;&amp; Tiers
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-8"><a class="header" href="#returns-8"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if JsonStr could be parsed, otherwise false. If this is false, CampaignID and Tiers should not be used.</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="parsetokeninfo"><a class="header" href="#parsetokeninfo"><strong><code>ParseTokenInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 76
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 160
 
 public:
 static bool ParseTokenInfo(
@@ -515,12 +716,12 @@ static bool ParseTokenInfo(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
+<h3 id="specifiers-11"><a class="header" href="#specifiers-11">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-7"><a class="header" href="#meta-specifiers-7">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-11"><a class="header" href="#meta-specifiers-11">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Parse API Token Info</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -537,10 +738,10 @@ static bool ParseTokenInfo(
 </code></pre>
   </summary>
 <hr />
-<h1 id="arguments-7"><a class="header" href="#arguments-7"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-11"><a class="header" href="#arguments-11"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="jsonstr"><a class="header" href="#jsonstr"><strong><code>JsonStr</code></strong></a></h2>
+<h2 id="jsonstr-1"><a class="header" href="#jsonstr-1"><strong><code>JsonStr</code></strong></a></h2>
 <pre><code class="language-cpp">FString JsonStr
 </code></pre>
 <p>The JSON string to parse</p>
@@ -553,12 +754,415 @@ static bool ParseTokenInfo(
 </li>
 </ul>
 <hr />
-<h1 id="returns-6"><a class="header" href="#returns-6"><strong>Returns</strong></a></h1>
+<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
 </code></pre>
 <p>True if the JsonStr could be parsed, otherwise False. If this returns False, TokenInfo should not be used.</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierafter"><a class="header" href="#pledgedtotierafter"><strong><code>PledgedToTierAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 110
+
+public:
+static bool PledgedToTierAfter(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierName,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-12"><a class="header" href="#specifiers-12">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-12"><a class="header" href="#meta-specifiers-12">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier After (by Title)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time after a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-12"><a class="header" href="#arguments-12"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory"><a class="header" href="#pledgehistory"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tiername-2"><a class="header" href="#tiername-2"><strong><code>tierName</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierName
+</code></pre>
+<p>The Title of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date"><a class="header" href="#date"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier after the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierafter2"><a class="header" href="#pledgedtotierafter2"><strong><code>PledgedToTierAfter2</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 120
+
+public:
+static bool PledgedToTierAfter2(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierId,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-13"><a class="header" href="#specifiers-13">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-13"><a class="header" href="#meta-specifiers-13">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier After (by ID)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time after a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-13"><a class="header" href="#arguments-13"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-1"><a class="header" href="#pledgehistory-1"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tierid-2"><a class="header" href="#tierid-2"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>The ID of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-1"><a class="header" href="#date-1"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier after the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierbefore"><a class="header" href="#pledgedtotierbefore"><strong><code>PledgedToTierBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 130
+
+public:
+static bool PledgedToTierBefore(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierName,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-14"><a class="header" href="#specifiers-14">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-14"><a class="header" href="#meta-specifiers-14">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier Before (by Title)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time before a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-14"><a class="header" href="#arguments-14"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-2"><a class="header" href="#pledgehistory-2"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tiername-3"><a class="header" href="#tiername-3"><strong><code>tierName</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierName
+</code></pre>
+<p>The Title of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-2"><a class="header" href="#date-2"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier before the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierbefore2"><a class="header" href="#pledgedtotierbefore2"><strong><code>PledgedToTierBefore2</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 140
+
+public:
+static bool PledgedToTierBefore2(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierId,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-15"><a class="header" href="#specifiers-15">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-15"><a class="header" href="#meta-specifiers-15">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier Before (by ID)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time before a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-15"><a class="header" href="#arguments-15"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-3"><a class="header" href="#pledgehistory-3"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tierid-3"><a class="header" href="#tierid-3"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>The ID of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-3"><a class="header" href="#date-3"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier before the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersafter"><a class="header" href="#pledgedtotiersafter"><strong><code>PledgedToTiersAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 92
+
+public:
+static TArray&lt;FString&gt; PledgedToTiersAfter(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-16"><a class="header" href="#specifiers-16">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-16"><a class="header" href="#meta-specifiers-16">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tiers After</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Returns a list of all tiers a user pledged to after a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-16"><a class="header" href="#arguments-16"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-4"><a class="header" href="#pledgehistory-4"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="date-4"><a class="header" href="#date-4"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date to include results for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersbefore"><a class="header" href="#pledgedtotiersbefore"><strong><code>PledgedToTiersBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 100
+
+public:
+static TArray&lt;FString&gt; PledgedToTiersBefore(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-17"><a class="header" href="#specifiers-17">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-17"><a class="header" href="#meta-specifiers-17">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tiers Before</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Returns a list of all tiers a user pledged to before a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-17"><a class="header" href="#arguments-17"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-5"><a class="header" href="#pledgehistory-5"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="date-5"><a class="header" href="#date-5"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date to include results for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersduring"><a class="header" href="#pledgedtotiersduring"><strong><code>PledgedToTiersDuring</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 84
+
+public:
+static TArray&lt;FString&gt; PledgedToTiersDuring(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const int32 year,
+    const int32 month
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-18"><a class="header" href="#specifiers-18">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-18"><a class="header" href="#meta-specifiers-18">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tiers During</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Returns a list of all tiers a user pledged to during a given month.</p>
+  </summary>
+<hr />
+<h1 id="arguments-18"><a class="header" href="#arguments-18"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-6"><a class="header" href="#pledgehistory-6"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="year"><a class="header" href="#year"><strong><code>year</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 year
+</code></pre>
+<p>The year to match</p>
+</li>
+<li>
+<h2 id="month"><a class="header" href="#month"><strong><code>month</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 month
+</code></pre>
+<p>The month in the year to match</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
 </li>
 </ul>
   </details>

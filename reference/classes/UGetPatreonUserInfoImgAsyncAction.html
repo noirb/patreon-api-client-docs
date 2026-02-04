@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="class-ugetpatreonuserinfoimgasyncaction"><a class="header" href="#class-ugetpatreonuserinfoimgasyncaction"><strong>Class: <code>UGetPatreonUserInfoImgAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 24
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 26
 
 class NBPATREONAPICLIENT_API UGetPatreonUserInfoImgAsyncAction
     : public UCancellableAsyncAction;
@@ -209,7 +209,7 @@ FGetPatreonUserInfoImgAsyncActionFailedEvent OnFail;
 <ul>
 <li>
 <h1 id="activate"><a class="header" href="#activate"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 58
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 61
 
 public:
 virtual void Activate() override;
@@ -222,7 +222,7 @@ virtual void Activate() override;
 </li>
 <li>
 <h1 id="cancel"><a class="header" href="#cancel"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 63
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 66
 
 public:
 virtual void Cancel() override;
@@ -235,12 +235,13 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="getpatreonuserinfoimgasyncaction"><a class="header" href="#getpatreonuserinfoimgasyncaction"><strong><code>GetPatreonUserInfoImgAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 40
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 43
 
 public:
 static UGetPatreonUserInfoImgAsyncAction* GetPatreonUserInfoImgAsyncAction(
     const UObject* WorldContext,
-    FAPITokenInfo TokenInfo
+    FAPITokenInfo TokenInfo,
+    const FString CampaignID = TEXT("")
 );
 </code></pre>
   <details>
@@ -277,6 +278,12 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
 </code></pre>
 <p>Token information for the user</p>
 </li>
+<li>
+<h2 id="campaignid"><a class="header" href="#campaignid"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CampaignID = TEXT("")
+</code></pre>
+<p>[OPTIONAL] If set, results will be filtered to only include data associated with the specified campaign ID.</p>
+</li>
 </ul>
 <hr />
 <h1 id="returns"><a class="header" href="#returns"><strong>Returns</strong></a></h1>
@@ -304,7 +311,7 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../reference/classes/UHTTPRequestAction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../reference/classes/UGetPatreonUserPledgesAsyncAction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -318,7 +325,7 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../reference/classes/UHTTPRequestAction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../reference/classes/UGetPatreonUserPledgesAsyncAction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

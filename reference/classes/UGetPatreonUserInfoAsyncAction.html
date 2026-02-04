@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="class-ugetpatreonuserinfoasyncaction"><a class="header" href="#class-ugetpatreonuserinfoasyncaction"><strong>Class: <code>UGetPatreonUserInfoAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 19
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 21
 
 class NBPATREONAPICLIENT_API UGetPatreonUserInfoAsyncAction
     : public UCancellableAsyncAction;
@@ -207,7 +207,7 @@ FGetPatreonUserInfoAsyncActionFailedEvent OnFail;
 <ul>
 <li>
 <h1 id="activate"><a class="header" href="#activate"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 51
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 54
 
 public:
 virtual void Activate() override;
@@ -220,7 +220,7 @@ virtual void Activate() override;
 </li>
 <li>
 <h1 id="cancel"><a class="header" href="#cancel"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 56
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 59
 
 public:
 virtual void Cancel() override;
@@ -233,12 +233,13 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="getpatreonuserinfoasyncaction"><a class="header" href="#getpatreonuserinfoasyncaction"><strong><code>GetPatreonUserInfoAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 33
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 36
 
 public:
 static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
     const UObject* WorldContext,
-    FAPITokenInfo TokenInfo
+    FAPITokenInfo TokenInfo,
+    const FString CampaignID = TEXT("")
 );
 </code></pre>
   <details>
@@ -273,6 +274,12 @@ static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
 <pre><code class="language-cpp">FAPITokenInfo TokenInfo
 </code></pre>
 <p>Token information for the user</p>
+</li>
+<li>
+<h2 id="campaignid"><a class="header" href="#campaignid"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CampaignID = TEXT("")
+</code></pre>
+<p>[OPTIONAL] If set, results will be filtered to only include data associated with the specified campaign ID.</p>
 </li>
 </ul>
 <hr />

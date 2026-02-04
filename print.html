@@ -155,31 +155,13 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="contents"><a class="header" href="#contents">Contents</a></h1>
-<ul>
-<li><a href="/patreon-api-client-docs/reference.html">C++ API Reference</a></li>
-</ul>
-<p><br/><br/>
-<br/><br/></p>
-<hr />
-<blockquote>
-<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
-</blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="usage--examples"><a class="header" href="#usage--examples">Usage &amp; Examples</a></h1>
+                        <h1 id="usage--examples"><a class="header" href="#usage--examples">Usage &amp; Examples</a></h1>
 <h2 id="before-getting-started"><a class="header" href="#before-getting-started">Before Getting Started</a></h2>
 <p>Before using this plugin, you should first <a href="how-to/./Registering.html">Register an API Client</a> with Patreon.</p>
 <p>This plugin supports a few different authentication flows with different trade-offs.</p>
-<h2 id="1-simple--automatic"><a class="header" href="#1-simple--automatic">1. <a href="how-to/./SimpleSetup.html">Simple &amp; Automatic</a></a></h2>
-<p>This is for you if you just want to check that your users are members of your campaign and find out which
-tiers/benefits they are entitled to. This allows you to easily do things like unlock specific in-game
-content for users pledged to specific tiers, display information to the user about their subscription, etc.</p>
+<h1 id="1-handle-everything-internally"><a class="header" href="#1-handle-everything-internally">1. Handle everything internally</a></h1>
 <p><a href="how-to/./SimpleSetup.html">Simple Setup</a></p>
-<h2 id="2-custom"><a class="header" href="#2-custom">2. <a href="how-to/./CustomSetup.html">Custom</a></a></h2>
-<p>If your needs are more complex, for example maybe you are building an MMO or competitive online shooter and have your
-own account system you need to link to Patreon, or perhaps you already have your own web service which connects to Patreon
-and just need to be able to pull specific data out of it from the game client.</p>
-<p>Going this route is more complex, but allows you to customize exactly where your tokens are stored, the data fetched from
-Patreon, how that gets tied into whatever other user data you may have, etc.</p>
+<h1 id="2-use-an-external-service-to-handle-authentication"><a class="header" href="#2-use-an-external-service-to-handle-authentication">2. Use an external service to handle authentication</a></h1>
 <p><a href="how-to/./CustomSetup.html">Custom Setup</a></p>
 <hr />
 <h1 id="running-the-examples"><a class="header" href="#running-the-examples">Running the examples</a></h1>
@@ -209,10 +191,10 @@ when signed in with your regular creator account.</p>
 <p>For an example of accessing and reading information about the Patreon user, see: <code>Plugins/NBPatreonAPIClient Content/Examples/UI/WBP_PatreonUserInfo</code></p>
 <h1 id="pages"><a class="header" href="#pages">Pages</a></h1>
 <ul>
-<li><a href="how-to//patreon-api-client-docs/how-to/Registering.html">Registering an API Client</a></li>
-<li><a href="how-to//patreon-api-client-docs/how-to/SimpleSetup.html">Simple Setup &amp; Usage</a></li>
-<li><a href="how-to//patreon-api-client-docs/how-to/CustomSetup.html">Custom Setup</a></li>
-<li><a href="how-to//patreon-api-client-docs/how-to/Troubleshooting.html">Troubleshooting</a></li>
+<li><a href="how-to//how-to/Registering.html">Registering an API Client</a></li>
+<li><a href="how-to//how-to/SimpleSetup.html">Simple Setup &amp; Usage</a></li>
+<li><a href="how-to//how-to/CustomSetup.html">Custom Setup</a></li>
+<li><a href="how-to//how-to/Troubleshooting.html">Troubleshooting</a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -237,9 +219,7 @@ when signed in with your regular creator account.</p>
 </li>
 </ol>
 <p>Once you have created a Client, you will need the <code>Client ID</code> and <code>Client Secret</code>.</p>
-<blockquote>
 <p><strong>Do not use the Creator's Access Token!!</strong></p>
-</blockquote>
 <p><img src="how-to/../assets/tutorial/patreon_tokens.png" alt="" /></p>
 <p><br/><br/>
 <br/><br/></p>
@@ -257,7 +237,7 @@ decrypted at run-time), there will always be a risk that one of your users will 
 <ol>
 <li>You open the Patreon login and consent page for your user (either using their default web browser or the UMG Web Browser widget).</li>
 <li>While they are signing in and granting your application access to their data, we start up an HTTP server
-a. By default the server will listen for a request at <code>http://localhost:8080/login</code>, but you can customize this as you see fit
+a. By default the server will listen for a request at <code>http://localhost/login:8080</code>, but you can customize this as you see fit
 b. Whatever you configure the server to use, you need to ensure that your application's configuration on the Patreon side has a matching <code>Redirect URI</code>, e.g. if you set <code>Callback Route</code> to <code>/patreon</code> and <code>Callback Port</code> to <code>9999</code>, you must update the settings in Patreon to include a <code>Redirect URI</code> of <code>http://localhost:9999/patreon</code>.
 <blockquote>
 <p>The <code>Callback Route</code> MUST start with <code>"/"</code> and be longer than just <code>"/"</code> but can otherwise be anything you want.</p>
@@ -280,7 +260,7 @@ b. Whatever you configure the server to use, you need to ensure that your applic
 #define CLIENT_SECRET TEXT("&lt;Your Client Secret&gt;")
 
 void MyClass::DoPatreonLogin() {
-  // create an authentication action expecting a callback at http://localhost:8080/login
+  // create an authentication action expecting a callback at http://localhost/login:8080
   UPerformAuthenticationAsyncAction* authAction = UPerformAuthenticationAsyncAction::PerformAuthenticationAsyncAction(
     this, // world context
     CLIENT_ID,
@@ -378,22 +358,6 @@ asking for their access token, passing the same Id so the server can look it up 
 <h2 id="logs"><a class="header" href="#logs">Logs</a></h2>
 <p>All logs produced by this plugin are created under the <code>PatreonAPIClient</code> log category</p>
 <p><img src="how-to/../assets/tutorial/log_category.png" alt="Log Category" /></p>
-<h2 id="c-headers"><a class="header" href="#c-headers">C++ Headers</a></h2>
-<p>If you are working in C++ and keep getting "File not found" errors when attempting to include headers from this plugin,
-make sure you have added the plugin as a dependency for your project in your <code>Build.cs</code> file:</p>
-<pre><code class="language-csharp">public class MyModule : ModuleRules
-{
-	public MyModule(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
-
-        // \/  Add NBPatreonAPIClient as a dependency to allow access to plugin header files, etc.
-		PrivateDependencyModuleNames.AddRange(new string[] { "NBPatreonAPIClient" });
-	}
-}
-</code></pre>
 <p><br/><br/>
 <br/><br/></p>
 <hr />
@@ -404,11 +368,26 @@ make sure you have added the plugin as a dependency for your project in your <co
 <p>An overview and explanation of all included Blueprint nodes</p>
 <h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
 <ul>
-<li><a href="blueprint-api//patreon-api-client-docs/blueprint-api/./functions/PerformAuthentication.html"><code>Perform Authentication</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/GetUserInfo.html"><code>Get User Info</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/GetUserInfoImgs.html"><code>Getuser Info Imgs</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/HTTPGET.html"><code>HTTP GET</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/HTTPPOST.html"><code>HTTP POST</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/HTTPRequest.html"><code>HTTP Request</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/HTTPRequestBearer.html"><code>HTTP Request (w/ bearer token)</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/MakePatreonAuthURI.html"><code>Make Patreon Auth URI</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/OpenURL.html"><code>Open URL</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/ParseAPITokenInfo.html"><code>Parse API Token Info</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/PerformAuthentication.html"><code>Perform Authentication</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/PerformAuthenticationUMG.html"><code>Perform Authenticatin (UMG)</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./functions/RefreshAPIToken.html"><code>Refresh API Token</code></a></li>
 </ul>
 <h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
 <ul>
-<li><a href="blueprint-api//patreon-api-client-docs/blueprint-api/./structs/APITokenInfo.html"><code>API Token Info</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./structs/APITokenInfo.html"><code>API Token Info</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./structs/PatreonTierInfo.html"><code>Patreon Tier Info</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./structs/APITokenInfoImgs.html"><code>Patreon Tier Info (w/ Images)</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./structs/PatreonUserInfo.html"><code>Patreon User Info</code></a></li>
+<li><a href="blueprint-api//blueprint-api/./structs/PatreonUserInfoImgs.html"><code>Patreon User Info (w/ Images)</code></a></li>
 </ul>
 <h1 id="pages-1"><a class="header" href="#pages-1">Pages</a></h1>
 <p><br/><br/>
@@ -420,18 +399,18 @@ make sure you have added the plugin as a dependency for your project in your <co
 <div style="break-before: page; page-break-before: always;"></div><h1 id="blueprint-functions"><a class="header" href="#blueprint-functions">Blueprint Functions</a></h1>
 <h1 id="pages-2"><a class="header" href="#pages-2">Pages</a></h1>
 <ul>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/PerformAuthentication.html">Perform Authentication</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/PerformAuthenticationUMG.html">Perform Authentication (UMG Browser)</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/RefreshAPIToken.html">Refresh API Token</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/GetUserInfo.html">Get User Info</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/GetUserInfoImgs.html">Get User Info (w/ images)</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/HTTPRequest.html">HTTP Request</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/HTTPRequestBearer.html">HTTP Request (with bearer token)</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/HTTPGET.html">HTTP GET</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/HTTPPOST.html">HTTP POST</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/MakePatreonAuthURI.html">Make Patreon Auth URI</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/OpenURL.html">Open URL</a></li>
-<li><a href="blueprint-api/functions//patreon-api-client-docs/blueprint-api/functions/ParseAPITokenInfo.html">Parse API Token Info</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/PerformAuthentication.html">Perform Authentication</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/PerformAuthenticationUMG.html">Perform Authentication (UMG Browser)</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/RefreshAPIToken.html">Refresh API Token</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/GetUserInfo.html">Get User Info</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/GetUserInfoImgs.html">Get User Info (w/ images)</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/HTTPRequest.html">HTTP Request</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/HTTPRequestBearer.html">HTTP Request (with bearer token)</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/HTTPGET.html">HTTP GET</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/HTTPPOST.html">HTTP POST</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/MakePatreonAuthURI.html">Make Patreon Auth URI</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/OpenURL.html">Open URL</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/ParseAPITokenInfo.html">Parse API Token Info</a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -458,9 +437,10 @@ user and their pledges to determine if specific in-game content should be unlock
 <p>Your Patreon app <code>client_id</code>.</p>
 </li>
 <li>
-<h1 id="client-secret"><a class="header" href="#client-secret"><strong><code>Client secret</code></strong></a></h1>
+<h1 id="client-secret"><a class="header" href="#client-secret"><strong><code>Client Secret</code></strong></a></h1>
 <h2 id="string-1"><a class="header" href="#string-1"><code>string</code></a></h2>
-<p>Your Patreon app <code>client_secret</code>.</p>
+<p>Patreon app <code>client-secret</code>.</p>
+<p><strong><a href="blueprint-api/functions/../../how-to/ClientSecret.html">OPTIONAL</a></strong>, leave empty if not using a <code>client_secret</code>.</p>
 </li>
 <li>
 <h1 id="callback-route"><a class="header" href="#callback-route"><strong><code>Callback Route</code></strong></a></h1>
@@ -534,9 +514,10 @@ user and their pledges to determine if specific in-game content should be unlock
 <p>Your Patreon app <code>client_id</code>.</p>
 </li>
 <li>
-<h1 id="client-secret-1"><a class="header" href="#client-secret-1"><strong><code>Client secret</code></strong></a></h1>
+<h1 id="client-secret-1"><a class="header" href="#client-secret-1"><strong><code>Client Secret</code></strong></a></h1>
 <h2 id="string-4"><a class="header" href="#string-4"><code>String</code></a></h2>
-<p>Your Patreon app <code>client_secret</code>.</p>
+<p>Patreon app <code>client-secret</code>.</p>
+<p><strong><a href="blueprint-api/functions/../../how-to/ClientSecret.html">OPTIONAL</a></strong>, leave empty if not using a <code>client_secret</code>.</p>
 </li>
 <li>
 <h1 id="callback-route-1"><a class="header" href="#callback-route-1"><strong><code>Callback Route</code></strong></a></h1>
@@ -608,9 +589,10 @@ obtained along with the original access token.</p>
 <p>Your Patreon app <code>client_id</code>.</p>
 </li>
 <li>
-<h1 id="client-secret-2"><a class="header" href="#client-secret-2"><strong><code>Client secret</code></strong></a></h1>
+<h1 id="client-secret-2"><a class="header" href="#client-secret-2"><strong><code>Client Secret</code></strong></a></h1>
 <h2 id="string-7"><a class="header" href="#string-7"><code>String</code></a></h2>
-<p>Your Patreon app <code>client_secret</code>.</p>
+<p>Patreon app <code>client-secret</code>.</p>
+<p><strong><a href="blueprint-api/functions/../../how-to/ClientSecret.html">OPTIONAL</a></strong>, leave empty if not using a <code>client_secret</code>.</p>
 </li>
 </ul>
 <h1 id="outputs-2"><a class="header" href="#outputs-2"><strong>Outputs</strong></a></h1>
@@ -1144,11 +1126,11 @@ access token, etc.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pages-3"><a class="header" href="#pages-3">Pages</a></h1>
 <ul>
-<li><a href="blueprint-api/structs//patreon-api-client-docs/blueprint-api/structs/APITokenInfo.html">API Token Info</a></li>
-<li><a href="blueprint-api/structs//patreon-api-client-docs/blueprint-api/structs/PatreonUserInfo.html">Patreon User Info</a></li>
-<li><a href="blueprint-api/structs//patreon-api-client-docs/blueprint-api/structs/PatreonUserInfoImgs.html">Patreon User Info Imgs</a></li>
-<li><a href="blueprint-api/structs//patreon-api-client-docs/blueprint-api/structs/PatreonTierInfo.html">Patreon Tier Info</a></li>
-<li><a href="blueprint-api/structs//patreon-api-client-docs/blueprint-api/structs/PatreonTierInfoImgs.html">Patreon Tier Info Imgs</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/APITokenInfo.html">API Token Info</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/PatreonUserInfo.html">Patreon User Info</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/PatreonUserInfoImgs.html">Patreon User Info Imgs</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/PatreonTierInfo.html">Patreon Tier Info</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/PatreonTierInfoImgs.html">Patreon Tier Info Imgs</a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -1475,7 +1457,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <ul>
 <li>
 <h2 id="user-info-5"><a class="header" href="#user-info-5"><strong><code>User Info</code></strong></a></h2>
-<h3 id="patreon-user-info-4"><a class="header" href="#patreon-user-info-4"><a href="blueprint-api/structs//patreon-api-client-docs/blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
+<h3 id="patreon-user-info-4"><a class="header" href="#patreon-user-info-4"><a href="blueprint-api/structs//blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
 <p>The user to check</p>
 </li>
 <li>
@@ -1586,33 +1568,38 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <div style="break-before: page; page-break-before: always;"></div><h1 id="c-api-reference"><a class="header" href="#c-api-reference">C++ API Reference</a></h1>
 <h2 id="structs-1"><a class="header" href="#structs-1">Structs</a></h2>
 <ul>
-<li><a href="/patreon-api-client-docs/reference/structs/FAPITokenInfo.html"><code>FAPITokenInfo</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/structs/FPatreonTierInfo.html"><code>FPatreonTierInfo</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/structs/FPatreonTierInfoImgs.html"><code>FPatreonTierInfoImgs</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/structs/FPatreonUserInfo.html"><code>FPatreonUserInfo</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/structs/FPatreonUserInfoImgs.html"><code>FPatreonUserInfoImgs</code></a></li>
+<li><a href="/reference/structs/FAPITokenInfo.html"><code>FAPITokenInfo</code></a></li>
+<li><a href="/reference/structs/FPatreonPledgeEvent.html"><code>FPatreonPledgeEvent</code></a></li>
+<li><a href="/reference/structs/FPatreonPledgeHistory.html"><code>FPatreonPledgeHistory</code></a></li>
+<li><a href="/reference/structs/FPatreonTierInfo.html"><code>FPatreonTierInfo</code></a></li>
+<li><a href="/reference/structs/FPatreonTierInfoImgs.html"><code>FPatreonTierInfoImgs</code></a></li>
+<li><a href="/reference/structs/FPatreonUserInfo.html"><code>FPatreonUserInfo</code></a></li>
+<li><a href="/reference/structs/FPatreonUserInfoImgs.html"><code>FPatreonUserInfoImgs</code></a></li>
 </ul>
 <h2 id="classes"><a class="header" href="#classes">Classes</a></h2>
 <ul>
-<li><a href="/patreon-api-client-docs/reference/classes/FNBPatreonAPIClientModule.html"><code>FNBPatreonAPIClientModule</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/classes/UGetPatreonUserInfoAsyncAction.html"><code>UGetPatreonUserInfoAsyncAction</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/classes/UGetPatreonUserInfoImgAsyncAction.html"><code>UGetPatreonUserInfoImgAsyncAction</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/classes/UNBPatreonAPIClientBPLibrary.html"><code>UNBPatreonAPIClientBPLibrary</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/classes/UPerformAuthenticationAsyncAction.html"><code>UPerformAuthenticationAsyncAction</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/classes/URefreshAPITokenAsyncAction.html"><code>URefreshAPITokenAsyncAction</code></a></li>
+<li><a href="/reference/classes/FNBPatreonAPIClientModule.html"><code>FNBPatreonAPIClientModule</code></a></li>
+<li><a href="/reference/classes/UGetPatreonUserInfoAsyncAction.html"><code>UGetPatreonUserInfoAsyncAction</code></a></li>
+<li><a href="/reference/classes/UGetPatreonUserInfoImgAsyncAction.html"><code>UGetPatreonUserInfoImgAsyncAction</code></a></li>
+<li><a href="/reference/classes/UGetPatreonUserPledgesAsyncAction.html"><code>UGetPatreonUserPledgesAsyncAction</code></a></li>
+<li><a href="/reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></li>
+<li><a href="/reference/classes/UNBPatreonAPIClientBPLibrary.html"><code>UNBPatreonAPIClientBPLibrary</code></a></li>
+<li><a href="/reference/classes/UPerformAuthenticationAsyncAction.html"><code>UPerformAuthenticationAsyncAction</code></a></li>
+<li><a href="/reference/classes/URefreshAPITokenAsyncAction.html"><code>URefreshAPITokenAsyncAction</code></a></li>
 </ul>
 <h2 id="delegates"><a class="header" href="#delegates">Delegates</a></h2>
 <ul>
-<li><a href="/patreon-api-client-docs/reference/delegates/FGetPatreonUserInfoAsyncActionEvent.html"><code>FGetPatreonUserInfoAsyncActionEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FGetPatreonUserInfoAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoAsyncActionFailedEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FGetPatreonUserInfoImgAsyncActionEvent.html"><code>FGetPatreonUserInfoImgAsyncActionEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FGetPatreonUserInfoImgAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoImgAsyncActionFailedEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FHTTPRequestActionEvent.html"><code>FHTTPRequestActionEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FPerformAuthenticationAsyncActionEvent.html"><code>FPerformAuthenticationAsyncActionEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FPerformAuthenticationAsyncActionFailedEvent.html"><code>FPerformAuthenticationAsyncActionFailedEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FRefreshAPITokenAsyncActionEvent.html"><code>FRefreshAPITokenAsyncActionEvent</code></a></li>
-<li><a href="/patreon-api-client-docs/reference/delegates/FRefreshAPITokenAsyncActionFailedEvent.html"><code>FRefreshAPITokenAsyncActionFailedEvent</code></a></li>
+<li><a href="/reference/delegates/FGetPatreonUserInfoAsyncActionEvent.html"><code>FGetPatreonUserInfoAsyncActionEvent</code></a></li>
+<li><a href="/reference/delegates/FGetPatreonUserInfoAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoAsyncActionFailedEvent</code></a></li>
+<li><a href="/reference/delegates/FGetPatreonUserInfoImgAsyncActionEvent.html"><code>FGetPatreonUserInfoImgAsyncActionEvent</code></a></li>
+<li><a href="/reference/delegates/FGetPatreonUserInfoImgAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoImgAsyncActionFailedEvent</code></a></li>
+<li><a href="/reference/delegates/FGetPatreonUserPledgesAsyncActionEvent.html"><code>FGetPatreonUserPledgesAsyncActionEvent</code></a></li>
+<li><a href="/reference/delegates/FGetPatreonUserPledgesAsyncActionFailedEvent.html"><code>FGetPatreonUserPledgesAsyncActionFailedEvent</code></a></li>
+<li><a href="/reference/delegates/FHTTPRequestActionEvent.html"><code>FHTTPRequestActionEvent</code></a></li>
+<li><a href="/reference/delegates/FPerformAuthenticationAsyncActionEvent.html"><code>FPerformAuthenticationAsyncActionEvent</code></a></li>
+<li><a href="/reference/delegates/FPerformAuthenticationAsyncActionFailedEvent.html"><code>FPerformAuthenticationAsyncActionFailedEvent</code></a></li>
+<li><a href="/reference/delegates/FRefreshAPITokenAsyncActionEvent.html"><code>FRefreshAPITokenAsyncActionEvent</code></a></li>
+<li><a href="/reference/delegates/FRefreshAPITokenAsyncActionFailedEvent.html"><code>FRefreshAPITokenAsyncActionFailedEvent</code></a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -1622,11 +1609,13 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="structs-2"><a class="header" href="#structs-2">Structs</a></h1>
 <ul>
-<li><a href="reference//patreon-api-client-docs/reference/reference/structs/FAPITokenInfo.html"><code>FAPITokenInfo</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/structs/FPatreonTierInfo.html"><code>FPatreonTierInfo</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/structs/FPatreonTierInfoImgs.html"><code>FPatreonTierInfoImgs</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/structs/FPatreonUserInfo.html"><code>FPatreonUserInfo</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/structs/FPatreonUserInfoImgs.html"><code>FPatreonUserInfoImgs</code></a></li>
+<li><a href="reference//reference/reference/structs/FAPITokenInfo.html"><code>FAPITokenInfo</code></a></li>
+<li><a href="reference//reference/reference/structs/FPatreonPledgeEvent.html"><code>FPatreonPledgeEvent</code></a></li>
+<li><a href="reference//reference/reference/structs/FPatreonPledgeHistory.html"><code>FPatreonPledgeHistory</code></a></li>
+<li><a href="reference//reference/reference/structs/FPatreonTierInfo.html"><code>FPatreonTierInfo</code></a></li>
+<li><a href="reference//reference/reference/structs/FPatreonTierInfoImgs.html"><code>FPatreonTierInfoImgs</code></a></li>
+<li><a href="reference//reference/reference/structs/FPatreonUserInfo.html"><code>FPatreonUserInfo</code></a></li>
+<li><a href="reference//reference/reference/structs/FPatreonUserInfoImgs.html"><code>FPatreonUserInfoImgs</code></a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -1635,7 +1624,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fapitokeninfo"><a class="header" href="#struct-fapitokeninfo"><strong>Struct: <code>FAPITokenInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  APITokenInfo.h : 9
+<pre><code class="language-cpp">//  APITokenInfo.h : 11
 
 struct NBPATREONAPICLIENT_API FAPITokenInfo;
 </code></pre>
@@ -1751,7 +1740,7 @@ FDateTime TokenReceived;
 <ul>
 <li>
 <h1 id="fapitokeninfo"><a class="header" href="#fapitokeninfo"><strong><code>FAPITokenInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  APITokenInfo.h : 49
+<pre><code class="language-cpp">//  APITokenInfo.h : 51
 
 public:
 FAPITokenInfo();
@@ -1761,7 +1750,7 @@ FAPITokenInfo();
 </li>
 <li>
 <h1 id="fapitokeninfo-1"><a class="header" href="#fapitokeninfo-1"><strong><code>FAPITokenInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  APITokenInfo.h : 51
+<pre><code class="language-cpp">//  APITokenInfo.h : 53
 
 public:
 FAPITokenInfo(
@@ -1804,7 +1793,7 @@ FAPITokenInfo(
 <ul>
 <li>
 <h1 id="hastokenexpired"><a class="header" href="#hastokenexpired"><strong><code>HasTokenExpired</code></strong></a></h1>
-<pre><code class="language-cpp">//  APITokenInfo.h : 61
+<pre><code class="language-cpp">//  APITokenInfo.h : 63
 
 public:
 bool HasTokenExpired() const;
@@ -1825,7 +1814,7 @@ bool HasTokenExpired() const;
 </li>
 <li>
 <h1 id="isvalid"><a class="header" href="#isvalid"><strong><code>IsValid</code></strong></a></h1>
-<pre><code class="language-cpp">//  APITokenInfo.h : 68
+<pre><code class="language-cpp">//  APITokenInfo.h : 70
 
 public:
 bool IsValid() const;
@@ -1847,7 +1836,7 @@ Does not check the refresh token.</p>
 </li>
 <li>
 <h1 id="remaininglifetime"><a class="header" href="#remaininglifetime"><strong><code>RemainingLifetime</code></strong></a></h1>
-<pre><code class="language-cpp">//  APITokenInfo.h : 56
+<pre><code class="language-cpp">//  APITokenInfo.h : 58
 
 public:
 FTimespan RemainingLifetime() const;
@@ -1873,14 +1862,606 @@ FTimespan RemainingLifetime() const;
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fpatreonpledgeevent"><a class="header" href="#struct-fpatreonpledgeevent"><strong>Struct: <code>FPatreonPledgeEvent</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeEvent.h : 14
+
+struct NBPATREONAPICLIENT_API FPatreonPledgeEvent;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintType</strong></li>
+</ul>
+<hr />
+<p>Contains information about when a user changed their pledge status.</p>
+<p>See: https://docs.patreon.com/#pledge-event</p>
+<hr />
+<h1 id="properties-6"><a class="header" href="#properties-6"><strong>Properties</strong></a></h1>
+<ul>
+<li>
+<h1 id="amountcents"><a class="header" href="#amountcents"><strong><code>AmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 AmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  Amount (in the currency with which the user paid) of the underlying event
+  </summary>
+</li>
+<li>
+<h1 id="currencycode"><a class="header" href="#currencycode"><strong><code>CurrencyCode</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString CurrencyCode;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-8"><a class="header" href="#specifiers-8">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  ISO code of the currency of the event (may not be the same currency as your campaign)
+  </summary>
+</li>
+<li>
+<h1 id="date"><a class="header" href="#date"><strong><code>Date</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FDateTime Date;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-9"><a class="header" href="#specifiers-9">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The timestamp at which the event occurred
+  </summary>
+</li>
+<li>
+<h1 id="paymentstatus"><a class="header" href="#paymentstatus"><strong><code>PaymentStatus</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString PaymentStatus;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-10"><a class="header" href="#specifiers-10">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  Status of underlying payment. One of:
+  - `Paid`
+  - `Declined`
+  - `Deleted`
+  - `Pending`
+  - `Refunded`
+  - `Fraud`
+  - `Refunded by Patreon`
+  - `Other`
+  - `Partially Refunded`
+  - `Free Trial`
+  - `<empty>`
+  </summary>
+</li>
+<li>
+<h1 id="pledgepaymentstatus"><a class="header" href="#pledgepaymentstatus"><strong><code>PledgePaymentStatus</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString PledgePaymentStatus;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-11"><a class="header" href="#specifiers-11">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The payment status of the pledge. One of:
+  - `queued`
+  - `pending`
+  - `valid`
+  - `declined`
+  - `fraud`
+  - `disabled`
+  - `<empty>`
+  </summary>
+</li>
+<li>
+<h1 id="tierid"><a class="header" href="#tierid"><strong><code>TierId</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString TierId;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-12"><a class="header" href="#specifiers-12">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  ID of the tier associated with this pledge. May be empty.
+  </summary>
+</li>
+<li>
+<h1 id="tiertitle"><a class="header" href="#tiertitle"><strong><code>TierTitle</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString TierTitle;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-13"><a class="header" href="#specifiers-13">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  Title of the tier associated with this pledge. May be empty.
+  </summary>
+</li>
+<li>
+<h1 id="type"><a class="header" href="#type"><strong><code>Type</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString Type;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-14"><a class="header" href="#specifiers-14">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  Event type. One of:
+  - `pledge_start`
+  - `pledge_upgrade`
+  - `pledge_downgrade`
+  - `pledge_delete`
+  - `subscription`
+  </summary>
+</li>
+</ul>
+<hr />
+<h1 id="constructors-1"><a class="header" href="#constructors-1"><strong>Constructors</strong></a></h1>
+<ul>
+<li>
+<h1 id="fpatreonpledgeevent"><a class="header" href="#fpatreonpledgeevent"><strong><code>FPatreonPledgeEvent</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeEvent.h : 19
+
+public:
+FPatreonPledgeEvent();
+</code></pre>
+  <details>
+  </details>
+</li>
+<li>
+<h1 id="fpatreonpledgeevent-1"><a class="header" href="#fpatreonpledgeevent-1"><strong><code>FPatreonPledgeEvent</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeEvent.h : 28
+
+public:
+FPatreonPledgeEvent(
+    const TSharedPtr&lt;FJsonObject&gt; pledgeEventEntry
+);
+</code></pre>
+  <details>
+  <summary>
+<p>Construct FPatreonPledgeEvent from a JSON string. Populates any fields
+it can find in the provided JSON.
+If the provided JSON string cannot be parsed for any reason, the result
+will be uninitialized.</p>
+  </summary>
+<hr />
+<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgeevententry"><a class="header" href="#pledgeevententry"><strong><code>pledgeEventEntry</code></strong></a></h2>
+<pre><code class="language-cpp">const TSharedPtr&lt;FJsonObject&gt; pledgeEventEntry
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+</ul>
+<hr />
+<h1 id="methods-1"><a class="header" href="#methods-1"><strong>Methods</strong></a></h1>
+<ul>
+<li>
+<h1 id="ispaid"><a class="header" href="#ispaid"><strong><code>IsPaid</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeEvent.h : 33
+
+public:
+bool IsPaid() const;
+</code></pre>
+  <details>
+  <summary>
+<p>Checks if payment for this event is valid (not failed, declined, etc).</p>
+  </summary>
+<hr />
+<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="operator"><a class="header" href="#operator"><strong><code>operator &lt;</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeEvent.h : 35
+
+public:
+bool operator &lt;(
+    const FPatreonPledgeEvent&amp; other
+) const;
+</code></pre>
+  <details>
+<hr />
+<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="other"><a class="header" href="#other"><strong><code>other</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeEvent&amp; other
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fpatreonpledgehistory"><a class="header" href="#struct-fpatreonpledgehistory"><strong>Struct: <code>FPatreonPledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 14
+
+struct NBPATREONAPICLIENT_API FPatreonPledgeHistory;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-15"><a class="header" href="#specifiers-15">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintType</strong></li>
+</ul>
+<hr />
+<p>Contains information about when a user changed their pledge status.</p>
+<hr />
+<h1 id="properties-7"><a class="header" href="#properties-7"><strong>Properties</strong></a></h1>
+<ul>
+<li>
+<h1 id="pledgehistory"><a class="header" href="#pledgehistory"><strong><code>PledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+TArray&lt;FPatreonPledgeEvent&gt; PledgeHistory;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-16"><a class="header" href="#specifiers-16">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  Collection of pledge events for a single user.
+  Expected to be sorted according to date.
+  </summary>
+</li>
+</ul>
+<hr />
+<h1 id="constructors-2"><a class="header" href="#constructors-2"><strong>Constructors</strong></a></h1>
+<ul>
+<li>
+<h1 id="fpatreonpledgehistory"><a class="header" href="#fpatreonpledgehistory"><strong><code>FPatreonPledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 19
+
+public:
+FPatreonPledgeHistory();
+</code></pre>
+  <details>
+  </details>
+</li>
+<li>
+<h1 id="fpatreonpledgehistory-1"><a class="header" href="#fpatreonpledgehistory-1"><strong><code>FPatreonPledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 31
+
+public:
+FPatreonPledgeHistory(
+    const FString&amp; json,
+    const FDateTime&amp; MinimumDate,
+    bool DiscardUnpaid,
+    const FString&amp; CampaignID = TEXT("")
+);
+</code></pre>
+  <details>
+  <summary>
+<p>Construct FPatreonPledgeHistory from a JSON string. Populates any fields
+it can find in the provided JSON.
+If the provided JSON string cannot be parsed for any reason, the result
+will be uninitialized.</p>
+  </summary>
+<hr />
+<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="json"><a class="header" href="#json"><strong><code>json</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; json
+</code></pre>
+<p>JSON string containing pledge history</p>
+</li>
+<li>
+<h2 id="minimumdate"><a class="header" href="#minimumdate"><strong><code>MinimumDate</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; MinimumDate
+</code></pre>
+<p>Entries in json with earlier dates will be discarded</p>
+</li>
+<li>
+<h2 id="discardunpaid"><a class="header" href="#discardunpaid"><strong><code>DiscardUnpaid</code></strong></a></h2>
+<pre><code class="language-cpp">bool DiscardUnpaid
+</code></pre>
+<p>If true, entries with invalid payment status (e.g. failed payments) will be discarded</p>
+</li>
+<li>
+<h2 id="campaignid"><a class="header" href="#campaignid"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; CampaignID = TEXT("")
+</code></pre>
+<p>If not empty, entries which do not match the given campaign ID will be discarded</p>
+</li>
+</ul>
+  </details>
+</li>
+</ul>
+<hr />
+<h1 id="methods-2"><a class="header" href="#methods-2"><strong>Methods</strong></a></h1>
+<ul>
+<li>
+<h1 id="pledgedtotierafter"><a class="header" href="#pledgedtotierafter"><strong><code>PledgedToTierAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 55
+
+public:
+bool PledgedToTierAfter(
+    const FString&amp; tier,
+    const FDateTime&amp; date,
+    bool byTierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Checks if the user was pledged to the specified tier at any time after a provided date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-4"><a class="header" href="#arguments-4"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tier"><a class="header" href="#tier"><strong><code>tier</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tier
+</code></pre>
+<p>The tier to search for</p>
+</li>
+<li>
+<h2 id="date-1"><a class="header" href="#date-1"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date that should be considered</p>
+</li>
+<li>
+<h2 id="bytierid"><a class="header" href="#bytierid"><strong><code>byTierId</code></strong></a></h2>
+<pre><code class="language-cpp">bool byTierId
+</code></pre>
+<p>If true, <code>tier</code> will be interpreted as a Tier ID, otherwise as a Tier Title</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierbefore"><a class="header" href="#pledgedtotierbefore"><strong><code>PledgedToTierBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 63
+
+public:
+bool PledgedToTierBefore(
+    const FString&amp; tier,
+    const FDateTime&amp; date,
+    bool byTierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Checks in the user pledged to the specified tier at any time before a provided date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-5"><a class="header" href="#arguments-5"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tier-1"><a class="header" href="#tier-1"><strong><code>tier</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tier
+</code></pre>
+<p>The tier to search for</p>
+</li>
+<li>
+<h2 id="date-2"><a class="header" href="#date-2"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date that should be considered</p>
+</li>
+<li>
+<h2 id="bytierid-1"><a class="header" href="#bytierid-1"><strong><code>byTierId</code></strong></a></h2>
+<pre><code class="language-cpp">bool byTierId
+</code></pre>
+<p>If true, <code>tier</code> will be interpreted as a Tier ID, otherwise as a Tier Title</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersafter"><a class="header" href="#pledgedtotiersafter"><strong><code>PledgedToTiersAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 42
+
+public:
+TArray&lt;FString&gt; PledgedToTiersAfter(
+    const FDateTime&amp; date
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Returns the titles of the tier(s) the user was pledged to after the given date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-6"><a class="header" href="#arguments-6"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="date-3"><a class="header" href="#date-3"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersbefore"><a class="header" href="#pledgedtotiersbefore"><strong><code>PledgedToTiersBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 47
+
+public:
+TArray&lt;FString&gt; PledgedToTiersBefore(
+    const FDateTime&amp; date
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Returns the titles of the tier(s) the user was pledged to after the given date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-7"><a class="header" href="#arguments-7"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="date-4"><a class="header" href="#date-4"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersduring"><a class="header" href="#pledgedtotiersduring"><strong><code>PledgedToTiersDuring</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 37
+
+public:
+TArray&lt;FString&gt; PledgedToTiersDuring(
+    const int32 year,
+    const int32 month
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Returns the titles of the tier(s) the user was pledged to during the given month, if any.
+If the user did not have a subscription during the given month, returns an empty list.</p>
+  </summary>
+<hr />
+<h1 id="arguments-8"><a class="header" href="#arguments-8"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="year"><a class="header" href="#year"><strong><code>year</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 year
+</code></pre>
+</li>
+<li>
+<h2 id="month"><a class="header" href="#month"><strong><code>month</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 month
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fpatreontierinfo"><a class="header" href="#struct-fpatreontierinfo"><strong>Struct: <code>FPatreonTierInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfo.h : 13
+<pre><code class="language-cpp">//  PatreonTierInfo.h : 15
 
 struct NBPATREONAPICLIENT_API FPatreonTierInfo;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
+<h3 id="specifiers-17"><a class="header" href="#specifiers-17">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintType</strong></li>
 </ul>
@@ -1890,8 +2471,26 @@ struct NBPATREONAPICLIENT_API FPatreonTierInfo;
 or content they are now able to unlock, or just to check which
 content should be unlocked behind the scenes.</p>
 <hr />
-<h1 id="properties-6"><a class="header" href="#properties-6"><strong>Properties</strong></a></h1>
+<h1 id="properties-8"><a class="header" href="#properties-8"><strong>Properties</strong></a></h1>
 <ul>
+<li>
+<h1 id="amountcents-1"><a class="header" href="#amountcents-1"><strong><code>AmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 AmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-18"><a class="header" href="#specifiers-18">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|Tier</em></li>
+</ul>
+<hr />
+  <summary>
+  The price of this tier, in USD cents
+  </summary>
+</li>
 <li>
 <h1 id="benefits-2"><a class="header" href="#benefits-2"><strong><code>Benefits</code></strong></a></h1>
 <pre><code class="language-cpp">public:
@@ -1899,7 +2498,7 @@ TArray&lt;FString&gt; Benefits;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
+<h3 id="specifiers-19"><a class="header" href="#specifiers-19">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -1920,7 +2519,7 @@ FString Description;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-8"><a class="header" href="#specifiers-8">Specifiers:</a></h3>
+<h3 id="specifiers-20"><a class="header" href="#specifiers-20">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -1932,13 +2531,31 @@ FString Description;
   </summary>
 </li>
 <li>
+<h1 id="id-1"><a class="header" href="#id-1"><strong><code>Id</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString Id;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-21"><a class="header" href="#specifiers-21">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
+</ul>
+<hr />
+  <summary>
+  The ID of this tier
+  </summary>
+</li>
+<li>
 <h1 id="imageurl"><a class="header" href="#imageurl"><strong><code>ImageURL</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FString ImageURL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-9"><a class="header" href="#specifiers-9">Specifiers:</a></h3>
+<h3 id="specifiers-22"><a class="header" href="#specifiers-22">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -1947,7 +2564,7 @@ FString ImageURL;
 <hr />
   <summary>
   URL of the tier's main image (if it has one).
-<p>For convenience, <a href="reference/structs//patreon-api-client-docs/reference/structs/FPatreonTierInfoImgs.html"><strong><code>FPatreonTierInfoImgs</code></strong></a> directly
+<p>For convenience, <a href="reference/structs//reference/structs/FPatreonTierInfoImgs.html"><strong><code>FPatreonTierInfoImgs</code></strong></a> directly
 includes the image as a texture instead.</p>
   </summary>
 </li>
@@ -1958,7 +2575,7 @@ FString Title;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-10"><a class="header" href="#specifiers-10">Specifiers:</a></h3>
+<h3 id="specifiers-23"><a class="header" href="#specifiers-23">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -1976,7 +2593,7 @@ FString URL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-11"><a class="header" href="#specifiers-11">Specifiers:</a></h3>
+<h3 id="specifiers-24"><a class="header" href="#specifiers-24">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -1989,11 +2606,11 @@ FString URL;
 </li>
 </ul>
 <hr />
-<h1 id="constructors-1"><a class="header" href="#constructors-1"><strong>Constructors</strong></a></h1>
+<h1 id="constructors-3"><a class="header" href="#constructors-3"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreontierinfo"><a class="header" href="#fpatreontierinfo"><strong><code>FPatreonTierInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfo.h : 18
+<pre><code class="language-cpp">//  PatreonTierInfo.h : 20
 
 public:
 FPatreonTierInfo();
@@ -2009,22 +2626,40 @@ FPatreonTierInfo();
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fpatreontierinfoimgs"><a class="header" href="#struct-fpatreontierinfoimgs"><strong>Struct: <code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 12
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 14
 
 struct NBPATREONAPICLIENT_API FPatreonTierInfoImgs;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-12"><a class="header" href="#specifiers-12">Specifiers:</a></h3>
+<h3 id="specifiers-25"><a class="header" href="#specifiers-25">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintType</strong></li>
 </ul>
 <hr />
-<p>Provides the same information as <a href="reference/structs//patreon-api-client-docs/reference/structs/FPatreonTierInfo.html"><strong><code>FPatreonTierInfo</code></strong></a>, but rather than containing
+<p>Provides the same information as <a href="reference/structs//reference/structs/FPatreonTierInfo.html"><strong><code>FPatreonTierInfo</code></strong></a>, but rather than containing
 URLs to images the images are stored directly as Textures.</p>
 <hr />
-<h1 id="properties-7"><a class="header" href="#properties-7"><strong>Properties</strong></a></h1>
+<h1 id="properties-9"><a class="header" href="#properties-9"><strong>Properties</strong></a></h1>
 <ul>
+<li>
+<h1 id="amountcents-2"><a class="header" href="#amountcents-2"><strong><code>AmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 AmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-26"><a class="header" href="#specifiers-26">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|Tier</em></li>
+</ul>
+<hr />
+  <summary>
+  The price of this tier, in USD cents
+  </summary>
+</li>
 <li>
 <h1 id="benefits-3"><a class="header" href="#benefits-3"><strong><code>Benefits</code></strong></a></h1>
 <pre><code class="language-cpp">public:
@@ -2032,7 +2667,7 @@ TArray&lt;FString&gt; Benefits;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-13"><a class="header" href="#specifiers-13">Specifiers:</a></h3>
+<h3 id="specifiers-27"><a class="header" href="#specifiers-27">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2053,7 +2688,7 @@ FString Description;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-14"><a class="header" href="#specifiers-14">Specifiers:</a></h3>
+<h3 id="specifiers-28"><a class="header" href="#specifiers-28">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2065,13 +2700,31 @@ FString Description;
   </summary>
 </li>
 <li>
+<h1 id="id-2"><a class="header" href="#id-2"><strong><code>Id</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString Id;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-29"><a class="header" href="#specifiers-29">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
+</ul>
+<hr />
+  <summary>
+  The ID of this tier
+  </summary>
+</li>
+<li>
 <h1 id="tierimage"><a class="header" href="#tierimage"><strong><code>TierImage</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 UTexture2DDynamic* TierImage;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-15"><a class="header" href="#specifiers-15">Specifiers:</a></h3>
+<h3 id="specifiers-30"><a class="header" href="#specifiers-30">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2089,7 +2742,7 @@ FString Title;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-16"><a class="header" href="#specifiers-16">Specifiers:</a></h3>
+<h3 id="specifiers-31"><a class="header" href="#specifiers-31">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2107,7 +2760,7 @@ FString URL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-17"><a class="header" href="#specifiers-17">Specifiers:</a></h3>
+<h3 id="specifiers-32"><a class="header" href="#specifiers-32">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2120,11 +2773,11 @@ FString URL;
 </li>
 </ul>
 <hr />
-<h1 id="constructors-2"><a class="header" href="#constructors-2"><strong>Constructors</strong></a></h1>
+<h1 id="constructors-4"><a class="header" href="#constructors-4"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreontierinfoimgs"><a class="header" href="#fpatreontierinfoimgs"><strong><code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 18
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 20
 
 public:
 FPatreonTierInfoImgs();
@@ -2134,7 +2787,7 @@ FPatreonTierInfoImgs();
 </li>
 <li>
 <h1 id="fpatreontierinfoimgs-1"><a class="header" href="#fpatreontierinfoimgs-1"><strong><code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 23
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 25
 
 public:
 FPatreonTierInfoImgs(
@@ -2143,10 +2796,10 @@ FPatreonTierInfoImgs(
 </code></pre>
   <details>
   <summary>
-<p>Copies all matching fields from a <a href="reference/structs//patreon-api-client-docs/reference/structs/FPatreonTierInfo.html"><strong><code>FPatreonTierInfo</code></strong></a>.</p>
+<p>Copies all matching fields from a <a href="reference/structs//reference/structs/FPatreonTierInfo.html"><strong><code>FPatreonTierInfo</code></strong></a>.</p>
   </summary>
 <hr />
-<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-9"><a class="header" href="#arguments-9"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="info"><a class="header" href="#info"><strong><code>info</code></strong></a></h2>
@@ -2164,13 +2817,13 @@ FPatreonTierInfoImgs(
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fpatreonuserinfo"><a class="header" href="#struct-fpatreonuserinfo"><strong>Struct: <code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 17
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 19
 
 struct NBPATREONAPICLIENT_API FPatreonUserInfo;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-18"><a class="header" href="#specifiers-18">Specifiers:</a></h3>
+<h3 id="specifiers-33"><a class="header" href="#specifiers-33">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintType</strong></li>
 </ul>
@@ -2183,8 +2836,28 @@ If any information you need about a user is not included here, you can still
 extract that information manually from an API request or submit a feature
 request for this plugin to nbpsup@gmail.com</p>
 <hr />
-<h1 id="properties-8"><a class="header" href="#properties-8"><strong>Properties</strong></a></h1>
+<h1 id="properties-10"><a class="header" href="#properties-10"><strong>Properties</strong></a></h1>
 <ul>
+<li>
+<h1 id="campaignlifetimesupportcents"><a class="header" href="#campaignlifetimesupportcents"><strong><code>CampaignLifetimeSupportCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 CampaignLifetimeSupportCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-34"><a class="header" href="#specifiers-34">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The total amount of money this user has ever contributed to this campaign, in cents.
+<p>Can be used to unlock content for users only after reaching specific subscription thresholds.
+NOTE: Gifted subscriptions will not increase this value!</p>
+  </summary>
+</li>
 <li>
 <h1 id="canseensfw"><a class="header" href="#canseensfw"><strong><code>CanSeeNSFW</code></strong></a></h1>
 <pre><code class="language-cpp">public:
@@ -2192,7 +2865,7 @@ bool CanSeeNSFW;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-19"><a class="header" href="#specifiers-19">Specifiers:</a></h3>
+<h3 id="specifiers-35"><a class="header" href="#specifiers-35">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2204,13 +2877,35 @@ bool CanSeeNSFW;
   </summary>
 </li>
 <li>
+<h1 id="currentlyentitledamountcents"><a class="header" href="#currentlyentitledamountcents"><strong><code>CurrentlyEntitledAmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 CurrentlyEntitledAmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-36"><a class="header" href="#specifiers-36">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.
+<p>This can be used to unlock content based on how much money they are contributing rather than checking
+which tier they belong to.</p>
+<p>NOTE: Gifted subscriptions will not increase this value! If someone is gifted a tier, this value may
+still be zero.</p>
+  </summary>
+</li>
+<li>
 <h1 id="firstname"><a class="header" href="#firstname"><strong><code>FirstName</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FString FirstName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-20"><a class="header" href="#specifiers-20">Specifiers:</a></h3>
+<h3 id="specifiers-37"><a class="header" href="#specifiers-37">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2225,7 +2920,7 @@ FString FullName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-21"><a class="header" href="#specifiers-21">Specifiers:</a></h3>
+<h3 id="specifiers-38"><a class="header" href="#specifiers-38">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2240,7 +2935,7 @@ FString ImageURL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-22"><a class="header" href="#specifiers-22">Specifiers:</a></h3>
+<h3 id="specifiers-39"><a class="header" href="#specifiers-39">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2258,7 +2953,7 @@ bool IsCreator;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-23"><a class="header" href="#specifiers-23">Specifiers:</a></h3>
+<h3 id="specifiers-40"><a class="header" href="#specifiers-40">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2266,7 +2961,7 @@ bool IsCreator;
 </ul>
 <hr />
   <summary>
-  Whether or not the current user is also the creator of the campaign.
+  Whether or not the current user is also the creator of a campaign.
   </summary>
 </li>
 <li>
@@ -2276,7 +2971,7 @@ FString LastName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-24"><a class="header" href="#specifiers-24">Specifiers:</a></h3>
+<h3 id="specifiers-41"><a class="header" href="#specifiers-41">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2291,7 +2986,7 @@ FString PatronStatus;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-25"><a class="header" href="#specifiers-25">Specifiers:</a></h3>
+<h3 id="specifiers-42"><a class="header" href="#specifiers-42">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2304,7 +2999,7 @@ FString PatronStatus;
 <li><code>active_patron</code>:   They are currently subscribed to a campaign</li>
 <li><code>declined_patron</code>: They have attempted to subscribe, but payment failed!!</li>
 <li><code>former_patron</code>:   They used to subscribe, but currently do not</li>
-<li><code>null</code>:            They have never subscribed before</li>
+<li><code>&lt;empty&gt;</code>:         They have never subscribed before</li>
 </ul>
   </summary>
 </li>
@@ -2315,7 +3010,7 @@ TArray&lt;FPatreonTierInfo&gt; Tiers;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-26"><a class="header" href="#specifiers-26">Specifiers:</a></h3>
+<h3 id="specifiers-43"><a class="header" href="#specifiers-43">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2335,7 +3030,7 @@ FString URL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-27"><a class="header" href="#specifiers-27">Specifiers:</a></h3>
+<h3 id="specifiers-44"><a class="header" href="#specifiers-44">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2353,7 +3048,7 @@ FString VanityName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-28"><a class="header" href="#specifiers-28">Specifiers:</a></h3>
+<h3 id="specifiers-45"><a class="header" href="#specifiers-45">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2366,11 +3061,11 @@ FString VanityName;
 </li>
 </ul>
 <hr />
-<h1 id="constructors-3"><a class="header" href="#constructors-3"><strong>Constructors</strong></a></h1>
+<h1 id="constructors-5"><a class="header" href="#constructors-5"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreonuserinfo"><a class="header" href="#fpatreonuserinfo"><strong><code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 25
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 27
 
 public:
 FPatreonUserInfo();
@@ -2383,11 +3078,12 @@ FPatreonUserInfo();
 </li>
 <li>
 <h1 id="fpatreonuserinfo-1"><a class="header" href="#fpatreonuserinfo-1"><strong><code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 33
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 35
 
 public:
 FPatreonUserInfo(
-    const FString&amp; json
+    const FString&amp; json,
+    const FString&amp; CampaignID = TEXT("")
 );
 </code></pre>
   <details>
@@ -2398,11 +3094,16 @@ If the provided json string cannot be parsed for any reason, the result
 will be uninitialized.</p>
   </summary>
 <hr />
-<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-10"><a class="header" href="#arguments-10"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="json"><a class="header" href="#json"><strong><code>json</code></strong></a></h2>
+<h2 id="json-1"><a class="header" href="#json-1"><strong><code>json</code></strong></a></h2>
 <pre><code class="language-cpp">const FString&amp; json
+</code></pre>
+</li>
+<li>
+<h2 id="campaignid-1"><a class="header" href="#campaignid-1"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; CampaignID = TEXT("")
 </code></pre>
 </li>
 </ul>
@@ -2410,11 +3111,45 @@ will be uninitialized.</p>
 </li>
 </ul>
 <hr />
-<h1 id="methods-1"><a class="header" href="#methods-1"><strong>Methods</strong></a></h1>
+<h1 id="methods-3"><a class="header" href="#methods-3"><strong>Methods</strong></a></h1>
 <ul>
 <li>
+<h1 id="getcampaignid"><a class="header" href="#getcampaignid"><strong><code>GetCampaignID</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 47
+
+public:
+static FString GetCampaignID(
+    const TSharedPtr&lt;FJsonObject&gt; relationshipEntry
+);
+</code></pre>
+  <details>
+  <summary>
+<p>Attempts to find a field 'campaign.data.id' in the given JSON object.</p>
+  </summary>
+<hr />
+<h1 id="arguments-11"><a class="header" href="#arguments-11"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="relationshipentry"><a class="header" href="#relationshipentry"><strong><code>relationshipEntry</code></strong></a></h2>
+<pre><code class="language-cpp">const TSharedPtr&lt;FJsonObject&gt; relationshipEntry
+</code></pre>
+<p>Object to begin searching from.</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">FString
+</code></pre>
+<p>The Campaign ID if one was false, otherwise an empty string.</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="hasbenefit"><a class="header" href="#hasbenefit"><strong><code>HasBenefit</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 50
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 69
 
 public:
 bool HasBenefit(
@@ -2427,7 +3162,7 @@ bool HasBenefit(
 Will check all tiers the user is pledged to.</p>
   </summary>
 <hr />
-<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-12"><a class="header" href="#arguments-12"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="benefitname"><a class="header" href="#benefitname"><strong><code>benefitName</code></strong></a></h2>
@@ -2437,7 +3172,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
+<h1 id="returns-17"><a class="header" href="#returns-17"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2449,7 +3184,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 <li>
 <h1 id="hastier"><a class="header" href="#hastier"><strong><code>HasTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 42
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 54
 
 public:
 bool HasTier(
@@ -2461,7 +3196,7 @@ bool HasTier(
 <p>Convenience method to check if this user has pledged to a specific tier</p>
   </summary>
 <hr />
-<h1 id="arguments-4"><a class="header" href="#arguments-4"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-13"><a class="header" href="#arguments-13"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="tiername"><a class="header" href="#tiername"><strong><code>tierName</code></strong></a></h2>
@@ -2471,7 +3206,41 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
+<h1 id="returns-18"><a class="header" href="#returns-18"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user has pledged to the given tier</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="hastierid"><a class="header" href="#hastierid"><strong><code>HasTierId</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 61
+
+public:
+bool HasTierId(
+    const FString&amp; tierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Convenience method to check if this user has pledged to a specific tier</p>
+  </summary>
+<hr />
+<h1 id="arguments-14"><a class="header" href="#arguments-14"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tierid-1"><a class="header" href="#tierid-1"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>ID of the tier to check for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-19"><a class="header" href="#returns-19"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2483,17 +3252,20 @@ bool HasTier(
 </li>
 <li>
 <h1 id="parsetier"><a class="header" href="#parsetier"><strong><code>ParseTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 35
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 40
 
 public:
-FPatreonTierInfo ParseTier(
+static FPatreonTierInfo ParseTier(
     const TSharedPtr&lt;FJsonObject&gt; tierEntry,
     const TSharedPtr&lt;FJsonObject&gt; tierattributes
 );
 </code></pre>
   <details>
+  <summary>
+<p>Parses tier information from JSON</p>
+  </summary>
 <hr />
-<h1 id="arguments-5"><a class="header" href="#arguments-5"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-15"><a class="header" href="#arguments-15"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="tierentry"><a class="header" href="#tierentry"><strong><code>tierEntry</code></strong></a></h2>
@@ -2507,7 +3279,7 @@ FPatreonTierInfo ParseTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
+<h1 id="returns-20"><a class="header" href="#returns-20"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FPatreonTierInfo
@@ -2524,21 +3296,21 @@ FPatreonTierInfo ParseTier(
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="struct-fpatreonuserinfoimgs"><a class="header" href="#struct-fpatreonuserinfoimgs"><strong>Struct: <code>FPatreonUserInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 14
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 16
 
 struct NBPATREONAPICLIENT_API FPatreonUserInfoImgs;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-29"><a class="header" href="#specifiers-29">Specifiers:</a></h3>
+<h3 id="specifiers-46"><a class="header" href="#specifiers-46">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintType</strong></li>
 </ul>
 <hr />
-<p>Contains the same information as <a href="reference/structs//patreon-api-client-docs/reference/structs/FPatreonUserInfo.html"><strong><code>FPatreonUserInfo</code></strong></a>, but instead of including
+<p>Contains the same information as <a href="reference/structs//reference/structs/FPatreonUserInfo.html"><strong><code>FPatreonUserInfo</code></strong></a>, but instead of including
 URLs to images will include the actual images as a Texture2D.</p>
 <hr />
-<h1 id="properties-9"><a class="header" href="#properties-9"><strong>Properties</strong></a></h1>
+<h1 id="properties-11"><a class="header" href="#properties-11"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="avatarimage"><a class="header" href="#avatarimage"><strong><code>AvatarImage</code></strong></a></h1>
@@ -2547,7 +3319,7 @@ UTexture2DDynamic* AvatarImage;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-30"><a class="header" href="#specifiers-30">Specifiers:</a></h3>
+<h3 id="specifiers-47"><a class="header" href="#specifiers-47">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2559,13 +3331,33 @@ UTexture2DDynamic* AvatarImage;
   </summary>
 </li>
 <li>
+<h1 id="campaignlifetimesupportcents-1"><a class="header" href="#campaignlifetimesupportcents-1"><strong><code>CampaignLifetimeSupportCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 CampaignLifetimeSupportCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-48"><a class="header" href="#specifiers-48">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The total amount of money this user has ever contributed to this campaign, in cents.
+<p>Can be used to unlock content for users only after reaching specific subscription thresholds.
+NOTE: Gifted subscriptions will not increase this value!</p>
+  </summary>
+</li>
+<li>
 <h1 id="canseensfw-1"><a class="header" href="#canseensfw-1"><strong><code>CanSeeNSFW</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 bool CanSeeNSFW;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-31"><a class="header" href="#specifiers-31">Specifiers:</a></h3>
+<h3 id="specifiers-49"><a class="header" href="#specifiers-49">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2577,13 +3369,35 @@ bool CanSeeNSFW;
   </summary>
 </li>
 <li>
+<h1 id="currentlyentitledamountcents-1"><a class="header" href="#currentlyentitledamountcents-1"><strong><code>CurrentlyEntitledAmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 CurrentlyEntitledAmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-50"><a class="header" href="#specifiers-50">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.
+<p>This can be used to unlock content based on how much money they are contributing rather than checking
+which tier they belong to.</p>
+<p>NOTE: Gifted subscriptions will not increase this value! If someone is gifted a tier, this value may
+still be zero.</p>
+  </summary>
+</li>
+<li>
 <h1 id="firstname-1"><a class="header" href="#firstname-1"><strong><code>FirstName</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FString FirstName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-32"><a class="header" href="#specifiers-32">Specifiers:</a></h3>
+<h3 id="specifiers-51"><a class="header" href="#specifiers-51">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2598,7 +3412,7 @@ FString FullName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-33"><a class="header" href="#specifiers-33">Specifiers:</a></h3>
+<h3 id="specifiers-52"><a class="header" href="#specifiers-52">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2613,7 +3427,7 @@ bool IsCreator;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-34"><a class="header" href="#specifiers-34">Specifiers:</a></h3>
+<h3 id="specifiers-53"><a class="header" href="#specifiers-53">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2621,7 +3435,7 @@ bool IsCreator;
 </ul>
 <hr />
   <summary>
-  Whether or not the current user is also the creator of the campaign.
+  Whether or not the current user is also the creator of a campaign.
   </summary>
 </li>
 <li>
@@ -2631,7 +3445,7 @@ FString LastName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-35"><a class="header" href="#specifiers-35">Specifiers:</a></h3>
+<h3 id="specifiers-54"><a class="header" href="#specifiers-54">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2646,7 +3460,7 @@ FString PatronStatus;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-36"><a class="header" href="#specifiers-36">Specifiers:</a></h3>
+<h3 id="specifiers-55"><a class="header" href="#specifiers-55">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2670,7 +3484,7 @@ TArray&lt;FPatreonTierInfoImgs&gt; Tiers;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-37"><a class="header" href="#specifiers-37">Specifiers:</a></h3>
+<h3 id="specifiers-56"><a class="header" href="#specifiers-56">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2690,7 +3504,7 @@ FString URL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-38"><a class="header" href="#specifiers-38">Specifiers:</a></h3>
+<h3 id="specifiers-57"><a class="header" href="#specifiers-57">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2708,7 +3522,7 @@ FString VanityName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-39"><a class="header" href="#specifiers-39">Specifiers:</a></h3>
+<h3 id="specifiers-58"><a class="header" href="#specifiers-58">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -2721,11 +3535,11 @@ FString VanityName;
 </li>
 </ul>
 <hr />
-<h1 id="constructors-4"><a class="header" href="#constructors-4"><strong>Constructors</strong></a></h1>
+<h1 id="constructors-6"><a class="header" href="#constructors-6"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
 <h1 id="fpatreonuserinfoimgs"><a class="header" href="#fpatreonuserinfoimgs"><strong><code>FPatreonUserInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 19
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 21
 
 public:
 FPatreonUserInfoImgs();
@@ -2735,7 +3549,7 @@ FPatreonUserInfoImgs();
 </li>
 <li>
 <h1 id="fpatreonuserinfoimgs-1"><a class="header" href="#fpatreonuserinfoimgs-1"><strong><code>FPatreonUserInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 21
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 23
 
 public:
 FPatreonUserInfoImgs(
@@ -2744,7 +3558,7 @@ FPatreonUserInfoImgs(
 </code></pre>
   <details>
 <hr />
-<h1 id="arguments-6"><a class="header" href="#arguments-6"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-16"><a class="header" href="#arguments-16"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="info-1"><a class="header" href="#info-1"><strong><code>info</code></strong></a></h2>
@@ -2756,11 +3570,11 @@ FPatreonUserInfoImgs(
 </li>
 </ul>
 <hr />
-<h1 id="methods-2"><a class="header" href="#methods-2"><strong>Methods</strong></a></h1>
+<h1 id="methods-4"><a class="header" href="#methods-4"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="hasbenefit-1"><a class="header" href="#hasbenefit-1"><strong><code>HasBenefit</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 36
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 45
 
 public:
 bool HasBenefit(
@@ -2773,7 +3587,7 @@ bool HasBenefit(
 Will check all tiers the user is pledged to.</p>
   </summary>
 <hr />
-<h1 id="arguments-7"><a class="header" href="#arguments-7"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-17"><a class="header" href="#arguments-17"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="benefitname-1"><a class="header" href="#benefitname-1"><strong><code>benefitName</code></strong></a></h2>
@@ -2783,7 +3597,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
+<h1 id="returns-21"><a class="header" href="#returns-21"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2795,7 +3609,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 <li>
 <h1 id="hastier-1"><a class="header" href="#hastier-1"><strong><code>HasTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 28
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 30
 
 public:
 bool HasTier(
@@ -2807,7 +3621,7 @@ bool HasTier(
 <p>Convenience method to check if this user has pledged to a specific tier</p>
   </summary>
 <hr />
-<h1 id="arguments-8"><a class="header" href="#arguments-8"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-18"><a class="header" href="#arguments-18"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="tiername-1"><a class="header" href="#tiername-1"><strong><code>tierName</code></strong></a></h2>
@@ -2817,7 +3631,41 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
+<h1 id="returns-22"><a class="header" href="#returns-22"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user has pledged to the given tier</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="hastierid-1"><a class="header" href="#hastierid-1"><strong><code>HasTierId</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonUserInfoImgs.h : 37
+
+public:
+bool HasTierId(
+    const FString&amp; tierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Convenience method to check if this user has pledged to a specific tier</p>
+  </summary>
+<hr />
+<h1 id="arguments-19"><a class="header" href="#arguments-19"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tierid-2"><a class="header" href="#tierid-2"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>IDof the tier to check for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-23"><a class="header" href="#returns-23"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2836,13 +3684,14 @@ bool HasTier(
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="classes-1"><a class="header" href="#classes-1">Classes</a></h1>
 <ul>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/FNBPatreonAPIClientModule.html"><code>FNBPatreonAPIClientModule</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/UGetPatreonUserInfoAsyncAction.html"><code>UGetPatreonUserInfoAsyncAction</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/UGetPatreonUserInfoImgAsyncAction.html"><code>UGetPatreonUserInfoImgAsyncAction</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/UNBPatreonAPIClientBPLibrary.html"><code>UNBPatreonAPIClientBPLibrary</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/UPerformAuthenticationAsyncAction.html"><code>UPerformAuthenticationAsyncAction</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/classes/URefreshAPITokenAsyncAction.html"><code>URefreshAPITokenAsyncAction</code></a></li>
+<li><a href="reference//reference/reference/classes/FNBPatreonAPIClientModule.html"><code>FNBPatreonAPIClientModule</code></a></li>
+<li><a href="reference//reference/reference/classes/UGetPatreonUserInfoAsyncAction.html"><code>UGetPatreonUserInfoAsyncAction</code></a></li>
+<li><a href="reference//reference/reference/classes/UGetPatreonUserInfoImgAsyncAction.html"><code>UGetPatreonUserInfoImgAsyncAction</code></a></li>
+<li><a href="reference//reference/reference/classes/UGetPatreonUserPledgesAsyncAction.html"><code>UGetPatreonUserPledgesAsyncAction</code></a></li>
+<li><a href="reference//reference/reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></li>
+<li><a href="reference//reference/reference/classes/UNBPatreonAPIClientBPLibrary.html"><code>UNBPatreonAPIClientBPLibrary</code></a></li>
+<li><a href="reference//reference/reference/classes/UPerformAuthenticationAsyncAction.html"><code>UPerformAuthenticationAsyncAction</code></a></li>
+<li><a href="reference//reference/reference/classes/URefreshAPITokenAsyncAction.html"><code>URefreshAPITokenAsyncAction</code></a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -2851,18 +3700,18 @@ bool HasTier(
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="class-fnbpatreonapiclientmodule"><a class="header" href="#class-fnbpatreonapiclientmodule"><strong>Class: <code>FNBPatreonAPIClientModule</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClient.h : 6
+<pre><code class="language-cpp">//  NBPatreonAPIClient.h : 9
 
 class FNBPatreonAPIClientModule
     : public IModuleInterface;
 </code></pre>
 <hr />
 <hr />
-<h1 id="methods-3"><a class="header" href="#methods-3"><strong>Methods</strong></a></h1>
+<h1 id="methods-5"><a class="header" href="#methods-5"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="shutdownmodule"><a class="header" href="#shutdownmodule"><strong><code>ShutdownModule</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClient.h : 11
+<pre><code class="language-cpp">//  NBPatreonAPIClient.h : 14
 
 public:
 virtual void ShutdownModule() override;
@@ -2872,7 +3721,7 @@ virtual void ShutdownModule() override;
 </li>
 <li>
 <h1 id="startupmodule"><a class="header" href="#startupmodule"><strong><code>StartupModule</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClient.h : 10
+<pre><code class="language-cpp">//  NBPatreonAPIClient.h : 13
 
 public:
 virtual void StartupModule() override;
@@ -2888,7 +3737,7 @@ virtual void StartupModule() override;
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="class-ugetpatreonuserinfoasyncaction"><a class="header" href="#class-ugetpatreonuserinfoasyncaction"><strong>Class: <code>UGetPatreonUserInfoAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 19
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 21
 
 class NBPATREONAPICLIENT_API UGetPatreonUserInfoAsyncAction
     : public UCancellableAsyncAction;
@@ -2900,7 +3749,7 @@ class NBPATREONAPICLIENT_API UGetPatreonUserInfoAsyncAction
 specific tier in order to unlock content, display information about their subscription, etc.</p>
 <p>Requires an access token obtained by some authentication method.</p>
 <hr />
-<h1 id="properties-10"><a class="header" href="#properties-10"><strong>Properties</strong></a></h1>
+<h1 id="properties-12"><a class="header" href="#properties-12"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete"><a class="header" href="#oncomplete"><strong><code>OnComplete</code></strong></a></h1>
@@ -2909,7 +3758,7 @@ FGetPatreonUserInfoAsyncActionEvent OnComplete;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-40"><a class="header" href="#specifiers-40">Specifiers:</a></h3>
+<h3 id="specifiers-59"><a class="header" href="#specifiers-59">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -2925,7 +3774,7 @@ FGetPatreonUserInfoAsyncActionFailedEvent OnFail;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-41"><a class="header" href="#specifiers-41">Specifiers:</a></h3>
+<h3 id="specifiers-60"><a class="header" href="#specifiers-60">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -2936,11 +3785,11 @@ FGetPatreonUserInfoAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-4"><a class="header" href="#methods-4"><strong>Methods</strong></a></h1>
+<h1 id="methods-6"><a class="header" href="#methods-6"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate"><a class="header" href="#activate"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 51
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 54
 
 public:
 virtual void Activate() override;
@@ -2953,7 +3802,7 @@ virtual void Activate() override;
 </li>
 <li>
 <h1 id="cancel"><a class="header" href="#cancel"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 56
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 59
 
 public:
 virtual void Cancel() override;
@@ -2966,18 +3815,19 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="getpatreonuserinfoasyncaction"><a class="header" href="#getpatreonuserinfoasyncaction"><strong><code>GetPatreonUserInfoAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 33
+<pre><code class="language-cpp">//  GetPatreonUserInfoAsyncAction.h : 36
 
 public:
 static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
     const UObject* WorldContext,
-    FAPITokenInfo TokenInfo
+    FAPITokenInfo TokenInfo,
+    const FString CampaignID = TEXT("")
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-42"><a class="header" href="#specifiers-42">Specifiers:</a></h3>
+<h3 id="specifiers-61"><a class="header" href="#specifiers-61">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
@@ -2994,7 +3844,7 @@ static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
 <p>Will fail if the access token is empty, invalid, or expired.</p>
   </summary>
 <hr />
-<h1 id="arguments-9"><a class="header" href="#arguments-9"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-20"><a class="header" href="#arguments-20"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="worldcontext"><a class="header" href="#worldcontext"><strong><code>WorldContext</code></strong></a></h2>
@@ -3007,9 +3857,15 @@ static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
 </code></pre>
 <p>Token information for the user</p>
 </li>
+<li>
+<h2 id="campaignid-2"><a class="header" href="#campaignid-2"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CampaignID = TEXT("")
+</code></pre>
+<p>[OPTIONAL] If set, results will be filtered to only include data associated with the specified campaign ID.</p>
+</li>
 </ul>
 <hr />
-<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
+<h1 id="returns-24"><a class="header" href="#returns-24"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserInfoAsyncAction*
@@ -3026,7 +3882,7 @@ static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="class-ugetpatreonuserinfoimgasyncaction"><a class="header" href="#class-ugetpatreonuserinfoimgasyncaction"><strong>Class: <code>UGetPatreonUserInfoImgAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 24
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 26
 
 class NBPATREONAPICLIENT_API UGetPatreonUserInfoImgAsyncAction
     : public UCancellableAsyncAction;
@@ -3040,7 +3896,7 @@ their pledged tiers.</p>
 display information about their subscription, etc.</p>
 <p>Requires an access token obtained by some authentication method.</p>
 <hr />
-<h1 id="properties-11"><a class="header" href="#properties-11"><strong>Properties</strong></a></h1>
+<h1 id="properties-13"><a class="header" href="#properties-13"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-1"><a class="header" href="#oncomplete-1"><strong><code>OnComplete</code></strong></a></h1>
@@ -3049,7 +3905,7 @@ FGetPatreonUserInfoImgAsyncActionEvent OnComplete;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-43"><a class="header" href="#specifiers-43">Specifiers:</a></h3>
+<h3 id="specifiers-62"><a class="header" href="#specifiers-62">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -3065,7 +3921,7 @@ FGetPatreonUserInfoImgAsyncActionFailedEvent OnFail;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-44"><a class="header" href="#specifiers-44">Specifiers:</a></h3>
+<h3 id="specifiers-63"><a class="header" href="#specifiers-63">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -3076,11 +3932,11 @@ FGetPatreonUserInfoImgAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-5"><a class="header" href="#methods-5"><strong>Methods</strong></a></h1>
+<h1 id="methods-7"><a class="header" href="#methods-7"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate-1"><a class="header" href="#activate-1"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 58
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 61
 
 public:
 virtual void Activate() override;
@@ -3093,7 +3949,7 @@ virtual void Activate() override;
 </li>
 <li>
 <h1 id="cancel-1"><a class="header" href="#cancel-1"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 63
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 66
 
 public:
 virtual void Cancel() override;
@@ -3106,18 +3962,19 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="getpatreonuserinfoimgasyncaction"><a class="header" href="#getpatreonuserinfoimgasyncaction"><strong><code>GetPatreonUserInfoImgAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 40
+<pre><code class="language-cpp">//  GetPatreonUserInfoImgAsyncAction.h : 43
 
 public:
 static UGetPatreonUserInfoImgAsyncAction* GetPatreonUserInfoImgAsyncAction(
     const UObject* WorldContext,
-    FAPITokenInfo TokenInfo
+    FAPITokenInfo TokenInfo,
+    const FString CampaignID = TEXT("")
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-45"><a class="header" href="#specifiers-45">Specifiers:</a></h3>
+<h3 id="specifiers-64"><a class="header" href="#specifiers-64">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3135,7 +3992,7 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
 <p>Will fail if the access token is empty, invalid, or expired.</p>
   </summary>
 <hr />
-<h1 id="arguments-10"><a class="header" href="#arguments-10"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-21"><a class="header" href="#arguments-21"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="worldcontext-1"><a class="header" href="#worldcontext-1"><strong><code>WorldContext</code></strong></a></h2>
@@ -3148,9 +4005,15 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
 </code></pre>
 <p>Token information for the user</p>
 </li>
+<li>
+<h2 id="campaignid-3"><a class="header" href="#campaignid-3"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CampaignID = TEXT("")
+</code></pre>
+<p>[OPTIONAL] If set, results will be filtered to only include data associated with the specified campaign ID.</p>
+</li>
 </ul>
 <hr />
-<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
+<h1 id="returns-25"><a class="header" href="#returns-25"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserInfoImgAsyncAction*
@@ -3166,58 +4029,57 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="class-uhttprequestaction"><a class="header" href="#class-uhttprequestaction"><strong>Class: <code>UHTTPRequestAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 13
+<div style="break-before: page; page-break-before: always;"></div><h1 id="class-ugetpatreonuserpledgesasyncaction"><a class="header" href="#class-ugetpatreonuserpledgesasyncaction"><strong>Class: <code>UGetPatreonUserPledgesAsyncAction</code></strong></a></h1>
+<pre><code class="language-cpp">//  GetPatreonUserPledgesAsyncAction.h : 20
 
-class NBPATREONAPICLIENT_API UHTTPRequestAction
+class NBPATREONAPICLIENT_API UGetPatreonUserPledgesAsyncAction
     : public UCancellableAsyncAction;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
 <hr />
-<p>Helper to make common HTTP requests a little easier and expose them to blueprints.</p>
 <hr />
-<h1 id="properties-12"><a class="header" href="#properties-12"><strong>Properties</strong></a></h1>
+<h1 id="properties-14"><a class="header" href="#properties-14"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-2"><a class="header" href="#oncomplete-2"><strong><code>OnComplete</code></strong></a></h1>
 <pre><code class="language-cpp">public:
-FHTTPRequestActionEvent OnComplete;
+FGetPatreonUserPledgesAsyncActionEvent OnComplete;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-46"><a class="header" href="#specifiers-46">Specifiers:</a></h3>
+<h3 id="specifiers-65"><a class="header" href="#specifiers-65">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
 <hr />
   <summary>
-  Event fired when the request completes successfully
+  Event invoked when pledge history is successfully retrieved
   </summary>
 </li>
 <li>
 <h1 id="onfail-2"><a class="header" href="#onfail-2"><strong><code>OnFail</code></strong></a></h1>
 <pre><code class="language-cpp">public:
-FHTTPRequestActionEvent OnFail;
+FGetPatreonUserPledgesAsyncActionFailedEvent OnFail;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-47"><a class="header" href="#specifiers-47">Specifiers:</a></h3>
+<h3 id="specifiers-66"><a class="header" href="#specifiers-66">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
 <hr />
   <summary>
-  Event fired if the request fails for any reason
+  Event invoked if fetching the pledge history fails for any reason
   </summary>
 </li>
 </ul>
 <hr />
-<h1 id="methods-6"><a class="header" href="#methods-6"><strong>Methods</strong></a></h1>
+<h1 id="methods-8"><a class="header" href="#methods-8"><strong>Methods</strong></a></h1>
 <ul>
 <li>
 <h1 id="activate-2"><a class="header" href="#activate-2"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 81
+<pre><code class="language-cpp">//  GetPatreonUserPledgesAsyncAction.h : 67
 
 public:
 virtual void Activate() override;
@@ -3230,7 +4092,236 @@ virtual void Activate() override;
 </li>
 <li>
 <h1 id="cancel-2"><a class="header" href="#cancel-2"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 86
+<pre><code class="language-cpp">//  GetPatreonUserPledgesAsyncAction.h : 72
+
+public:
+virtual void Cancel() override;
+</code></pre>
+  <details>
+  <summary>
+<p>Can be called to cancel the task and prevent callbacks from being called</p>
+  </summary>
+  </details>
+</li>
+<li>
+<h1 id="getpatreonuserpledgesafterasyncaction"><a class="header" href="#getpatreonuserpledgesafterasyncaction"><strong><code>GetPatreonUserPledgesAfterAsyncAction</code></strong></a></h1>
+<pre><code class="language-cpp">//  GetPatreonUserPledgesAsyncAction.h : 49
+
+public:
+static UGetPatreonUserPledgesAsyncAction* GetPatreonUserPledgesAfterAsyncAction(
+    const UObject* WorldContext,
+    const FAPITokenInfo TokenInfo,
+    const FDateTime&amp; StartDate,
+    bool DiscardUnpaid = true,
+    const FString CampaignID = TEXT("")
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-67"><a class="header" href="#specifiers-67">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-2"><a class="header" href="#meta-specifiers-2">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Get Pledge History After</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+<li><strong>WorldContext</strong> = <em>WorldContext</em></li>
+<li><strong>BlueprintInternalUseOnly</strong> = <em>true</em></li>
+</ul>
+  <summary>
+<p>Fetches a user's pledge history after a specified date.
+If you are only interested in a small recent time range you may wan to use this to avoid processing
+unneeded pledge history entries later (e.g. when searching for a previously-pledged tier).
+It is recommended to still request a little more than you need (e.g. if you are only interested in pledges
+in June you may want to request pledges starting in May to capture cases where a user started their pledge
+on May 30 and was entitled to that tier during June).</p>
+  </summary>
+<hr />
+<h1 id="arguments-22"><a class="header" href="#arguments-22"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="worldcontext-2"><a class="header" href="#worldcontext-2"><strong><code>WorldContext</code></strong></a></h2>
+<pre><code class="language-cpp">const UObject* WorldContext
+</code></pre>
+</li>
+<li>
+<h2 id="tokeninfo-2"><a class="header" href="#tokeninfo-2"><strong><code>TokenInfo</code></strong></a></h2>
+<pre><code class="language-cpp">const FAPITokenInfo TokenInfo
+</code></pre>
+<p>Valid TokenInfo from the user to fetch pledge history for</p>
+</li>
+<li>
+<h2 id="startdate"><a class="header" href="#startdate"><strong><code>StartDate</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; StartDate
+</code></pre>
+<p>Pledge events with timestamps earlier than this date will not be included in the results</p>
+</li>
+<li>
+<h2 id="discardunpaid-1"><a class="header" href="#discardunpaid-1"><strong><code>DiscardUnpaid</code></strong></a></h2>
+<pre><code class="language-cpp">bool DiscardUnpaid = true
+</code></pre>
+<p>If true, pledge events with invalid payment states (e.g. declined payments) will not be included in the results</p>
+</li>
+<li>
+<h2 id="campaignid-4"><a class="header" href="#campaignid-4"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CampaignID = TEXT("")
+</code></pre>
+<p>If not empty, will only process pledge events with a matching campaign ID and discard others</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-26"><a class="header" href="#returns-26"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">UGetPatreonUserPledgesAsyncAction*
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="getpatreonuserpledgesasyncaction"><a class="header" href="#getpatreonuserpledgesasyncaction"><strong><code>GetPatreonUserPledgesAsyncAction</code></strong></a></h1>
+<pre><code class="language-cpp">//  GetPatreonUserPledgesAsyncAction.h : 34
+
+public:
+static UGetPatreonUserPledgesAsyncAction* GetPatreonUserPledgesAsyncAction(
+    const UObject* WorldContext,
+    const FAPITokenInfo TokenInfo,
+    bool DiscardUnpaid = true,
+    const FString CampaignID = TEXT("")
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-68"><a class="header" href="#specifiers-68">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-3"><a class="header" href="#meta-specifiers-3">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Get Pledge History</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+<li><strong>WorldContext</strong> = <em>WorldContext</em></li>
+<li><strong>BlueprintInternalUseOnly</strong> = <em>true</em></li>
+</ul>
+  <summary>
+<p>Fetches a user's pledge history. This can be used to check if they were previously pledged to a tier (even
+if they may have since unsubscribed), find out when they started their subscription to their current tier, etc.</p>
+  </summary>
+<hr />
+<h1 id="arguments-23"><a class="header" href="#arguments-23"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="worldcontext-3"><a class="header" href="#worldcontext-3"><strong><code>WorldContext</code></strong></a></h2>
+<pre><code class="language-cpp">const UObject* WorldContext
+</code></pre>
+</li>
+<li>
+<h2 id="tokeninfo-3"><a class="header" href="#tokeninfo-3"><strong><code>TokenInfo</code></strong></a></h2>
+<pre><code class="language-cpp">const FAPITokenInfo TokenInfo
+</code></pre>
+<p>Valid TokenInfo from the user to fetch pledge history for</p>
+</li>
+<li>
+<h2 id="discardunpaid-2"><a class="header" href="#discardunpaid-2"><strong><code>DiscardUnpaid</code></strong></a></h2>
+<pre><code class="language-cpp">bool DiscardUnpaid = true
+</code></pre>
+<p>If true, pledge events with invalid payment states (e.g. declined payments) will not be included in the results</p>
+</li>
+<li>
+<h2 id="campaignid-5"><a class="header" href="#campaignid-5"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CampaignID = TEXT("")
+</code></pre>
+<p>If not empty, will only process pledge events with a matching campaign ID and discard others</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-27"><a class="header" href="#returns-27"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">UGetPatreonUserPledgesAsyncAction*
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="class-uhttprequestaction"><a class="header" href="#class-uhttprequestaction"><strong>Class: <code>UHTTPRequestAction</code></strong></a></h1>
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 15
+
+class NBPATREONAPICLIENT_API UHTTPRequestAction
+    : public UCancellableAsyncAction;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<hr />
+<p>Helper to make common HTTP requests a little easier and expose them to blueprints.</p>
+<hr />
+<h1 id="properties-15"><a class="header" href="#properties-15"><strong>Properties</strong></a></h1>
+<ul>
+<li>
+<h1 id="oncomplete-3"><a class="header" href="#oncomplete-3"><strong><code>OnComplete</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FHTTPRequestActionEvent OnComplete;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-69"><a class="header" href="#specifiers-69">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintAssignable</strong></li>
+</ul>
+<hr />
+  <summary>
+  Event fired when the request completes successfully
+  </summary>
+</li>
+<li>
+<h1 id="onfail-3"><a class="header" href="#onfail-3"><strong><code>OnFail</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FHTTPRequestActionEvent OnFail;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-70"><a class="header" href="#specifiers-70">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintAssignable</strong></li>
+</ul>
+<hr />
+  <summary>
+  Event fired if the request fails for any reason
+  </summary>
+</li>
+</ul>
+<hr />
+<h1 id="methods-9"><a class="header" href="#methods-9"><strong>Methods</strong></a></h1>
+<ul>
+<li>
+<h1 id="activate-3"><a class="header" href="#activate-3"><strong><code>Activate</code></strong></a></h1>
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 83
+
+public:
+virtual void Activate() override;
+</code></pre>
+  <details>
+  <summary>
+<p>Starts the task</p>
+  </summary>
+  </details>
+</li>
+<li>
+<h1 id="cancel-3"><a class="header" href="#cancel-3"><strong><code>Cancel</code></strong></a></h1>
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 88
 
 public:
 virtual void Cancel() override;
@@ -3243,7 +4334,7 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="httpgetasyncaction"><a class="header" href="#httpgetasyncaction"><strong><code>HTTPGetAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 52
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 54
 
 public:
 static UHTTPRequestAction* HTTPGetAsyncAction(
@@ -3254,12 +4345,12 @@ static UHTTPRequestAction* HTTPGetAsyncAction(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-48"><a class="header" href="#specifiers-48">Specifiers:</a></h3>
+<h3 id="specifiers-71"><a class="header" href="#specifiers-71">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-2"><a class="header" href="#meta-specifiers-2">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-4"><a class="header" href="#meta-specifiers-4">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>HTTP GET</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3270,10 +4361,10 @@ static UHTTPRequestAction* HTTPGetAsyncAction(
 <p>HTTP GET Request</p>
   </summary>
 <hr />
-<h1 id="arguments-11"><a class="header" href="#arguments-11"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-24"><a class="header" href="#arguments-24"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-2"><a class="header" href="#worldcontext-2"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-4"><a class="header" href="#worldcontext-4"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
@@ -3285,7 +4376,7 @@ static UHTTPRequestAction* HTTPGetAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
+<h1 id="returns-28"><a class="header" href="#returns-28"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3296,7 +4387,7 @@ static UHTTPRequestAction* HTTPGetAsyncAction(
 </li>
 <li>
 <h1 id="httppostasyncaction"><a class="header" href="#httppostasyncaction"><strong><code>HTTPPostAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 63
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 65
 
 public:
 static UHTTPRequestAction* HTTPPostAsyncAction(
@@ -3309,12 +4400,12 @@ static UHTTPRequestAction* HTTPPostAsyncAction(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-49"><a class="header" href="#specifiers-49">Specifiers:</a></h3>
+<h3 id="specifiers-72"><a class="header" href="#specifiers-72">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-3"><a class="header" href="#meta-specifiers-3">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-5"><a class="header" href="#meta-specifiers-5">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>HTTP POST</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3325,10 +4416,10 @@ static UHTTPRequestAction* HTTPPostAsyncAction(
 <p>HTTP POST Request</p>
   </summary>
 <hr />
-<h1 id="arguments-12"><a class="header" href="#arguments-12"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-25"><a class="header" href="#arguments-25"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-3"><a class="header" href="#worldcontext-3"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-5"><a class="header" href="#worldcontext-5"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
@@ -3352,7 +4443,7 @@ static UHTTPRequestAction* HTTPPostAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-17"><a class="header" href="#returns-17"><strong>Returns</strong></a></h1>
+<h1 id="returns-29"><a class="header" href="#returns-29"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3363,7 +4454,7 @@ static UHTTPRequestAction* HTTPPostAsyncAction(
 </li>
 <li>
 <h1 id="httprequestasyncaction"><a class="header" href="#httprequestasyncaction"><strong><code>HTTPRequestAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 28
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 30
 
 public:
 static UHTTPRequestAction* HTTPRequestAsyncAction(
@@ -3377,12 +4468,12 @@ static UHTTPRequestAction* HTTPRequestAsyncAction(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-50"><a class="header" href="#specifiers-50">Specifiers:</a></h3>
+<h3 id="specifiers-73"><a class="header" href="#specifiers-73">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-4"><a class="header" href="#meta-specifiers-4">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-6"><a class="header" href="#meta-specifiers-6">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>HTTP Request</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3393,10 +4484,10 @@ static UHTTPRequestAction* HTTPRequestAsyncAction(
 <p>Generic HTTP request</p>
   </summary>
 <hr />
-<h1 id="arguments-13"><a class="header" href="#arguments-13"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-26"><a class="header" href="#arguments-26"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-4"><a class="header" href="#worldcontext-4"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-6"><a class="header" href="#worldcontext-6"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
@@ -3426,7 +4517,7 @@ static UHTTPRequestAction* HTTPRequestAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-18"><a class="header" href="#returns-18"><strong>Returns</strong></a></h1>
+<h1 id="returns-30"><a class="header" href="#returns-30"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3437,7 +4528,7 @@ static UHTTPRequestAction* HTTPRequestAsyncAction(
 </li>
 <li>
 <h1 id="httprequestwithtokenasyncaction"><a class="header" href="#httprequestwithtokenasyncaction"><strong><code>HTTPRequestWithTokenAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  HTTPRequestAction.h : 43
+<pre><code class="language-cpp">//  HTTPRequestAction.h : 45
 
 public:
 static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
@@ -3452,12 +4543,12 @@ static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-51"><a class="header" href="#specifiers-51">Specifiers:</a></h3>
+<h3 id="specifiers-74"><a class="header" href="#specifiers-74">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-5"><a class="header" href="#meta-specifiers-5">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-7"><a class="header" href="#meta-specifiers-7">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>HTTP Request (with bearer token)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3469,10 +4560,10 @@ static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
 <p>This will automatically set the <code>Authorization</code> header to <code>Bearer &lt;AccessToken&gt;</code>.</p>
   </summary>
 <hr />
-<h1 id="arguments-14"><a class="header" href="#arguments-14"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-27"><a class="header" href="#arguments-27"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-5"><a class="header" href="#worldcontext-5"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-7"><a class="header" href="#worldcontext-7"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
@@ -3508,7 +4599,7 @@ static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-19"><a class="header" href="#returns-19"><strong>Returns</strong></a></h1>
+<h1 id="returns-31"><a class="header" href="#returns-31"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -3525,7 +4616,7 @@ static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="class-unbpatreonapiclientbplibrary"><a class="header" href="#class-unbpatreonapiclientbplibrary"><strong>Class: <code>UNBPatreonAPIClientBPLibrary</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 9
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 12
 
 class UNBPatreonAPIClientBPLibrary
     : public UBlueprintFunctionLibrary;
@@ -3534,11 +4625,47 @@ class UNBPatreonAPIClientBPLibrary
 <p><strong><em>Reflection-enabled</em></strong></p>
 <hr />
 <hr />
-<h1 id="methods-7"><a class="header" href="#methods-7"><strong>Methods</strong></a></h1>
+<h1 id="methods-10"><a class="header" href="#methods-10"><strong>Methods</strong></a></h1>
 <ul>
 <li>
+<h1 id="copytoclipboard"><a class="header" href="#copytoclipboard"><strong><code>CopyToClipboard</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 182
+
+public:
+static void CopyToClipboard(
+    const FString str
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-75"><a class="header" href="#specifiers-75">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Utils</em></li>
+</ul>
+<h3 id="meta-specifiers-8"><a class="header" href="#meta-specifiers-8">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Copy to Clipboard</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Copies the given string to the user's clipboard</p>
+  </summary>
+<hr />
+<h1 id="arguments-28"><a class="header" href="#arguments-28"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="str"><a class="header" href="#str"><strong><code>str</code></strong></a></h2>
+<pre><code class="language-cpp">const FString str
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="hasbenefit-2"><a class="header" href="#hasbenefit-2"><strong><code>HasBenefit</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 48
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 67
 
 public:
 static bool HasBenefit(
@@ -3549,13 +4676,13 @@ static bool HasBenefit(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-52"><a class="header" href="#specifiers-52">Specifiers:</a></h3>
+<h3 id="specifiers-76"><a class="header" href="#specifiers-76">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-6"><a class="header" href="#meta-specifiers-6">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-9"><a class="header" href="#meta-specifiers-9">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Has Benefit</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3564,7 +4691,7 @@ static bool HasBenefit(
 <p>Checks if the given User is entitled to a specific benefit/reward</p>
   </summary>
 <hr />
-<h1 id="arguments-15"><a class="header" href="#arguments-15"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-29"><a class="header" href="#arguments-29"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo"><a class="header" href="#userinfo"><strong><code>UserInfo</code></strong></a></h2>
@@ -3579,7 +4706,7 @@ static bool HasBenefit(
 </li>
 </ul>
 <hr />
-<h1 id="returns-20"><a class="header" href="#returns-20"><strong>Returns</strong></a></h1>
+<h1 id="returns-32"><a class="header" href="#returns-32"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3590,7 +4717,7 @@ static bool HasBenefit(
 </li>
 <li>
 <h1 id="hasbenefit2"><a class="header" href="#hasbenefit2"><strong><code>HasBenefit2</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 56
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 75
 
 public:
 static bool HasBenefit2(
@@ -3601,13 +4728,13 @@ static bool HasBenefit2(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-53"><a class="header" href="#specifiers-53">Specifiers:</a></h3>
+<h3 id="specifiers-77"><a class="header" href="#specifiers-77">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-7"><a class="header" href="#meta-specifiers-7">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-10"><a class="header" href="#meta-specifiers-10">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Has Benefit</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3616,7 +4743,7 @@ static bool HasBenefit2(
 <p>Checks if the given User is entitled to a specific benefit/reward</p>
   </summary>
 <hr />
-<h1 id="arguments-16"><a class="header" href="#arguments-16"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-30"><a class="header" href="#arguments-30"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo-1"><a class="header" href="#userinfo-1"><strong><code>UserInfo</code></strong></a></h2>
@@ -3631,7 +4758,7 @@ static bool HasBenefit2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-21"><a class="header" href="#returns-21"><strong>Returns</strong></a></h1>
+<h1 id="returns-33"><a class="header" href="#returns-33"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3642,7 +4769,7 @@ static bool HasBenefit2(
 </li>
 <li>
 <h1 id="hastier-2"><a class="header" href="#hastier-2"><strong><code>HasTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 32
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 35
 
 public:
 static bool HasTier(
@@ -3653,22 +4780,22 @@ static bool HasTier(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-54"><a class="header" href="#specifiers-54">Specifiers:</a></h3>
+<h3 id="specifiers-78"><a class="header" href="#specifiers-78">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-8"><a class="header" href="#meta-specifiers-8">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-11"><a class="header" href="#meta-specifiers-11">Meta Specifiers:</a></h3>
 <ul>
-<li><strong>DisplayName</strong> = <em>Has Tier</em></li>
+<li><strong>DisplayName</strong> = <em>Has Tier (by Title)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
   <summary>
 <p>Checks if the given User is pledged to a specific tier.</p>
   </summary>
 <hr />
-<h1 id="arguments-17"><a class="header" href="#arguments-17"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-31"><a class="header" href="#arguments-31"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo-2"><a class="header" href="#userinfo-2"><strong><code>UserInfo</code></strong></a></h2>
@@ -3684,7 +4811,7 @@ static bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-22"><a class="header" href="#returns-22"><strong>Returns</strong></a></h1>
+<h1 id="returns-34"><a class="header" href="#returns-34"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3695,7 +4822,7 @@ static bool HasTier(
 </li>
 <li>
 <h1 id="hastier2"><a class="header" href="#hastier2"><strong><code>HasTier2</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 40
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 43
 
 public:
 static bool HasTier2(
@@ -3706,22 +4833,22 @@ static bool HasTier2(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-55"><a class="header" href="#specifiers-55">Specifiers:</a></h3>
+<h3 id="specifiers-79"><a class="header" href="#specifiers-79">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
 </ul>
-<h3 id="meta-specifiers-9"><a class="header" href="#meta-specifiers-9">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-12"><a class="header" href="#meta-specifiers-12">Meta Specifiers:</a></h3>
 <ul>
-<li><strong>DisplayName</strong> = <em>Has Tier</em></li>
+<li><strong>DisplayName</strong> = <em>Has Tier (by Title)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
   <summary>
 <p>Checks if the given User is pledged to a specific tier.</p>
   </summary>
 <hr />
-<h1 id="arguments-18"><a class="header" href="#arguments-18"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-32"><a class="header" href="#arguments-32"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="userinfo-3"><a class="header" href="#userinfo-3"><strong><code>UserInfo</code></strong></a></h2>
@@ -3737,7 +4864,113 @@ static bool HasTier2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-23"><a class="header" href="#returns-23"><strong>Returns</strong></a></h1>
+<h1 id="returns-35"><a class="header" href="#returns-35"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="hastierbyid"><a class="header" href="#hastierbyid"><strong><code>HasTierById</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 51
+
+public:
+static bool HasTierById(
+    const FPatreonUserInfo&amp; UserInfo,
+    const FString TierId
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-80"><a class="header" href="#specifiers-80">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintPure</strong></li>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<h3 id="meta-specifiers-13"><a class="header" href="#meta-specifiers-13">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Has Tier (by ID)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if the given User is pledged to a specific tier.</p>
+  </summary>
+<hr />
+<h1 id="arguments-33"><a class="header" href="#arguments-33"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="userinfo-4"><a class="header" href="#userinfo-4"><strong><code>UserInfo</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonUserInfo&amp; UserInfo
+</code></pre>
+<p>User to check</p>
+</li>
+<li>
+<h2 id="tierid-3"><a class="header" href="#tierid-3"><strong><code>TierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString TierId
+</code></pre>
+<p>ID of tier</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-36"><a class="header" href="#returns-36"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="hastierbyid2"><a class="header" href="#hastierbyid2"><strong><code>HasTierById2</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 59
+
+public:
+static bool HasTierById2(
+    const FPatreonUserInfoImgs&amp; UserInfo,
+    const FString TierId
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-81"><a class="header" href="#specifiers-81">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintPure</strong></li>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<h3 id="meta-specifiers-14"><a class="header" href="#meta-specifiers-14">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Has Tier (by ID)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if the given User is pledged to a specific tier.</p>
+  </summary>
+<hr />
+<h1 id="arguments-34"><a class="header" href="#arguments-34"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="userinfo-5"><a class="header" href="#userinfo-5"><strong><code>UserInfo</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonUserInfoImgs&amp; UserInfo
+</code></pre>
+<p>User to check</p>
+</li>
+<li>
+<h2 id="tierid-4"><a class="header" href="#tierid-4"><strong><code>TierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString TierId
+</code></pre>
+<p>ID of tier</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-37"><a class="header" href="#returns-37"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3748,7 +4981,7 @@ static bool HasTier2(
 </li>
 <li>
 <h1 id="hastokenexpired-1"><a class="header" href="#hastokenexpired-1"><strong><code>HasTokenExpired</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 18
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 21
 
 public:
 static bool HasTokenExpired(
@@ -3758,13 +4991,13 @@ static bool HasTokenExpired(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-56"><a class="header" href="#specifiers-56">Specifiers:</a></h3>
+<h3 id="specifiers-82"><a class="header" href="#specifiers-82">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-10"><a class="header" href="#meta-specifiers-10">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-15"><a class="header" href="#meta-specifiers-15">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Has API Token Expired</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3773,7 +5006,7 @@ static bool HasTokenExpired(
 <p>Checks if a token's lifetime has expired.</p>
   </summary>
 <hr />
-<h1 id="arguments-19"><a class="header" href="#arguments-19"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-35"><a class="header" href="#arguments-35"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="token-2"><a class="header" href="#token-2"><strong><code>token</code></strong></a></h2>
@@ -3782,7 +5015,7 @@ static bool HasTokenExpired(
 </li>
 </ul>
 <hr />
-<h1 id="returns-24"><a class="header" href="#returns-24"><strong>Returns</strong></a></h1>
+<h1 id="returns-38"><a class="header" href="#returns-38"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3793,7 +5026,7 @@ static bool HasTokenExpired(
 </li>
 <li>
 <h1 id="istokenvalid"><a class="header" href="#istokenvalid"><strong><code>IsTokenValid</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 24
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 27
 
 public:
 static bool IsTokenValid(
@@ -3803,13 +5036,13 @@ static bool IsTokenValid(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-57"><a class="header" href="#specifiers-57">Specifiers:</a></h3>
+<h3 id="specifiers-83"><a class="header" href="#specifiers-83">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintPure</strong></li>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-11"><a class="header" href="#meta-specifiers-11">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-16"><a class="header" href="#meta-specifiers-16">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Is API Token Valid</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3818,7 +5051,7 @@ static bool IsTokenValid(
 <p>Checks if the access token is present and not yet expired</p>
   </summary>
 <hr />
-<h1 id="arguments-20"><a class="header" href="#arguments-20"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-36"><a class="header" href="#arguments-36"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="token-3"><a class="header" href="#token-3"><strong><code>token</code></strong></a></h2>
@@ -3827,7 +5060,7 @@ static bool IsTokenValid(
 </li>
 </ul>
 <hr />
-<h1 id="returns-25"><a class="header" href="#returns-25"><strong>Returns</strong></a></h1>
+<h1 id="returns-39"><a class="header" href="#returns-39"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3838,7 +5071,7 @@ static bool IsTokenValid(
 </li>
 <li>
 <h1 id="openurl"><a class="header" href="#openurl"><strong><code>OpenURL</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 82
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 176
 
 public:
 static void OpenURL(
@@ -3848,12 +5081,12 @@ static void OpenURL(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-58"><a class="header" href="#specifiers-58">Specifiers:</a></h3>
+<h3 id="specifiers-84"><a class="header" href="#specifiers-84">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-12"><a class="header" href="#meta-specifiers-12">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-17"><a class="header" href="#meta-specifiers-17">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Open URL</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3862,7 +5095,7 @@ static void OpenURL(
 <p>Opens a given URL in the user's default web browser</p>
   </summary>
 <hr />
-<h1 id="arguments-21"><a class="header" href="#arguments-21"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-37"><a class="header" href="#arguments-37"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="url-7"><a class="header" href="#url-7"><strong><code>URL</code></strong></a></h2>
@@ -3873,8 +5106,67 @@ static void OpenURL(
   </details>
 </li>
 <li>
+<h1 id="parsecampaigninfo"><a class="header" href="#parsecampaigninfo"><strong><code>ParseCampaignInfo</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 170
+
+public:
+static bool ParseCampaignInfo(
+    FString JsonStr,
+    FString&amp; CampaignID,
+    TArray&lt;FPatreonTierInfo&gt;&amp; Tiers
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-85"><a class="header" href="#specifiers-85">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Campaign</em></li>
+</ul>
+<h3 id="meta-specifiers-18"><a class="header" href="#meta-specifiers-18">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Parse Campaign Info</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Parses a JSON string containing a creator's campaign information.</p>
+  </summary>
+<hr />
+<h1 id="arguments-38"><a class="header" href="#arguments-38"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="jsonstr"><a class="header" href="#jsonstr"><strong><code>JsonStr</code></strong></a></h2>
+<pre><code class="language-cpp">FString JsonStr
+</code></pre>
+<p>The JSON string to parse</p>
+</li>
+<li>
+<h2 id="campaignid-6"><a class="header" href="#campaignid-6"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">FString&amp; CampaignID
+</code></pre>
+<p>The creator's campaign ID</p>
+</li>
+<li>
+<h2 id="tiers-4"><a class="header" href="#tiers-4"><strong><code>Tiers</code></strong></a></h2>
+<pre><code class="language-cpp">TArray&lt;FPatreonTierInfo&gt;&amp; Tiers
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-40"><a class="header" href="#returns-40"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if JsonStr could be parsed, otherwise false. If this is false, CampaignID and Tiers should not be used.</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="parsetokeninfo"><a class="header" href="#parsetokeninfo"><strong><code>ParseTokenInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 76
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 160
 
 public:
 static bool ParseTokenInfo(
@@ -3885,12 +5177,12 @@ static bool ParseTokenInfo(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-59"><a class="header" href="#specifiers-59">Specifiers:</a></h3>
+<h3 id="specifiers-86"><a class="header" href="#specifiers-86">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-13"><a class="header" href="#meta-specifiers-13">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-19"><a class="header" href="#meta-specifiers-19">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Parse API Token Info</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -3907,28 +5199,431 @@ static bool ParseTokenInfo(
 </code></pre>
   </summary>
 <hr />
-<h1 id="arguments-22"><a class="header" href="#arguments-22"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-39"><a class="header" href="#arguments-39"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="jsonstr"><a class="header" href="#jsonstr"><strong><code>JsonStr</code></strong></a></h2>
+<h2 id="jsonstr-1"><a class="header" href="#jsonstr-1"><strong><code>JsonStr</code></strong></a></h2>
 <pre><code class="language-cpp">FString JsonStr
 </code></pre>
 <p>The JSON string to parse</p>
 </li>
 <li>
-<h2 id="tokeninfo-2"><a class="header" href="#tokeninfo-2"><strong><code>TokenInfo</code></strong></a></h2>
+<h2 id="tokeninfo-4"><a class="header" href="#tokeninfo-4"><strong><code>TokenInfo</code></strong></a></h2>
 <pre><code class="language-cpp">FAPITokenInfo&amp; TokenInfo
 </code></pre>
 <p>The parsed TokenInfo object</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-26"><a class="header" href="#returns-26"><strong>Returns</strong></a></h1>
+<h1 id="returns-41"><a class="header" href="#returns-41"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
 </code></pre>
 <p>True if the JsonStr could be parsed, otherwise False. If this returns False, TokenInfo should not be used.</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierafter-1"><a class="header" href="#pledgedtotierafter-1"><strong><code>PledgedToTierAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 110
+
+public:
+static bool PledgedToTierAfter(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierName,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-87"><a class="header" href="#specifiers-87">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-20"><a class="header" href="#meta-specifiers-20">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier After (by Title)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time after a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-40"><a class="header" href="#arguments-40"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-1"><a class="header" href="#pledgehistory-1"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tiername-4"><a class="header" href="#tiername-4"><strong><code>tierName</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierName
+</code></pre>
+<p>The Title of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-5"><a class="header" href="#date-5"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-42"><a class="header" href="#returns-42"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier after the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierafter2"><a class="header" href="#pledgedtotierafter2"><strong><code>PledgedToTierAfter2</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 120
+
+public:
+static bool PledgedToTierAfter2(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierId,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-88"><a class="header" href="#specifiers-88">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-21"><a class="header" href="#meta-specifiers-21">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier After (by ID)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time after a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-41"><a class="header" href="#arguments-41"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-2"><a class="header" href="#pledgehistory-2"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tierid-5"><a class="header" href="#tierid-5"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>The ID of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-6"><a class="header" href="#date-6"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-43"><a class="header" href="#returns-43"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier after the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierbefore-1"><a class="header" href="#pledgedtotierbefore-1"><strong><code>PledgedToTierBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 130
+
+public:
+static bool PledgedToTierBefore(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierName,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-89"><a class="header" href="#specifiers-89">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-22"><a class="header" href="#meta-specifiers-22">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier Before (by Title)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time before a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-42"><a class="header" href="#arguments-42"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-3"><a class="header" href="#pledgehistory-3"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tiername-5"><a class="header" href="#tiername-5"><strong><code>tierName</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierName
+</code></pre>
+<p>The Title of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-7"><a class="header" href="#date-7"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-44"><a class="header" href="#returns-44"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier before the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierbefore2"><a class="header" href="#pledgedtotierbefore2"><strong><code>PledgedToTierBefore2</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 140
+
+public:
+static bool PledgedToTierBefore2(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FString&amp; tierId,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-90"><a class="header" href="#specifiers-90">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-23"><a class="header" href="#meta-specifiers-23">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tier Before (by ID)</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Checks if a user was pledged to a specific tier at any time before a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-43"><a class="header" href="#arguments-43"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-4"><a class="header" href="#pledgehistory-4"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tierid-6"><a class="header" href="#tierid-6"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>The ID of the Tier to search for</p>
+</li>
+<li>
+<h2 id="date-8"><a class="header" href="#date-8"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date to consider</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-45"><a class="header" href="#returns-45"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user pledged to the given tier before the given date</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersafter-1"><a class="header" href="#pledgedtotiersafter-1"><strong><code>PledgedToTiersAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 92
+
+public:
+static TArray&lt;FString&gt; PledgedToTiersAfter(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-91"><a class="header" href="#specifiers-91">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-24"><a class="header" href="#meta-specifiers-24">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tiers After</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Returns a list of all tiers a user pledged to after a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-44"><a class="header" href="#arguments-44"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-5"><a class="header" href="#pledgehistory-5"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="date-9"><a class="header" href="#date-9"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date to include results for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-46"><a class="header" href="#returns-46"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersbefore-1"><a class="header" href="#pledgedtotiersbefore-1"><strong><code>PledgedToTiersBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 100
+
+public:
+static TArray&lt;FString&gt; PledgedToTiersBefore(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const FDateTime&amp; date
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-92"><a class="header" href="#specifiers-92">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-25"><a class="header" href="#meta-specifiers-25">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tiers Before</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Returns a list of all tiers a user pledged to before a given date (inclusive)</p>
+  </summary>
+<hr />
+<h1 id="arguments-45"><a class="header" href="#arguments-45"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-6"><a class="header" href="#pledgehistory-6"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="date-10"><a class="header" href="#date-10"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date to include results for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-47"><a class="header" href="#returns-47"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersduring-1"><a class="header" href="#pledgedtotiersduring-1"><strong><code>PledgedToTiersDuring</code></strong></a></h1>
+<pre><code class="language-cpp">//  NBPatreonAPIClientBPLibrary.h : 84
+
+public:
+static TArray&lt;FString&gt; PledgedToTiersDuring(
+    const FPatreonPledgeHistory&amp; PledgeHistory,
+    const int32 year,
+    const int32 month
+);
+</code></pre>
+  <details>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-93"><a class="header" href="#specifiers-93">Specifiers:</a></h3>
+<ul>
+<li><strong>BlueprintCallable</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Pledge History</em></li>
+</ul>
+<h3 id="meta-specifiers-26"><a class="header" href="#meta-specifiers-26">Meta Specifiers:</a></h3>
+<ul>
+<li><strong>DisplayName</strong> = <em>Pledged To Tiers During</em></li>
+<li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
+</ul>
+  <summary>
+<p>Returns a list of all tiers a user pledged to during a given month.</p>
+  </summary>
+<hr />
+<h1 id="arguments-46"><a class="header" href="#arguments-46"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-7"><a class="header" href="#pledgehistory-7"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">const FPatreonPledgeHistory&amp; PledgeHistory
+</code></pre>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="year-1"><a class="header" href="#year-1"><strong><code>year</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 year
+</code></pre>
+<p>The year to match</p>
+</li>
+<li>
+<h2 id="month-1"><a class="header" href="#month-1"><strong><code>month</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 month
+</code></pre>
+<p>The month in the year to match</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-48"><a class="header" href="#returns-48"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
 </li>
 </ul>
   </details>
@@ -3941,7 +5636,7 @@ static bool ParseTokenInfo(
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="class-uperformauthenticationasyncaction"><a class="header" href="#class-uperformauthenticationasyncaction"><strong>Class: <code>UPerformAuthenticationAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 40
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 42
 
 class NBPATREONAPICLIENT_API UPerformAuthenticationAsyncAction
     : public UCancellableAsyncAction;
@@ -3961,24 +5656,24 @@ their pledges to determine if specific content should be unlocked for them.</p>
 <blockquote>
 <p>Because everything is being handled within the same process,
 using this action requires that the application have a copy
-of your client_id and client_secret, both of which will be
-included in HTTP requests sent to Patreon from the user's
-computer. This means that the user may be able to extract these
-values either from the packaged binaries or by analyzing their
-network traffic during the authentication process.</p>
+of your client_id and client_secret (if you use one), both
+of which will be included in HTTP requests sent to Patreon from
+the user's computer. This means that the user may be able to
+extract these values either from the packaged binaries or by
+analyzing their network traffic during the authentication process.</p>
 </blockquote>
 <p>NEVER use your creator token here!</p>
 <hr />
-<h1 id="properties-13"><a class="header" href="#properties-13"><strong>Properties</strong></a></h1>
+<h1 id="properties-16"><a class="header" href="#properties-16"><strong>Properties</strong></a></h1>
 <ul>
 <li>
-<h1 id="oncomplete-3"><a class="header" href="#oncomplete-3"><strong><code>OnComplete</code></strong></a></h1>
+<h1 id="oncomplete-4"><a class="header" href="#oncomplete-4"><strong><code>OnComplete</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FPerformAuthenticationAsyncActionEvent OnComplete;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-60"><a class="header" href="#specifiers-60">Specifiers:</a></h3>
+<h3 id="specifiers-94"><a class="header" href="#specifiers-94">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -3988,13 +5683,13 @@ FPerformAuthenticationAsyncActionEvent OnComplete;
   </summary>
 </li>
 <li>
-<h1 id="onfail-3"><a class="header" href="#onfail-3"><strong><code>OnFail</code></strong></a></h1>
+<h1 id="onfail-4"><a class="header" href="#onfail-4"><strong><code>OnFail</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FPerformAuthenticationAsyncActionFailedEvent OnFail;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-61"><a class="header" href="#specifiers-61">Specifiers:</a></h3>
+<h3 id="specifiers-95"><a class="header" href="#specifiers-95">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -4005,11 +5700,11 @@ FPerformAuthenticationAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-8"><a class="header" href="#methods-8"><strong>Methods</strong></a></h1>
+<h1 id="methods-11"><a class="header" href="#methods-11"><strong>Methods</strong></a></h1>
 <ul>
 <li>
-<h1 id="activate-3"><a class="header" href="#activate-3"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 115
+<h1 id="activate-4"><a class="header" href="#activate-4"><strong><code>Activate</code></strong></a></h1>
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 123
 
 public:
 virtual void Activate() override;
@@ -4021,8 +5716,8 @@ virtual void Activate() override;
   </details>
 </li>
 <li>
-<h1 id="cancel-3"><a class="header" href="#cancel-3"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 120
+<h1 id="cancel-4"><a class="header" href="#cancel-4"><strong><code>Cancel</code></strong></a></h1>
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 128
 
 public:
 virtual void Cancel() override;
@@ -4035,24 +5730,25 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="makeauthuri"><a class="header" href="#makeauthuri"><strong><code>MakeAuthURI</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 95
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 103
 
 public:
 static FString MakeAuthURI(
     const FString ClientID,
     const FString CallbackURI,
+    const FString CustomScopes = TEXT(""),
     FString id = TEXT("")
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-62"><a class="header" href="#specifiers-62">Specifiers:</a></h3>
+<h3 id="specifiers-96"><a class="header" href="#specifiers-96">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient|HTTP</em></li>
 </ul>
-<h3 id="meta-specifiers-14"><a class="header" href="#meta-specifiers-14">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-27"><a class="header" href="#meta-specifiers-27">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Make Patreon Auth URI</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -4062,7 +5758,7 @@ static FString MakeAuthURI(
 This should be used to allow the user to authenticate with Patreon in a web browser.</p>
   </summary>
 <hr />
-<h1 id="arguments-23"><a class="header" href="#arguments-23"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-47"><a class="header" href="#arguments-47"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="clientid"><a class="header" href="#clientid"><strong><code>ClientID</code></strong></a></h2>
@@ -4077,7 +5773,14 @@ This should be used to allow the user to authenticate with Patreon in a web brow
 <p>URI to redirect the user to after successfully authenticating</p>
 </li>
 <li>
-<h2 id="id-1"><a class="header" href="#id-1"><strong><code>id</code></strong></a></h2>
+<h2 id="customscopes"><a class="header" href="#customscopes"><strong><code>CustomScopes</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CustomScopes = TEXT("")
+</code></pre>
+<p>By default only authorization for the 'identity' scope will be requested.
+If you need additional scopes, specify them here. <a href="https://docs.patreon.com/#scopes">See here for more information</a></p>
+</li>
+<li>
+<h2 id="id-3"><a class="header" href="#id-3"><strong><code>id</code></strong></a></h2>
 <pre><code class="language-cpp">FString id = TEXT("")
 </code></pre>
 <p>Optional session/state/id value which will be passed back to the CallbackURI after authentication.
@@ -4085,7 +5788,7 @@ This can be used to match a specific request to a specific response if necessary
 </li>
 </ul>
 <hr />
-<h1 id="returns-27"><a class="header" href="#returns-27"><strong>Returns</strong></a></h1>
+<h1 id="returns-49"><a class="header" href="#returns-49"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FString
@@ -4096,7 +5799,7 @@ This can be used to match a specific request to a specific response if necessary
 </li>
 <li>
 <h1 id="performauthenticationasyncaction"><a class="header" href="#performauthenticationasyncaction"><strong><code>PerformAuthenticationAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 54
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 57
 
 public:
 static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
@@ -4104,18 +5807,19 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
     const FString ClientID,
     const FString ClientSecret,
     const FString CallbackRoute = TEXT("/login"),
-    const int32 CallbackPort = 8080
+    const int32 CallbackPort = 8080,
+    const FString ScopeOverrides = TEXT("")
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-63"><a class="header" href="#specifiers-63">Specifiers:</a></h3>
+<h3 id="specifiers-97"><a class="header" href="#specifiers-97">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-15"><a class="header" href="#meta-specifiers-15">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-28"><a class="header" href="#meta-specifiers-28">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Perform Authentication</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -4126,10 +5830,10 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 <p>Performs OAuth login to Patreon using the user's default web browser</p>
   </summary>
 <hr />
-<h1 id="arguments-24"><a class="header" href="#arguments-24"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-48"><a class="header" href="#arguments-48"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-6"><a class="header" href="#worldcontext-6"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-8"><a class="header" href="#worldcontext-8"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
@@ -4143,7 +5847,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 <h2 id="clientsecret"><a class="header" href="#clientsecret"><strong><code>ClientSecret</code></strong></a></h2>
 <pre><code class="language-cpp">const FString ClientSecret
 </code></pre>
-<p>Patreon App client_secret</p>
+<p>Patreon App client_secret - OPTIONAL - Leave empty if not using a client_secret</p>
 </li>
 <li>
 <h2 id="callbackroute"><a class="header" href="#callbackroute"><strong><code>CallbackRoute</code></strong></a></h2>
@@ -4157,9 +5861,15 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 </code></pre>
 <p>Port to listen on for the login callback</p>
 </li>
+<li>
+<h2 id="scopeoverrides"><a class="header" href="#scopeoverrides"><strong><code>ScopeOverrides</code></strong></a></h2>
+<pre><code class="language-cpp">const FString ScopeOverrides = TEXT("")
+</code></pre>
+<p>By default only the 'identity' scope will be requested. If you need more specify them here.</p>
+</li>
 </ul>
 <hr />
-<h1 id="returns-28"><a class="header" href="#returns-28"><strong>Returns</strong></a></h1>
+<h1 id="returns-50"><a class="header" href="#returns-50"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UPerformAuthenticationAsyncAction*
@@ -4170,7 +5880,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 </li>
 <li>
 <h1 id="performauthenticationumgasyncaction"><a class="header" href="#performauthenticationumgasyncaction"><strong><code>PerformAuthenticationUMGAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 77
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 82
 
 public:
 static UPerformAuthenticationAsyncAction* PerformAuthenticationUMGAsyncAction(
@@ -4179,18 +5889,19 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationUMGAsyncAction(
     const FString ClientID,
     const FString ClientSecret,
     const FString CallbackRoute = TEXT("/login"),
-    const int32 CallbackPort = 8080
+    const int32 CallbackPort = 8080,
+    const FString ScopeOverrides = TEXT("")
 );
 </code></pre>
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-64"><a class="header" href="#specifiers-64">Specifiers:</a></h3>
+<h3 id="specifiers-98"><a class="header" href="#specifiers-98">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-16"><a class="header" href="#meta-specifiers-16">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-29"><a class="header" href="#meta-specifiers-29">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Perform Authentication (UMG Browser)</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -4207,10 +5918,10 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 </blockquote>
   </summary>
 <hr />
-<h1 id="arguments-25"><a class="header" href="#arguments-25"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-49"><a class="header" href="#arguments-49"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-7"><a class="header" href="#worldcontext-7"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-9"><a class="header" href="#worldcontext-9"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
@@ -4230,7 +5941,7 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 <h2 id="clientsecret-1"><a class="header" href="#clientsecret-1"><strong><code>ClientSecret</code></strong></a></h2>
 <pre><code class="language-cpp">const FString ClientSecret
 </code></pre>
-<p>Patreon App client_secret</p>
+<p>Patreon App client_secret - OPTIONAL - Leave empty if not using a client_secret</p>
 </li>
 <li>
 <h2 id="callbackroute-1"><a class="header" href="#callbackroute-1"><strong><code>CallbackRoute</code></strong></a></h2>
@@ -4244,9 +5955,15 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 </code></pre>
 <p>Port to listen on for the login callback</p>
 </li>
+<li>
+<h2 id="scopeoverrides-1"><a class="header" href="#scopeoverrides-1"><strong><code>ScopeOverrides</code></strong></a></h2>
+<pre><code class="language-cpp">const FString ScopeOverrides = TEXT("")
+</code></pre>
+<p>By default only the 'identity' scope will be requested. If you need more specify them here.</p>
+</li>
 </ul>
 <hr />
-<h1 id="returns-29"><a class="header" href="#returns-29"><strong>Returns</strong></a></h1>
+<h1 id="returns-51"><a class="header" href="#returns-51"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UPerformAuthenticationAsyncAction*
@@ -4263,7 +5980,7 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="class-urefreshapitokenasyncaction"><a class="header" href="#class-urefreshapitokenasyncaction"><strong>Class: <code>URefreshAPITokenAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 17
+<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 19
 
 class NBPATREONAPICLIENT_API URefreshAPITokenAsyncAction
     : public UCancellableAsyncAction;
@@ -4273,16 +5990,16 @@ class NBPATREONAPICLIENT_API URefreshAPITokenAsyncAction
 <hr />
 <p>Refreshes an existing API access token</p>
 <hr />
-<h1 id="properties-14"><a class="header" href="#properties-14"><strong>Properties</strong></a></h1>
+<h1 id="properties-17"><a class="header" href="#properties-17"><strong>Properties</strong></a></h1>
 <ul>
 <li>
-<h1 id="oncomplete-4"><a class="header" href="#oncomplete-4"><strong><code>OnComplete</code></strong></a></h1>
+<h1 id="oncomplete-5"><a class="header" href="#oncomplete-5"><strong><code>OnComplete</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FRefreshAPITokenAsyncActionEvent OnComplete;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-65"><a class="header" href="#specifiers-65">Specifiers:</a></h3>
+<h3 id="specifiers-99"><a class="header" href="#specifiers-99">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -4292,13 +6009,13 @@ FRefreshAPITokenAsyncActionEvent OnComplete;
   </summary>
 </li>
 <li>
-<h1 id="onfail-4"><a class="header" href="#onfail-4"><strong><code>OnFail</code></strong></a></h1>
+<h1 id="onfail-5"><a class="header" href="#onfail-5"><strong><code>OnFail</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FRefreshAPITokenAsyncActionFailedEvent OnFail;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-66"><a class="header" href="#specifiers-66">Specifiers:</a></h3>
+<h3 id="specifiers-100"><a class="header" href="#specifiers-100">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintAssignable</strong></li>
 </ul>
@@ -4309,11 +6026,11 @@ FRefreshAPITokenAsyncActionFailedEvent OnFail;
 </li>
 </ul>
 <hr />
-<h1 id="methods-9"><a class="header" href="#methods-9"><strong>Methods</strong></a></h1>
+<h1 id="methods-12"><a class="header" href="#methods-12"><strong>Methods</strong></a></h1>
 <ul>
 <li>
-<h1 id="activate-4"><a class="header" href="#activate-4"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 44
+<h1 id="activate-5"><a class="header" href="#activate-5"><strong><code>Activate</code></strong></a></h1>
+<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 46
 
 public:
 virtual void Activate() override;
@@ -4325,8 +6042,8 @@ virtual void Activate() override;
   </details>
 </li>
 <li>
-<h1 id="cancel-4"><a class="header" href="#cancel-4"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 49
+<h1 id="cancel-5"><a class="header" href="#cancel-5"><strong><code>Cancel</code></strong></a></h1>
+<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 51
 
 public:
 virtual void Cancel() override;
@@ -4339,7 +6056,7 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="refreshapitokenasyncaction"><a class="header" href="#refreshapitokenasyncaction"><strong><code>RefreshAPITokenAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 26
+<pre><code class="language-cpp">//  RefreshAPITokenAsyncAction.h : 28
 
 public:
 static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
@@ -4352,12 +6069,12 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
   <details>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-67"><a class="header" href="#specifiers-67">Specifiers:</a></h3>
+<h3 id="specifiers-101"><a class="header" href="#specifiers-101">Specifiers:</a></h3>
 <ul>
 <li><strong>BlueprintCallable</strong></li>
 <li><strong>Category</strong> = <em>NBPatreonAPIClient</em></li>
 </ul>
-<h3 id="meta-specifiers-17"><a class="header" href="#meta-specifiers-17">Meta Specifiers:</a></h3>
+<h3 id="meta-specifiers-30"><a class="header" href="#meta-specifiers-30">Meta Specifiers:</a></h3>
 <ul>
 <li><strong>DisplayName</strong> = <em>Refresh API Token</em></li>
 <li><strong>Keywords</strong> = <em>NBPatreonAPIClient</em></li>
@@ -4368,15 +6085,15 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
 <p>Refreshes an API access token</p>
   </summary>
 <hr />
-<h1 id="arguments-26"><a class="header" href="#arguments-26"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-50"><a class="header" href="#arguments-50"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="worldcontext-8"><a class="header" href="#worldcontext-8"><strong><code>WorldContext</code></strong></a></h2>
+<h2 id="worldcontext-10"><a class="header" href="#worldcontext-10"><strong><code>WorldContext</code></strong></a></h2>
 <pre><code class="language-cpp">const UObject* WorldContext
 </code></pre>
 </li>
 <li>
-<h2 id="tokeninfo-3"><a class="header" href="#tokeninfo-3"><strong><code>TokenInfo</code></strong></a></h2>
+<h2 id="tokeninfo-5"><a class="header" href="#tokeninfo-5"><strong><code>TokenInfo</code></strong></a></h2>
 <pre><code class="language-cpp">const FAPITokenInfo TokenInfo
 </code></pre>
 </li>
@@ -4392,7 +6109,7 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-30"><a class="header" href="#returns-30"><strong>Returns</strong></a></h1>
+<h1 id="returns-52"><a class="header" href="#returns-52"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">URefreshAPITokenAsyncAction*
@@ -4408,24 +6125,19 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
-<p><br/><br/>
-<br/><br/></p>
-<hr />
-<blockquote>
-<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
-</blockquote>
-<div style="break-before: page; page-break-before: always;"></div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delegates-1"><a class="header" href="#delegates-1">Delegates</a></h1>
 <ul>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FGetPatreonUserInfoAsyncActionEvent.html"><code>FGetPatreonUserInfoAsyncActionEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FGetPatreonUserInfoAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoAsyncActionFailedEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FGetPatreonUserInfoImgAsyncActionEvent.html"><code>FGetPatreonUserInfoImgAsyncActionEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FGetPatreonUserInfoImgAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoImgAsyncActionFailedEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FHTTPRequestActionEvent.html"><code>FHTTPRequestActionEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FPerformAuthenticationAsyncActionEvent.html"><code>FPerformAuthenticationAsyncActionEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FPerformAuthenticationAsyncActionFailedEvent.html"><code>FPerformAuthenticationAsyncActionFailedEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FRefreshAPITokenAsyncActionEvent.html"><code>FRefreshAPITokenAsyncActionEvent</code></a></li>
-<li><a href="reference//patreon-api-client-docs/reference/reference/delegates/FRefreshAPITokenAsyncActionFailedEvent.html"><code>FRefreshAPITokenAsyncActionFailedEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FGetPatreonUserInfoAsyncActionEvent.html"><code>FGetPatreonUserInfoAsyncActionEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FGetPatreonUserInfoAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoAsyncActionFailedEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FGetPatreonUserInfoImgAsyncActionEvent.html"><code>FGetPatreonUserInfoImgAsyncActionEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FGetPatreonUserInfoImgAsyncActionFailedEvent.html"><code>FGetPatreonUserInfoImgAsyncActionFailedEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FGetPatreonUserPledgesAsyncActionEvent.html"><code>FGetPatreonUserPledgesAsyncActionEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FGetPatreonUserPledgesAsyncActionFailedEvent.html"><code>FGetPatreonUserPledgesAsyncActionFailedEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FHTTPRequestActionEvent.html"><code>FHTTPRequestActionEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FPerformAuthenticationAsyncActionEvent.html"><code>FPerformAuthenticationAsyncActionEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FPerformAuthenticationAsyncActionFailedEvent.html"><code>FPerformAuthenticationAsyncActionFailedEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FRefreshAPITokenAsyncActionEvent.html"><code>FRefreshAPITokenAsyncActionEvent</code></a></li>
+<li><a href="reference//reference/reference/delegates/FRefreshAPITokenAsyncActionFailedEvent.html"><code>FRefreshAPITokenAsyncActionFailedEvent</code></a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -4449,7 +6161,7 @@ void FGetPatreonUserInfoAsyncActionEvent(
 <h1 id="parameters"><a class="header" href="#parameters"><strong>Parameters</strong></a></h1>
 <ul>
 <li>
-<h2 id="userinfo-4"><a class="header" href="#userinfo-4"><strong><code>UserInfo</code></strong></a></h2>
+<h2 id="userinfo-6"><a class="header" href="#userinfo-6"><strong><code>UserInfo</code></strong></a></h2>
 <pre><code class="language-cpp">FPatreonUserInfo UserInfo
 </code></pre>
 </li>
@@ -4462,7 +6174,7 @@ void FGetPatreonUserInfoAsyncActionEvent(
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delegate-fgetpatreonuserinfoasyncactionfailedevent"><a class="header" href="#delegate-fgetpatreonuserinfoasyncactionfailedevent"><strong>Delegate: <code>FGetPatreonUserInfoAsyncActionFailedEvent</code></strong></a></h1>
 <pre><code class="language-cpp">// Delegate type
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGetPatreonUserInfoAsyncActionFailedEvent,);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGetPatreonUserInfoAsyncActionFailedEvent);
 
 // Compatible function signature
 void FGetPatreonUserInfoAsyncActionFailedEvent();
@@ -4490,7 +6202,7 @@ void FGetPatreonUserInfoImgAsyncActionEvent(
 <h1 id="parameters-1"><a class="header" href="#parameters-1"><strong>Parameters</strong></a></h1>
 <ul>
 <li>
-<h2 id="userinfo-5"><a class="header" href="#userinfo-5"><strong><code>UserInfo</code></strong></a></h2>
+<h2 id="userinfo-7"><a class="header" href="#userinfo-7"><strong><code>UserInfo</code></strong></a></h2>
 <pre><code class="language-cpp">FPatreonUserInfoImgs UserInfo
 </code></pre>
 </li>
@@ -4503,10 +6215,51 @@ void FGetPatreonUserInfoImgAsyncActionEvent(
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delegate-fgetpatreonuserinfoimgasyncactionfailedevent"><a class="header" href="#delegate-fgetpatreonuserinfoimgasyncactionfailedevent"><strong>Delegate: <code>FGetPatreonUserInfoImgAsyncActionFailedEvent</code></strong></a></h1>
 <pre><code class="language-cpp">// Delegate type
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGetPatreonUserInfoImgAsyncActionFailedEvent,);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGetPatreonUserInfoImgAsyncActionFailedEvent);
 
 // Compatible function signature
 void FGetPatreonUserInfoImgAsyncActionFailedEvent();
+
+</code></pre>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="delegate-fgetpatreonuserpledgesasyncactionevent"><a class="header" href="#delegate-fgetpatreonuserpledgesasyncactionevent"><strong>Delegate: <code>FGetPatreonUserPledgesAsyncActionEvent</code></strong></a></h1>
+<pre><code class="language-cpp">// Delegate type
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGetPatreonUserPledgesAsyncActionEvent,
+    FPatreonPledgeHistory PledgeHistory
+);
+
+// Compatible function signature
+void FGetPatreonUserPledgesAsyncActionEvent(
+    FPatreonPledgeHistory PledgeHistory
+);
+
+</code></pre>
+<hr />
+<h1 id="parameters-2"><a class="header" href="#parameters-2"><strong>Parameters</strong></a></h1>
+<ul>
+<li>
+<h2 id="pledgehistory-8"><a class="header" href="#pledgehistory-8"><strong><code>PledgeHistory</code></strong></a></h2>
+<pre><code class="language-cpp">FPatreonPledgeHistory PledgeHistory
+</code></pre>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="delegate-fgetpatreonuserpledgesasyncactionfailedevent"><a class="header" href="#delegate-fgetpatreonuserpledgesasyncactionfailedevent"><strong>Delegate: <code>FGetPatreonUserPledgesAsyncActionFailedEvent</code></strong></a></h1>
+<pre><code class="language-cpp">// Delegate type
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGetPatreonUserPledgesAsyncActionFailedEvent);
+
+// Compatible function signature
+void FGetPatreonUserPledgesAsyncActionFailedEvent();
 
 </code></pre>
 <p><br/><br/>
@@ -4530,7 +6283,7 @@ void FHTTPRequestActionEvent(
 
 </code></pre>
 <hr />
-<h1 id="parameters-2"><a class="header" href="#parameters-2"><strong>Parameters</strong></a></h1>
+<h1 id="parameters-3"><a class="header" href="#parameters-3"><strong>Parameters</strong></a></h1>
 <ul>
 <li>
 <h2 id="responsecode"><a class="header" href="#responsecode"><strong><code>ResponseCode</code></strong></a></h2>
@@ -4562,10 +6315,10 @@ void FPerformAuthenticationAsyncActionEvent(
 
 </code></pre>
 <hr />
-<h1 id="parameters-3"><a class="header" href="#parameters-3"><strong>Parameters</strong></a></h1>
+<h1 id="parameters-4"><a class="header" href="#parameters-4"><strong>Parameters</strong></a></h1>
 <ul>
 <li>
-<h2 id="tokeninfo-4"><a class="header" href="#tokeninfo-4"><strong><code>TokenInfo</code></strong></a></h2>
+<h2 id="tokeninfo-6"><a class="header" href="#tokeninfo-6"><strong><code>TokenInfo</code></strong></a></h2>
 <pre><code class="language-cpp">FAPITokenInfo TokenInfo
 </code></pre>
 </li>
@@ -4578,7 +6331,7 @@ void FPerformAuthenticationAsyncActionEvent(
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delegate-fperformauthenticationasyncactionfailedevent"><a class="header" href="#delegate-fperformauthenticationasyncactionfailedevent"><strong>Delegate: <code>FPerformAuthenticationAsyncActionFailedEvent</code></strong></a></h1>
 <pre><code class="language-cpp">// Delegate type
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPerformAuthenticationAsyncActionFailedEvent,);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPerformAuthenticationAsyncActionFailedEvent);
 
 // Compatible function signature
 void FPerformAuthenticationAsyncActionFailedEvent();
@@ -4603,10 +6356,10 @@ void FRefreshAPITokenAsyncActionEvent(
 
 </code></pre>
 <hr />
-<h1 id="parameters-4"><a class="header" href="#parameters-4"><strong>Parameters</strong></a></h1>
+<h1 id="parameters-5"><a class="header" href="#parameters-5"><strong>Parameters</strong></a></h1>
 <ul>
 <li>
-<h2 id="tokeninfo-5"><a class="header" href="#tokeninfo-5"><strong><code>TokenInfo</code></strong></a></h2>
+<h2 id="tokeninfo-7"><a class="header" href="#tokeninfo-7"><strong><code>TokenInfo</code></strong></a></h2>
 <pre><code class="language-cpp">FAPITokenInfo TokenInfo
 </code></pre>
 </li>
@@ -4619,7 +6372,7 @@ void FRefreshAPITokenAsyncActionEvent(
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="delegate-frefreshapitokenasyncactionfailedevent"><a class="header" href="#delegate-frefreshapitokenasyncactionfailedevent"><strong>Delegate: <code>FRefreshAPITokenAsyncActionFailedEvent</code></strong></a></h1>
 <pre><code class="language-cpp">// Delegate type
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRefreshAPITokenAsyncActionFailedEvent,);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRefreshAPITokenAsyncActionFailedEvent);
 
 // Compatible function signature
 void FRefreshAPITokenAsyncActionFailedEvent();

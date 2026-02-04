@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>FPatreonTierInfo - NB Patreon API Integration</title>
+        <title>FPatreonPledgeHistory - NB Patreon API Integration</title>
 
 
         <!-- Custom HTML head -->
@@ -154,10 +154,10 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="struct-fpatreontierinfo"><a class="header" href="#struct-fpatreontierinfo"><strong>Struct: <code>FPatreonTierInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfo.h : 15
+                        <h1 id="struct-fpatreonpledgehistory"><a class="header" href="#struct-fpatreonpledgehistory"><strong>Struct: <code>FPatreonPledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 14
 
-struct NBPATREONAPICLIENT_API FPatreonTierInfo;
+struct NBPATREONAPICLIENT_API FPatreonPledgeHistory;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
@@ -166,17 +166,14 @@ struct NBPATREONAPICLIENT_API FPatreonTierInfo;
 <li><strong>BlueprintType</strong></li>
 </ul>
 <hr />
-<p>Represents basic information about a pledged tier.</p>
-<p>This can be used to show the user information about the benefits
-or content they are now able to unlock, or just to check which
-content should be unlocked behind the scenes.</p>
+<p>Contains information about when a user changed their pledge status.</p>
 <hr />
 <h1 id="properties"><a class="header" href="#properties"><strong>Properties</strong></a></h1>
 <ul>
 <li>
-<h1 id="amountcents"><a class="header" href="#amountcents"><strong><code>AmountCents</code></strong></a></h1>
+<h1 id="pledgehistory"><a class="header" href="#pledgehistory"><strong><code>PledgeHistory</code></strong></a></h1>
 <pre><code class="language-cpp">public:
-int64 AmountCents;
+TArray&lt;FPatreonPledgeEvent&gt; PledgeHistory;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
@@ -184,124 +181,12 @@ int64 AmountCents;
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreaonAPIClient|Tier</em></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|User Info</em></li>
 </ul>
 <hr />
   <summary>
-  The price of this tier, in USD cents
-  </summary>
-</li>
-<li>
-<h1 id="benefits"><a class="header" href="#benefits"><strong><code>Benefits</code></strong></a></h1>
-<pre><code class="language-cpp">public:
-TArray&lt;FString&gt; Benefits;
-</code></pre>
-<hr />
-<p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
-<ul>
-<li><strong>EditAnywhere</strong></li>
-<li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
-</ul>
-<hr />
-  <summary>
-  List of benefits this tier provides.
-<p>If you have multiple tiers which provide the same benefit, it may be
-more straightforward to simply check if any tier contains a particular
-benefit to unlock content rather than checking for multiple tiers at once.</p>
-  </summary>
-</li>
-<li>
-<h1 id="description"><a class="header" href="#description"><strong><code>Description</code></strong></a></h1>
-<pre><code class="language-cpp">public:
-FString Description;
-</code></pre>
-<hr />
-<p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
-<ul>
-<li><strong>EditAnywhere</strong></li>
-<li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
-</ul>
-<hr />
-  <summary>
-  Short description of the tier, may be empty
-  </summary>
-</li>
-<li>
-<h1 id="id"><a class="header" href="#id"><strong><code>Id</code></strong></a></h1>
-<pre><code class="language-cpp">public:
-FString Id;
-</code></pre>
-<hr />
-<p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
-<ul>
-<li><strong>EditAnywhere</strong></li>
-<li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
-</ul>
-<hr />
-  <summary>
-  The ID of this tier
-  </summary>
-</li>
-<li>
-<h1 id="imageurl"><a class="header" href="#imageurl"><strong><code>ImageURL</code></strong></a></h1>
-<pre><code class="language-cpp">public:
-FString ImageURL;
-</code></pre>
-<hr />
-<p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
-<ul>
-<li><strong>EditAnywhere</strong></li>
-<li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
-</ul>
-<hr />
-  <summary>
-  URL of the tier's main image (if it has one).
-<p>For convenience, <a href="/reference/structs/FPatreonTierInfoImgs.html"><strong><code>FPatreonTierInfoImgs</code></strong></a> directly
-includes the image as a texture instead.</p>
-  </summary>
-</li>
-<li>
-<h1 id="title"><a class="header" href="#title"><strong><code>Title</code></strong></a></h1>
-<pre><code class="language-cpp">public:
-FString Title;
-</code></pre>
-<hr />
-<p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
-<ul>
-<li><strong>EditAnywhere</strong></li>
-<li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
-</ul>
-<hr />
-  <summary>
-  The name of this tier
-  </summary>
-</li>
-<li>
-<h1 id="url"><a class="header" href="#url"><strong><code>URL</code></strong></a></h1>
-<pre><code class="language-cpp">public:
-FString URL;
-</code></pre>
-<hr />
-<p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
-<ul>
-<li><strong>EditAnywhere</strong></li>
-<li><strong>BlueprintReadWrite</strong></li>
-<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
-</ul>
-<hr />
-  <summary>
-  URL of the tier, e.g. to provide a pledge link
+  Collection of pledge events for a single user.
+  Expected to be sorted according to date.
   </summary>
 </li>
 </ul>
@@ -309,13 +194,263 @@ FString URL;
 <h1 id="constructors"><a class="header" href="#constructors"><strong>Constructors</strong></a></h1>
 <ul>
 <li>
-<h1 id="fpatreontierinfo"><a class="header" href="#fpatreontierinfo"><strong><code>FPatreonTierInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfo.h : 20
+<h1 id="fpatreonpledgehistory"><a class="header" href="#fpatreonpledgehistory"><strong><code>FPatreonPledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 19
 
 public:
-FPatreonTierInfo();
+FPatreonPledgeHistory();
 </code></pre>
   <details>
+  </details>
+</li>
+<li>
+<h1 id="fpatreonpledgehistory-1"><a class="header" href="#fpatreonpledgehistory-1"><strong><code>FPatreonPledgeHistory</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 31
+
+public:
+FPatreonPledgeHistory(
+    const FString&amp; json,
+    const FDateTime&amp; MinimumDate,
+    bool DiscardUnpaid,
+    const FString&amp; CampaignID = TEXT("")
+);
+</code></pre>
+  <details>
+  <summary>
+<p>Construct FPatreonPledgeHistory from a JSON string. Populates any fields
+it can find in the provided JSON.
+If the provided JSON string cannot be parsed for any reason, the result
+will be uninitialized.</p>
+  </summary>
+<hr />
+<h1 id="arguments"><a class="header" href="#arguments"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="json"><a class="header" href="#json"><strong><code>json</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; json
+</code></pre>
+<p>JSON string containing pledge history</p>
+</li>
+<li>
+<h2 id="minimumdate"><a class="header" href="#minimumdate"><strong><code>MinimumDate</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; MinimumDate
+</code></pre>
+<p>Entries in json with earlier dates will be discarded</p>
+</li>
+<li>
+<h2 id="discardunpaid"><a class="header" href="#discardunpaid"><strong><code>DiscardUnpaid</code></strong></a></h2>
+<pre><code class="language-cpp">bool DiscardUnpaid
+</code></pre>
+<p>If true, entries with invalid payment status (e.g. failed payments) will be discarded</p>
+</li>
+<li>
+<h2 id="campaignid"><a class="header" href="#campaignid"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; CampaignID = TEXT("")
+</code></pre>
+<p>If not empty, entries which do not match the given campaign ID will be discarded</p>
+</li>
+</ul>
+  </details>
+</li>
+</ul>
+<hr />
+<h1 id="methods"><a class="header" href="#methods"><strong>Methods</strong></a></h1>
+<ul>
+<li>
+<h1 id="pledgedtotierafter"><a class="header" href="#pledgedtotierafter"><strong><code>PledgedToTierAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 55
+
+public:
+bool PledgedToTierAfter(
+    const FString&amp; tier,
+    const FDateTime&amp; date,
+    bool byTierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Checks if the user was pledged to the specified tier at any time after a provided date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tier"><a class="header" href="#tier"><strong><code>tier</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tier
+</code></pre>
+<p>The tier to search for</p>
+</li>
+<li>
+<h2 id="date"><a class="header" href="#date"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The minimum date that should be considered</p>
+</li>
+<li>
+<h2 id="bytierid"><a class="header" href="#bytierid"><strong><code>byTierId</code></strong></a></h2>
+<pre><code class="language-cpp">bool byTierId
+</code></pre>
+<p>If true, <code>tier</code> will be interpreted as a Tier ID, otherwise as a Tier Title</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns"><a class="header" href="#returns"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotierbefore"><a class="header" href="#pledgedtotierbefore"><strong><code>PledgedToTierBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 63
+
+public:
+bool PledgedToTierBefore(
+    const FString&amp; tier,
+    const FDateTime&amp; date,
+    bool byTierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Checks in the user pledged to the specified tier at any time before a provided date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tier-1"><a class="header" href="#tier-1"><strong><code>tier</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tier
+</code></pre>
+<p>The tier to search for</p>
+</li>
+<li>
+<h2 id="date-1"><a class="header" href="#date-1"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+<p>The maximum date that should be considered</p>
+</li>
+<li>
+<h2 id="bytierid-1"><a class="header" href="#bytierid-1"><strong><code>byTierId</code></strong></a></h2>
+<pre><code class="language-cpp">bool byTierId
+</code></pre>
+<p>If true, <code>tier</code> will be interpreted as a Tier ID, otherwise as a Tier Title</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-1"><a class="header" href="#returns-1"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersafter"><a class="header" href="#pledgedtotiersafter"><strong><code>PledgedToTiersAfter</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 42
+
+public:
+TArray&lt;FString&gt; PledgedToTiersAfter(
+    const FDateTime&amp; date
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Returns the titles of the tier(s) the user was pledged to after the given date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="date-2"><a class="header" href="#date-2"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-2"><a class="header" href="#returns-2"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersbefore"><a class="header" href="#pledgedtotiersbefore"><strong><code>PledgedToTiersBefore</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 47
+
+public:
+TArray&lt;FString&gt; PledgedToTiersBefore(
+    const FDateTime&amp; date
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Returns the titles of the tier(s) the user was pledged to after the given date.</p>
+  </summary>
+<hr />
+<h1 id="arguments-4"><a class="header" href="#arguments-4"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="date-3"><a class="header" href="#date-3"><strong><code>date</code></strong></a></h2>
+<pre><code class="language-cpp">const FDateTime&amp; date
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-3"><a class="header" href="#returns-3"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="pledgedtotiersduring"><a class="header" href="#pledgedtotiersduring"><strong><code>PledgedToTiersDuring</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonPledgeHistory.h : 37
+
+public:
+TArray&lt;FString&gt; PledgedToTiersDuring(
+    const int32 year,
+    const int32 month
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Returns the titles of the tier(s) the user was pledged to during the given month, if any.
+If the user did not have a subscription during the given month, returns an empty list.</p>
+  </summary>
+<hr />
+<h1 id="arguments-5"><a class="header" href="#arguments-5"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="year"><a class="header" href="#year"><strong><code>year</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 year
+</code></pre>
+</li>
+<li>
+<h2 id="month"><a class="header" href="#month"><strong><code>month</code></strong></a></h2>
+<pre><code class="language-cpp">const int32 month
+</code></pre>
+</li>
+</ul>
+<hr />
+<h1 id="returns-4"><a class="header" href="#returns-4"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">TArray&lt;FString&gt;
+</code></pre>
+</li>
+</ul>
   </details>
 </li>
 </ul>
@@ -330,11 +465,11 @@ FPatreonTierInfo();
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../reference/structs/FPatreonPledgeHistory.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../reference/structs/FPatreonPledgeEvent.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../reference/structs/FPatreonTierInfoImgs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../reference/structs/FPatreonTierInfo.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -344,11 +479,11 @@ FPatreonTierInfo();
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../reference/structs/FPatreonPledgeHistory.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../reference/structs/FPatreonPledgeEvent.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../reference/structs/FPatreonTierInfoImgs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../reference/structs/FPatreonTierInfo.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

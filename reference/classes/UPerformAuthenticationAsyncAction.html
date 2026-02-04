@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="class-uperformauthenticationasyncaction"><a class="header" href="#class-uperformauthenticationasyncaction"><strong>Class: <code>UPerformAuthenticationAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 40
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 42
 
 class NBPATREONAPICLIENT_API UPerformAuthenticationAsyncAction
     : public UCancellableAsyncAction;
@@ -175,11 +175,11 @@ their pledges to determine if specific content should be unlocked for them.</p>
 <blockquote>
 <p>Because everything is being handled within the same process,
 using this action requires that the application have a copy
-of your client_id and client_secret (<a href="https://noirb.github.io/patreon-api-client-docs/how-to/ClientSecret.html">if you use one</a>), both of which will be
-included in HTTP requests sent to Patreon from the user's
-computer. This means that the user may be able to extract these
-values either from the packaged binaries or by analyzing their
-network traffic during the authentication process.</p>
+of your client_id and client_secret (if you use one), both
+of which will be included in HTTP requests sent to Patreon from
+the user's computer. This means that the user may be able to
+extract these values either from the packaged binaries or by
+analyzing their network traffic during the authentication process.</p>
 </blockquote>
 <p>NEVER use your creator token here!</p>
 <hr />
@@ -223,7 +223,7 @@ FPerformAuthenticationAsyncActionFailedEvent OnFail;
 <ul>
 <li>
 <h1 id="activate"><a class="header" href="#activate"><strong><code>Activate</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 115
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 123
 
 public:
 virtual void Activate() override;
@@ -236,7 +236,7 @@ virtual void Activate() override;
 </li>
 <li>
 <h1 id="cancel"><a class="header" href="#cancel"><strong><code>Cancel</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 120
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 128
 
 public:
 virtual void Cancel() override;
@@ -249,12 +249,13 @@ virtual void Cancel() override;
 </li>
 <li>
 <h1 id="makeauthuri"><a class="header" href="#makeauthuri"><strong><code>MakeAuthURI</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 95
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 103
 
 public:
 static FString MakeAuthURI(
     const FString ClientID,
     const FString CallbackURI,
+    const FString CustomScopes = TEXT(""),
     FString id = TEXT("")
 );
 </code></pre>
@@ -291,6 +292,13 @@ This should be used to allow the user to authenticate with Patreon in a web brow
 <p>URI to redirect the user to after successfully authenticating</p>
 </li>
 <li>
+<h2 id="customscopes"><a class="header" href="#customscopes"><strong><code>CustomScopes</code></strong></a></h2>
+<pre><code class="language-cpp">const FString CustomScopes = TEXT("")
+</code></pre>
+<p>By default only authorization for the 'identity' scope will be requested.
+If you need additional scopes, specify them here. <a href="https://docs.patreon.com/#scopes">See here for more information</a></p>
+</li>
+<li>
 <h2 id="id"><a class="header" href="#id"><strong><code>id</code></strong></a></h2>
 <pre><code class="language-cpp">FString id = TEXT("")
 </code></pre>
@@ -310,7 +318,7 @@ This can be used to match a specific request to a specific response if necessary
 </li>
 <li>
 <h1 id="performauthenticationasyncaction"><a class="header" href="#performauthenticationasyncaction"><strong><code>PerformAuthenticationAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 54
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 57
 
 public:
 static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
@@ -318,7 +326,8 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
     const FString ClientID,
     const FString ClientSecret,
     const FString CallbackRoute = TEXT("/login"),
-    const int32 CallbackPort = 8080
+    const int32 CallbackPort = 8080,
+    const FString ScopeOverrides = TEXT("")
 );
 </code></pre>
   <details>
@@ -357,8 +366,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 <h2 id="clientsecret"><a class="header" href="#clientsecret"><strong><code>ClientSecret</code></strong></a></h2>
 <pre><code class="language-cpp">const FString ClientSecret
 </code></pre>
-<p>Patreon App client_secret</p>
-<p><b><a href="https://noirb.github.io/patreon-api-client-docs/how-to/ClientSecret.html">OPTIONAL</a></b>, leave empty if not using a <code>client_secret</code></p>
+<p>Patreon App client_secret - OPTIONAL - Leave empty if not using a client_secret</p>
 </li>
 <li>
 <h2 id="callbackroute"><a class="header" href="#callbackroute"><strong><code>CallbackRoute</code></strong></a></h2>
@@ -371,6 +379,12 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 <pre><code class="language-cpp">const int32 CallbackPort = 8080
 </code></pre>
 <p>Port to listen on for the login callback</p>
+</li>
+<li>
+<h2 id="scopeoverrides"><a class="header" href="#scopeoverrides"><strong><code>ScopeOverrides</code></strong></a></h2>
+<pre><code class="language-cpp">const FString ScopeOverrides = TEXT("")
+</code></pre>
+<p>By default only the 'identity' scope will be requested. If you need more specify them here.</p>
 </li>
 </ul>
 <hr />
@@ -385,7 +399,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 </li>
 <li>
 <h1 id="performauthenticationumgasyncaction"><a class="header" href="#performauthenticationumgasyncaction"><strong><code>PerformAuthenticationUMGAsyncAction</code></strong></a></h1>
-<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 77
+<pre><code class="language-cpp">//  PerformAuthenticationAsyncAction.h : 82
 
 public:
 static UPerformAuthenticationAsyncAction* PerformAuthenticationUMGAsyncAction(
@@ -394,7 +408,8 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationUMGAsyncAction(
     const FString ClientID,
     const FString ClientSecret,
     const FString CallbackRoute = TEXT("/login"),
-    const int32 CallbackPort = 8080
+    const int32 CallbackPort = 8080,
+    const FString ScopeOverrides = TEXT("")
 );
 </code></pre>
   <details>
@@ -445,8 +460,7 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 <h2 id="clientsecret-1"><a class="header" href="#clientsecret-1"><strong><code>ClientSecret</code></strong></a></h2>
 <pre><code class="language-cpp">const FString ClientSecret
 </code></pre>
-<p>Patreon App client_secret</p>
-<p><b><a href="https://noirb.github.io/patreon-api-client-docs/how-to/ClientSecret.html">OPTIONAL</a></b>, leave empty if not using a <code>client_secret</code></p>
+<p>Patreon App client_secret - OPTIONAL - Leave empty if not using a client_secret</p>
 </li>
 <li>
 <h2 id="callbackroute-1"><a class="header" href="#callbackroute-1"><strong><code>CallbackRoute</code></strong></a></h2>
@@ -459,6 +473,12 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 <pre><code class="language-cpp">const int32 CallbackPort = 8080
 </code></pre>
 <p>Port to listen on for the login callback</p>
+</li>
+<li>
+<h2 id="scopeoverrides-1"><a class="header" href="#scopeoverrides-1"><strong><code>ScopeOverrides</code></strong></a></h2>
+<pre><code class="language-cpp">const FString ScopeOverrides = TEXT("")
+</code></pre>
+<p>By default only the 'identity' scope will be requested. If you need more specify them here.</p>
 </li>
 </ul>
 <hr />
