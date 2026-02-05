@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="struct-fpatreonuserinfo"><a class="header" href="#struct-fpatreonuserinfo"><strong>Struct: <code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 17
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 19
 
 struct NBPATREONAPICLIENT_API FPatreonUserInfo;
 </code></pre>
@@ -177,9 +177,9 @@ request for this plugin to nbpsup@gmail.com</p>
 <h1 id="properties"><a class="header" href="#properties"><strong>Properties</strong></a></h1>
 <ul>
 <li>
-<h1 id="canseensfw"><a class="header" href="#canseensfw"><strong><code>CanSeeNSFW</code></strong></a></h1>
+<h1 id="campaignlifetimesupportcents"><a class="header" href="#campaignlifetimesupportcents"><strong><code>CampaignLifetimeSupportCents</code></strong></a></h1>
 <pre><code class="language-cpp">public:
-bool CanSeeNSFW;
+int64 CampaignLifetimeSupportCents;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
@@ -191,7 +191,47 @@ bool CanSeeNSFW;
 </ul>
 <hr />
   <summary>
+  The total amount of money this user has ever contributed to this campaign, in cents.
+<p>Can be used to unlock content for users only after reaching specific subscription thresholds.
+NOTE: Gifted subscriptions will not increase this value!</p>
+  </summary>
+</li>
+<li>
+<h1 id="canseensfw"><a class="header" href="#canseensfw"><strong><code>CanSeeNSFW</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+bool CanSeeNSFW;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
   Whether or not the user has enabled NSFW content on their Patreon profile
+  </summary>
+</li>
+<li>
+<h1 id="currentlyentitledamountcents"><a class="header" href="#currentlyentitledamountcents"><strong><code>CurrentlyEntitledAmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 CurrentlyEntitledAmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|User Info</em></li>
+</ul>
+<hr />
+  <summary>
+  The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.
+<p>This can be used to unlock content based on how much money they are contributing rather than checking
+which tier they belong to.</p>
   </summary>
 </li>
 <li>
@@ -201,7 +241,7 @@ FString FirstName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
+<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -216,7 +256,7 @@ FString FullName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
+<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -231,7 +271,7 @@ FString ImageURL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
+<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -249,7 +289,7 @@ bool IsCreator;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
+<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -257,7 +297,7 @@ bool IsCreator;
 </ul>
 <hr />
   <summary>
-  Whether or not the current user is also the creator of the campaign.
+  Whether or not the current user is also the creator of a campaign.
   </summary>
 </li>
 <li>
@@ -267,7 +307,7 @@ FString LastName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
+<h3 id="specifiers-8"><a class="header" href="#specifiers-8">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -282,7 +322,7 @@ FString PatronStatus;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
+<h3 id="specifiers-9"><a class="header" href="#specifiers-9">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -295,7 +335,7 @@ FString PatronStatus;
 <li><code>active_patron</code>:   They are currently subscribed to a campaign</li>
 <li><code>declined_patron</code>: They have attempted to subscribe, but payment failed!!</li>
 <li><code>former_patron</code>:   They used to subscribe, but currently do not</li>
-<li><code>null</code>:            They have never subscribed before</li>
+<li><code>&lt;empty&gt;</code>:         They have never subscribed before</li>
 </ul>
   </summary>
 </li>
@@ -306,7 +346,7 @@ TArray&lt;FPatreonTierInfo&gt; Tiers;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-8"><a class="header" href="#specifiers-8">Specifiers:</a></h3>
+<h3 id="specifiers-10"><a class="header" href="#specifiers-10">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -326,7 +366,7 @@ FString URL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-9"><a class="header" href="#specifiers-9">Specifiers:</a></h3>
+<h3 id="specifiers-11"><a class="header" href="#specifiers-11">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -344,7 +384,7 @@ FString VanityName;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-10"><a class="header" href="#specifiers-10">Specifiers:</a></h3>
+<h3 id="specifiers-12"><a class="header" href="#specifiers-12">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -361,7 +401,7 @@ FString VanityName;
 <ul>
 <li>
 <h1 id="fpatreonuserinfo"><a class="header" href="#fpatreonuserinfo"><strong><code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 25
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 27
 
 public:
 FPatreonUserInfo();
@@ -374,11 +414,12 @@ FPatreonUserInfo();
 </li>
 <li>
 <h1 id="fpatreonuserinfo-1"><a class="header" href="#fpatreonuserinfo-1"><strong><code>FPatreonUserInfo</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 33
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 35
 
 public:
 FPatreonUserInfo(
-    const FString&amp; json
+    const FString&amp; json,
+    const FString&amp; CampaignID = TEXT("")
 );
 </code></pre>
   <details>
@@ -396,6 +437,11 @@ will be uninitialized.</p>
 <pre><code class="language-cpp">const FString&amp; json
 </code></pre>
 </li>
+<li>
+<h2 id="campaignid"><a class="header" href="#campaignid"><strong><code>CampaignID</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; CampaignID = TEXT("")
+</code></pre>
+</li>
 </ul>
   </details>
 </li>
@@ -404,8 +450,42 @@ will be uninitialized.</p>
 <h1 id="methods"><a class="header" href="#methods"><strong>Methods</strong></a></h1>
 <ul>
 <li>
+<h1 id="getcampaignid"><a class="header" href="#getcampaignid"><strong><code>GetCampaignID</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 47
+
+public:
+static FString GetCampaignID(
+    const TSharedPtr&lt;FJsonObject&gt; relationshipEntry
+);
+</code></pre>
+  <details>
+  <summary>
+<p>Attempts to find a field 'campaign.data.id' in the given JSON object.</p>
+  </summary>
+<hr />
+<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="relationshipentry"><a class="header" href="#relationshipentry"><strong><code>relationshipEntry</code></strong></a></h2>
+<pre><code class="language-cpp">const TSharedPtr&lt;FJsonObject&gt; relationshipEntry
+</code></pre>
+<p>Object to begin searching from.</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns"><a class="header" href="#returns"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">FString
+</code></pre>
+<p>The Campaign ID if one was false, otherwise an empty string.</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
 <h1 id="hasbenefit"><a class="header" href="#hasbenefit"><strong><code>HasBenefit</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 50
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 69
 
 public:
 bool HasBenefit(
@@ -418,7 +498,7 @@ bool HasBenefit(
 Will check all tiers the user is pledged to.</p>
   </summary>
 <hr />
-<h1 id="arguments-1"><a class="header" href="#arguments-1"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="benefitname"><a class="header" href="#benefitname"><strong><code>benefitName</code></strong></a></h2>
@@ -428,7 +508,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns"><a class="header" href="#returns"><strong>Returns</strong></a></h1>
+<h1 id="returns-1"><a class="header" href="#returns-1"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -440,7 +520,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 <li>
 <h1 id="hastier"><a class="header" href="#hastier"><strong><code>HasTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 42
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 54
 
 public:
 bool HasTier(
@@ -452,7 +532,7 @@ bool HasTier(
 <p>Convenience method to check if this user has pledged to a specific tier</p>
   </summary>
 <hr />
-<h1 id="arguments-2"><a class="header" href="#arguments-2"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="tiername"><a class="header" href="#tiername"><strong><code>tierName</code></strong></a></h2>
@@ -462,7 +542,41 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-1"><a class="header" href="#returns-1"><strong>Returns</strong></a></h1>
+<h1 id="returns-2"><a class="header" href="#returns-2"><strong>Returns</strong></a></h1>
+<ul>
+<li>
+<pre><code class="language-cpp">bool
+</code></pre>
+<p>True if the user has pledged to the given tier</p>
+</li>
+</ul>
+  </details>
+</li>
+<li>
+<h1 id="hastierid"><a class="header" href="#hastierid"><strong><code>HasTierId</code></strong></a></h1>
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 61
+
+public:
+bool HasTierId(
+    const FString&amp; tierId
+) const;
+</code></pre>
+  <details>
+  <summary>
+<p>Convenience method to check if this user has pledged to a specific tier</p>
+  </summary>
+<hr />
+<h1 id="arguments-4"><a class="header" href="#arguments-4"><strong>Arguments</strong></a></h1>
+<ul>
+<li>
+<h2 id="tierid"><a class="header" href="#tierid"><strong><code>tierId</code></strong></a></h2>
+<pre><code class="language-cpp">const FString&amp; tierId
+</code></pre>
+<p>ID of the tier to check for</p>
+</li>
+</ul>
+<hr />
+<h1 id="returns-3"><a class="header" href="#returns-3"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -474,17 +588,20 @@ bool HasTier(
 </li>
 <li>
 <h1 id="parsetier"><a class="header" href="#parsetier"><strong><code>ParseTier</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonUserInfo.h : 35
+<pre><code class="language-cpp">//  PatreonUserInfo.h : 40
 
 public:
-FPatreonTierInfo ParseTier(
+static FPatreonTierInfo ParseTier(
     const TSharedPtr&lt;FJsonObject&gt; tierEntry,
     const TSharedPtr&lt;FJsonObject&gt; tierattributes
 );
 </code></pre>
   <details>
+  <summary>
+<p>Parses tier information from JSON</p>
+  </summary>
 <hr />
-<h1 id="arguments-3"><a class="header" href="#arguments-3"><strong>Arguments</strong></a></h1>
+<h1 id="arguments-5"><a class="header" href="#arguments-5"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
 <h2 id="tierentry"><a class="header" href="#tierentry"><strong><code>tierEntry</code></strong></a></h2>
@@ -498,7 +615,7 @@ FPatreonTierInfo ParseTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-2"><a class="header" href="#returns-2"><strong>Returns</strong></a></h1>
+<h1 id="returns-4"><a class="header" href="#returns-4"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FPatreonTierInfo

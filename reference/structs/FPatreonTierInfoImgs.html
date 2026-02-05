@@ -155,7 +155,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="struct-fpatreontierinfoimgs"><a class="header" href="#struct-fpatreontierinfoimgs"><strong>Struct: <code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 12
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 14
 
 struct NBPATREONAPICLIENT_API FPatreonTierInfoImgs;
 </code></pre>
@@ -172,13 +172,31 @@ URLs to images the images are stored directly as Textures.</p>
 <h1 id="properties"><a class="header" href="#properties"><strong>Properties</strong></a></h1>
 <ul>
 <li>
+<h1 id="amountcents"><a class="header" href="#amountcents"><strong><code>AmountCents</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+int64 AmountCents;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-1"><a class="header" href="#specifiers-1">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreaonAPIClient|Tier</em></li>
+</ul>
+<hr />
+  <summary>
+  The price of this tier, in USD cents
+  </summary>
+</li>
+<li>
 <h1 id="benefits"><a class="header" href="#benefits"><strong><code>Benefits</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 TArray&lt;FString&gt; Benefits;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-1"><a class="header" href="#specifiers-1">Specifiers:</a></h3>
+<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -199,7 +217,7 @@ FString Description;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-2"><a class="header" href="#specifiers-2">Specifiers:</a></h3>
+<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -211,13 +229,31 @@ FString Description;
   </summary>
 </li>
 <li>
+<h1 id="id"><a class="header" href="#id"><strong><code>Id</code></strong></a></h1>
+<pre><code class="language-cpp">public:
+FString Id;
+</code></pre>
+<hr />
+<p><strong><em>Reflection-enabled</em></strong></p>
+<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
+<ul>
+<li><strong>EditAnywhere</strong></li>
+<li><strong>BlueprintReadWrite</strong></li>
+<li><strong>Category</strong> = <em>NBPatreonAPIClient|Tier</em></li>
+</ul>
+<hr />
+  <summary>
+  The ID of this tier
+  </summary>
+</li>
+<li>
 <h1 id="tierimage"><a class="header" href="#tierimage"><strong><code>TierImage</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 UTexture2DDynamic* TierImage;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-3"><a class="header" href="#specifiers-3">Specifiers:</a></h3>
+<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -235,7 +271,7 @@ FString Title;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-4"><a class="header" href="#specifiers-4">Specifiers:</a></h3>
+<h3 id="specifiers-6"><a class="header" href="#specifiers-6">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -253,7 +289,7 @@ FString URL;
 </code></pre>
 <hr />
 <p><strong><em>Reflection-enabled</em></strong></p>
-<h3 id="specifiers-5"><a class="header" href="#specifiers-5">Specifiers:</a></h3>
+<h3 id="specifiers-7"><a class="header" href="#specifiers-7">Specifiers:</a></h3>
 <ul>
 <li><strong>EditAnywhere</strong></li>
 <li><strong>BlueprintReadWrite</strong></li>
@@ -270,7 +306,7 @@ FString URL;
 <ul>
 <li>
 <h1 id="fpatreontierinfoimgs"><a class="header" href="#fpatreontierinfoimgs"><strong><code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 18
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 20
 
 public:
 FPatreonTierInfoImgs();
@@ -280,7 +316,7 @@ FPatreonTierInfoImgs();
 </li>
 <li>
 <h1 id="fpatreontierinfoimgs-1"><a class="header" href="#fpatreontierinfoimgs-1"><strong><code>FPatreonTierInfoImgs</code></strong></a></h1>
-<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 23
+<pre><code class="language-cpp">//  PatreonTierInfoImgs.h : 25
 
 public:
 FPatreonTierInfoImgs(

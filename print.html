@@ -159,9 +159,17 @@
 <h2 id="before-getting-started"><a class="header" href="#before-getting-started">Before Getting Started</a></h2>
 <p>Before using this plugin, you should first <a href="how-to/./Registering.html">Register an API Client</a> with Patreon.</p>
 <p>This plugin supports a few different authentication flows with different trade-offs.</p>
-<h1 id="1-handle-everything-internally"><a class="header" href="#1-handle-everything-internally">1. Handle everything internally</a></h1>
+<h2 id="1-simple--automatic"><a class="header" href="#1-simple--automatic">1. <a href="how-to/./SimpleSetup.html">Simple &amp; Automatic</a></a></h2>
+<p>This is for you if you just want to check that your users are members of your campaign and find out which
+tiers/benefits they are entitled to. This allows you to easily do things like unlock specific in-game
+content for users pledged to specific tiers, display information to the user about their subscription, etc.</p>
 <p><a href="how-to/./SimpleSetup.html">Simple Setup</a></p>
-<h1 id="2-use-an-external-service-to-handle-authentication"><a class="header" href="#2-use-an-external-service-to-handle-authentication">2. Use an external service to handle authentication</a></h1>
+<h2 id="2-custom"><a class="header" href="#2-custom">2. <a href="how-to/./CustomSetup.html">Custom</a></a></h2>
+<p>If your needs are more complex, for example maybe you are building an MMO or competitive online shooter and have your
+own account system you need to link to Patreon, or perhaps you already have your own web service which connects to Patreon
+and just need to be able to pull specific data out of it from the game client.</p>
+<p>Going this route is more complex, but allows you to customize exactly where your tokens are stored, the data fetched from
+Patreon, how that gets tied into whatever other user data you may have, etc.</p>
 <p><a href="how-to/./CustomSetup.html">Custom Setup</a></p>
 <hr />
 <h1 id="running-the-examples"><a class="header" href="#running-the-examples">Running the examples</a></h1>
@@ -177,7 +185,7 @@
 <p>Open these and enter the blueprint graph, where you will see the Client ID and Client Secret fields need to be filled in.</p>
 <p><img src="how-to/../assets/tutorial/bp_client_info.png" alt="" /></p>
 <p>Enter the values for the application you created in Patreon, run the <code>LoginDemo</code> map, and it should now allow you to sign in!</p>
-<p>It is up to you to decide how to store and handle the Client ID and Client Secret. You could store these as encrypted
+<p>It is up to you to decide how and where to store and handle the Client ID and Client Secret. You could store these as encrypted
 strings which are only decrypted just before using them, or you might store them outside of your application somewhere
 and only fetch/download them when needed, etc. If you are developing an open-source project, under no circumstance should
 you commit these strings to source control.</p>
@@ -192,6 +200,7 @@ when signed in with your regular creator account.</p>
 <h1 id="pages"><a class="header" href="#pages">Pages</a></h1>
 <ul>
 <li><a href="how-to//how-to/Registering.html">Registering an API Client</a></li>
+<li><a href="how-to//how-to/ClientSecret.html">Client Secrets</a></li>
 <li><a href="how-to//how-to/SimpleSetup.html">Simple Setup &amp; Usage</a></li>
 <li><a href="how-to//how-to/CustomSetup.html">Custom Setup</a></li>
 <li><a href="how-to//how-to/Troubleshooting.html">Troubleshooting</a></li>
@@ -219,7 +228,9 @@ when signed in with your regular creator account.</p>
 </li>
 </ol>
 <p>Once you have created a Client, you will need the <code>Client ID</code> and <code>Client Secret</code>.</p>
+<blockquote>
 <p><strong>Do not use the Creator's Access Token!!</strong></p>
+</blockquote>
 <p><img src="how-to/../assets/tutorial/patreon_tokens.png" alt="" /></p>
 <p><br/><br/>
 <br/><br/></p>
@@ -227,18 +238,45 @@ when signed in with your regular creator account.</p>
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="client-secrets"><a class="header" href="#client-secrets">Client Secrets</a></h1>
+<p>When you <a href="https://www.patreon.com/portal/registration/register-clients">register an API client</a> you will get a <code>Client ID</code> and <code>Client Secret</code>. These values are used to identify your application and tell Patreon that the app making the calls to authenticate a user are coming from code you trust.</p>
+<p>The <code>Client ID</code> is included in the URL used by your users to sign into Patreon, as such it will always be known to anyone who uses your app and can essentially be considered as public information. It is impossible to hide your <code>Client ID</code>.</p>
+<p>The <code>Client Secret</code>, on the other hand, is not required to be exposed to all your users. It is also used during the authentication process, but it is optional, and if it is used there are steps you can take to hide it from your users. In general, <code>Client Secrets</code> are meant to be secret, but as long as you can access the same information using only the <code>Client ID</code> it's a bit of a moot point.</p>
+<h1 id="do-i-need-to-use-a-client-secret"><a class="header" href="#do-i-need-to-use-a-client-secret">Do I need to use a Client Secret?</a></h1>
+<p>The short answer is No. You can leave the <code>Client Secret</code> parameter on <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/functions/PerformAuthentication.html"><code>PerformAuthentication</code></a> empty and everything should work fine, only the <code>Client ID</code> is required.</p>
+<p>The long answer is: <a href="https://docs.patreon.com/#clients-and-api-keys">Patreon's API Documentation</a> always describes the <code>Client Secret</code> as being required for authentication. While it works fine right now to omit the <code>Client Secret</code>, it might not be something they want to support in the future and this may change. Personally, I'm not worried about this happening any time soon: Patreon's API is, frankly, poorly supported and seldom updated, so I doubt this will change any time soon (if ever).</p>
+<p>If you are building an application which will see ongoing support (like most Patreon-funded games) then the risk of not using the <code>Client Secret</code> is pretty small. In the worst-case scenario, authentication in older builds breaks and you will have to push an updated build which uses the <code>Client Secret</code>. If you are building an application you no longer intend to support and update, however, a change to Patreon's authentication could leave your last-published build broken and your users without any way to fix it.</p>
+<h1 id="if-i-want-to-use-a-client-secret-how-do-i-protect-it"><a class="header" href="#if-i-want-to-use-a-client-secret-how-do-i-protect-it">If I want to use a Client Secret, how do I protect it?</a></h1>
+<p>The only way to absolutely guarantee no user is able to access your <code>Client Secret</code> is to never allow it to touch their computer in the first place. A typical way to do this would be to create a separate web service which runs on a server that you control, then when the user signs in to Patreon they are first redirected to that web service (which holds your <code>Client Secret</code>). That service then uses the client secret to complete the user's authentication and cache the user's tokens, and finally your game client requests the tokens (or information obtained from the Patreon API using those tokens). There are notes on how to work this way using this plugin on the <a href="how-to/./CustomSetup.html">Custom Setup</a> page.</p>
+<p>If you don't want to set up an external service, then you will need your game client to have access to the <code>Client Secret</code>. You can take some steps to make it more difficult for a user to extract, but you cannot make it impossible.</p>
+<ul>
+<li>Encrypt the <code>Client Secret</code> string, then only decrypt it when you use it and immediately free that string from memory afterwards.</li>
+<li>Store the <code>Client Secret</code> (encrypted) on some external server somewhere where your game client can fetch it, then it will only exist in RAM when your game is running not on disk.</li>
+</ul>
+<p>Steps like these can make it more difficult for a user to extract the secret from your game, in the end the secret needs to be sent over the network to Patreon as part of the authentication process. Regardless of how much encryption you apply when the secret is not being used, a user who has the tools to monitor their own network traffic will be able to sniff it out eventually.</p>
+<p>The primary risk of having your <code>Client Secret</code> leaked is that someone else could build an application which uses your <code>Client ID</code> and <code>Client Secret</code> to pretend to be your game. Users could then be tricked into signing in to Patreon through this fake app which would now have access to the same information as your game: their names, pledge information, possibly more personal information like their e-mail address, etc. As long as the <code>Client ID</code> is sufficient to get this information without a <code>Client Secret</code>, though, the <code>Client ID</code> itself can carry this risk.</p>
+<p>If you suspect another person has copied your <code>Client ID</code> and/or <code>Client Secret</code> and are trying to trick your users into signing in through some fake game/application, you should immediately <a href="https://www.patreon.com/portal/registration/register-clients">delete your API client and create a new one</a>, then publish an updated build of your application using the <em>new</em> <code>Client ID</code>. This will immediately stop any bogus app using the old ID from working and will invalidate any access tokens it was able to obtain.</p>
+<h1 id="what-about-access-tokens"><a class="header" href="#what-about-access-tokens">What about access tokens?</a></h1>
+<p>When you call <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/functions/PerformAuthentication.html">PerformAuthentication</a>, a struct containing <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/structs/APITokenInfo.html">the user's Access Token</a> is returned. This <code>Access Token</code> is used to request information on behalf of the user, and as long as the access token is valid (usually for 30 days) using it does not require the user to sign-in again.</p>
+<p>The nice thing about this is if you save the token info you can avoid needing to ask the user to sign-in too often. The risk of doing this, however, is that if a user's access token falls into the hands of a hacker, that hacker can also use it to request the same information from Patreon about the user. Because of this, it is recommended to consider whether or not you really need to store the access token, and if so to be careful how you do so.</p>
+<p>If you do save the user's access token, it is strongly recommended NOT to save it in plain text. If you encrypt it before writing it to their save file, it will be that much more difficult for an attacker to recognize what it is and figure out how to read it. Rather than just writing a virus which scans everyone's PC for files that look like access tokens, they will have to construct an attack specifically for your game which should greatly reduce the odds that they even bother.</p>
+<p>If the in-game rewards you want to unlock for a user are permanently given once unlocked (i.e. you don't want to revoke them if the user unsubscribes from your Patreon campaign), then rather than storing the access token you can just use it once to unlock the content and then only save some information about what content was unlocked. In this case, the access tokens are temporary and don't need to persist on the user's machine.</p>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="simple-setup--usage"><a class="header" href="#simple-setup--usage">Simple Setup &amp; Usage</a></h1>
-<p>This is the simplest approach, but it requires that your <code>Client ID</code> and <code>Client Secret</code> be built into your application or
-are somehow retrievable by your application at run-time.
-While you can take steps to make extracting these from your project difficult (e.g. only storing encrypted strings which are
-decrypted at run-time), there will always be a risk that one of your users will be able to locate and extract them.</p>
+<p>This is the simplest approach, and for most projects which just need to gate some content behind subscription to a specific tier you probably won't need to get more complicated than this.</p>
+<p>You will need your <code>Client ID</code>. The <code>Client Secret</code> can also be used, <a href="how-to/./ClientSecret.html">but it is optional</a>.</p>
 <p>Your <code>Redirect URI</code> in your <a href="https://www.patreon.com/portal/registration/register-clients">registered client</a> should start with <code>http://localhost</code></p>
 <p>The process will work like this:</p>
 <ol>
 <li>You open the Patreon login and consent page for your user (either using their default web browser or the UMG Web Browser widget).</li>
 <li>While they are signing in and granting your application access to their data, we start up an HTTP server
-a. By default the server will listen for a request at <code>http://localhost/login:8080</code>, but you can customize this as you see fit
-b. Whatever you configure the server to use, you need to ensure that your application's configuration on the Patreon side has a matching <code>Redirect URI</code>, e.g. if you set <code>Callback Route</code> to <code>/patreon</code> and <code>Callback Port</code> to <code>9999</code>, you must update the settings in Patreon to include a <code>Redirect URI</code> of <code>http://localhost:9999/patreon</code>.
+a.   By default the server will listen for a request at <code>http://localhost:8080/login</code>, but you can customize this as you see fit
+b.   Whatever you configure the server to use, you need to ensure that your application's configuration on the Patreon side has a matching <code>Redirect URI</code>, e.g. if you set <code>Callback Route</code> to <code>/patreon</code> and <code>Callback Port</code> to <code>9999</code>, you must update the settings in Patreon to include a <code>Redirect URI</code> of <code>http://localhost:9999/patreon</code>.
 <blockquote>
 <p>The <code>Callback Route</code> MUST start with <code>"/"</code> and be longer than just <code>"/"</code> but can otherwise be anything you want.</p>
 <p>The <code>Callback Port</code> MUST be a positive integer, and unless you plan to use port <code>80</code> should be larger than <code>1024</code></p>
@@ -248,7 +286,7 @@ b. Whatever you configure the server to use, you need to ensure that your applic
 <li>Once we have an access token, we use this to request the user's account information, including any tiers and benefits they are entitled to.</li>
 <li>You can then use this information as you want, e.g. checking if they are pledged to a specific tier and unlocking some content for them.</li>
 </ol>
-<p>That sounds like a lot, but steps 1-3 are encapsulated inside of a single function which can be chained to a second function to handle step 4 for you, leaving only the actual logic for your application in step 5 up to you to implement.</p>
+<p>That sounds like a lot, but steps <strong>1-3</strong> are encapsulated inside of a single function which can be chained to a second function to handle <strong>step 4</strong> for you, leaving only the actual logic for your application in <strong>step 5</strong> up to you to implement.</p>
 <h2 id="blueprint"><a class="header" href="#blueprint">Blueprint</a></h2>
 <p><img src="how-to/../assets/tutorial/bp_simple_tier_check.png" alt="Authentication &amp; Checking for a tier" /></p>
 <h2 id="c"><a class="header" href="#c">C++</a></h2>
@@ -257,14 +295,14 @@ b. Whatever you configure the server to use, you need to ensure that your applic
 #include "APITokenInfo.h"
 
 #define CLIENT_ID     TEXT("&lt;Your Client ID&gt;")
-#define CLIENT_SECRET TEXT("&lt;Your Client Secret&gt;")
+#define CLIENT_SECRET TEXT("&lt;Your Client Secret&gt;") // optional
 
 void MyClass::DoPatreonLogin() {
-  // create an authentication action expecting a callback at http://localhost/login:8080
+  // create an authentication action expecting a callback at http://localhost:8080/login
   UPerformAuthenticationAsyncAction* authAction = UPerformAuthenticationAsyncAction::PerformAuthenticationAsyncAction(
     this, // world context
     CLIENT_ID,
-    CLIENT_SECRET
+    CLIENT_SECRET // can be set to an empty string
     // callback route defaults to "/login"
     // callback port defaults to 8080
   );
@@ -328,6 +366,7 @@ other account details your game receives.</p>
 ever being able to extract it is to prevent the application from ever seeing it in the first place. Even without your own account system, you could
 still run a web service which just handles the code exchange to get an access token after a user logs in to Patreon, then either ask the user to
 copy-and-paste this into the game or cache the access tokens on your server and provide an API to fetch them.</p>
+<p>(side note: <a href="how-to/./ClientSecret.html">use of the client secret is optional</a>)</p>
 <p>If you find that the information we retrieve from the Patreon API in <a href="how-to/../blueprint-api/functions/GetUserInfo.html">Get User Info</a> is insufficient for
 your use case, then you may also want to go the custom route to make the specific API requets you need (if you find yourself going down this road, though,
 please <a href="mailto:nbpsup@gmail.com">drop me a note</a> so I can consider supporting your use case better by default in the future).</p>
@@ -358,6 +397,21 @@ asking for their access token, passing the same Id so the server can look it up 
 <h2 id="logs"><a class="header" href="#logs">Logs</a></h2>
 <p>All logs produced by this plugin are created under the <code>PatreonAPIClient</code> log category</p>
 <p><img src="how-to/../assets/tutorial/log_category.png" alt="Log Category" /></p>
+<h2 id="c-headers"><a class="header" href="#c-headers">C++ Headers</a></h2>
+<p>If you are working in C++ and keep getting "File not found" errors when attempting to include headers from this plugin, make sure you have added the plugin as a dependency for your project in your <code>Build.cs</code> file:</p>
+<pre><code class="language-csharp">public class MyModule : ModuleRules
+{
+    public MyModule(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+
+        // \/  Add NBPatreonAPIClient as a dependency to allow access to plugin header files, etc.
+        PrivateDependencyModuleNames.AddRange(new string[] { "NBPatreonAPIClient" });
+    }
+}
+</code></pre>
 <p><br/><br/>
 <br/><br/></p>
 <hr />
@@ -2894,8 +2948,6 @@ int64 CurrentlyEntitledAmountCents;
   The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.
 <p>This can be used to unlock content based on how much money they are contributing rather than checking
 which tier they belong to.</p>
-<p>NOTE: Gifted subscriptions will not increase this value! If someone is gifted a tier, this value may
-still be zero.</p>
   </summary>
 </li>
 <li>
@@ -3386,8 +3438,6 @@ int64 CurrentlyEntitledAmountCents;
   The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.
 <p>This can be used to unlock content based on how much money they are contributing rather than checking
 which tier they belong to.</p>
-<p>NOTE: Gifted subscriptions will not increase this value! If someone is gifted a tier, this value may
-still be zero.</p>
   </summary>
 </li>
 <li>
