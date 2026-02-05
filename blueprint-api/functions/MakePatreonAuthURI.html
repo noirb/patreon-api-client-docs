@@ -178,8 +178,15 @@
 This must match the <code>Redirect URI</code> set in your Patreon app settings.</p>
 </li>
 <li>
-<h1 id="id"><a class="header" href="#id"><strong><code>Id</code></strong></a></h1>
+<h1 id="custom-scopes"><a class="header" href="#custom-scopes"><strong><code>Custom Scopes</code></strong></a></h1>
 <h2 id="string-2"><a class="header" href="#string-2"><code>String</code></a></h2>
+<p>[<code>OPTIONAL</code>] If set, will override the <a href="https://docs.patreon.com/#scopes">Scopes</a> requested during authentication.
+By default, only the <code>identity</code> scope is requested. This is sufficient for most use cases, but if you need additional
+information or plan to perform your own custom queries against the API, you can set the scopes you need here.</p>
+</li>
+<li>
+<h1 id="id"><a class="header" href="#id"><strong><code>Id</code></strong></a></h1>
+<h2 id="string-3"><a class="header" href="#string-3"><code>String</code></a></h2>
 <p>An optional string which will be appended to the login URI. After authentication, this string will be included in the callback
 to <code>Callback URI</code>. This can be used to match the response to a specific request, associate a non-Patreon user ID with a new user's
 access token, etc.</p>
@@ -189,7 +196,7 @@ access token, etc.</p>
 <ul>
 <li>
 <h1 id="uri"><a class="header" href="#uri"><strong><code>URI</code></strong></a></h1>
-<h2 id="string-3"><a class="header" href="#string-3"><code>String</code></a></h2>
+<h2 id="string-4"><a class="header" href="#string-4"><code>String</code></a></h2>
 <p>The complete authentication URI</p>
 </li>
 </ul>

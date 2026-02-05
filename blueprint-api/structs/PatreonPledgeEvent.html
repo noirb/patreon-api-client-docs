@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Patreon User Info Imgs - NB Patreon API Integration</title>
+        <title>Patreon Pledge Event - NB Patreon API Integration</title>
 
 
         <!-- Custom HTML head -->
@@ -154,137 +154,88 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="bp-struct-patreon-user-info-imgs"><a class="header" href="#bp-struct-patreon-user-info-imgs"><strong>BP Struct: <code>Patreon User Info Imgs</code></strong></a></h1>
-<div class="table-wrapper"><table><thead><tr><th>C++ Struct</th><th><a href="../../reference/structs/FPatreonUserInfoImgs.html"><code>FPatreonUserInfoImgs</code></a></th></tr></thead><tbody>
+                        <h1 id="bp-struct-patreon-pledge-event"><a class="header" href="#bp-struct-patreon-pledge-event"><strong>BP Struct: <code>Patreon Pledge Event</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Struct</th><th><a href="../../reference/structs/FPatreonPledgeEvent.html"><code>FPatreonPledgeEvent</code></a></th></tr></thead><tbody>
 </tbody></table>
 </div><p align="center">
-  <img alt="Patreon User Info Node" src="../../assets/bpapi_patreonuserinfoimgs_node.png" />
+  <img alt="Patreon Pledge Event Node" src="../../assets/bpapi_patreonpledgeevent_node.png" />
 </p>
 <hr />
-<p>Stores information related to a user and their subscription(s).</p>
-<p>Includes images (e.g. the user's avatar) as usable textures rather than URLs, so they can be directly added to the UI.</p>
+<p>Contains information about when a user changed their pledge status.</p>
+<p>See: <a href="https://docs.patreon.com/#pledge-event">https://docs.patreon.com/#pledge-event</a></p>
 <hr />
 <h1 id="properties"><a class="header" href="#properties"><strong>Properties</strong></a></h1>
 <ul>
 <li>
-<h1 id="first-name"><a class="header" href="#first-name"><strong><code>First Name</code></strong></a></h1>
+<h1 id="amount-cents"><a class="header" href="#amount-cents"><strong><code>Amount Cents</code></strong></a></h1>
+<h2 id="int64"><a class="header" href="#int64"><code>Int64</code></a></h2>
+<p>Amount (in the currency with which the user paid) of the underlying event.</p>
+</li>
+<li>
+<h1 id="currency-code"><a class="header" href="#currency-code"><strong><code>Currency Code</code></strong></a></h1>
 <h2 id="string"><a class="header" href="#string"><code>String</code></a></h2>
-<p>Ther user's first name (may be empty).</p>
+<p>ISO code of the currency of the event (may not be the same currency as your campaign)</p>
 </li>
 <li>
-<h1 id="last-name"><a class="header" href="#last-name"><strong><code>Last Name</code></strong></a></h1>
+<h1 id="date"><a class="header" href="#date"><strong><code>Date</code></strong></a></h1>
+<h2 id="datetime"><a class="header" href="#datetime"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h2>
+<p>The timestamp at which the event occurred</p>
+</li>
+<li>
+<h1 id="payment-status"><a class="header" href="#payment-status"><strong><code>Payment Status</code></strong></a></h1>
 <h2 id="string-1"><a class="header" href="#string-1"><code>String</code></a></h2>
-<p>Ther user's last name (may be empty).</p>
-</li>
-<li>
-<h1 id="full-name"><a class="header" href="#full-name"><strong><code>Full Name</code></strong></a></h1>
-<h2 id="string-2"><a class="header" href="#string-2"><code>String</code></a></h2>
-<p>The user's full name (usually the combination of <code>First Name</code> and <code>Last Name</code> but may be different).</p>
-</li>
-<li>
-<h1 id="vanity-name"><a class="header" href="#vanity-name"><strong><code>Vanity Name</code></strong></a></h1>
-<h2 id="string-3"><a class="header" href="#string-3"><code>String</code></a></h2>
-<p>The user's preferred nickname, if they have set one (may be empty).</p>
-</li>
-<li>
-<h1 id="avatar-image"><a class="header" href="#avatar-image"><strong><code>Avatar Image</code></strong></a></h1>
-<h2 id="texture-2ddynamic"><a class="header" href="#texture-2ddynamic"><code>Texture 2DDynamic</code></a></h2>
-<p>The user's avatar image, can be used directly in UMG to display it.</p>
-</li>
-<li>
-<h1 id="patron-status"><a class="header" href="#patron-status"><strong><code>Patron Status</code></strong></a></h1>
-<h2 id="string-4"><a class="header" href="#string-4"><code>String</code></a></h2>
-<p>Indicates the user's current pledge status for your campaign.</p>
-<div class="table-wrapper"><table><thead><tr><th>Value</th><th>Meaning</th></tr></thead><tbody>
-<tr><td><code>active_patron</code></td><td>They are currently subscribed to your campaign</td></tr>
-<tr><td><code>declined_patron</code></td><td>They have attempted to subscribe, but payment failed</td></tr>
-<tr><td><code>former_patron</code></td><td>They used to subscribe, but currently do not</td></tr>
-<tr><td>empty</td><td>This user has never subscribed to your campaign before</td></tr>
+<p>Status of underlying payment. One of:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>Paid</code></th></tr></thead><tbody>
+<tr><td><code>Declined</code></td></tr>
+<tr><td><code>Deleted</code></td></tr>
+<tr><td><code>Pending</code></td></tr>
+<tr><td><code>Refunded</code></td></tr>
+<tr><td><code>Fraud</code></td></tr>
+<tr><td><code>Refunded by Patreon</code></td></tr>
+<tr><td><code>Other</code></td></tr>
+<tr><td><code>Partially Refunded</code></td></tr>
+<tr><td><code>Free Trial</code></td></tr>
+<tr><td><code>&lt;empty&gt;</code></td></tr>
 </tbody></table>
 </div></li>
 <li>
-<h1 id="campaign-lifetime-support-cents"><a class="header" href="#campaign-lifetime-support-cents"><strong><code>Campaign Lifetime Support Cents</code></strong></a></h1>
+<h1 id="pledge-payment-status"><a class="header" href="#pledge-payment-status"><strong><code>Pledge Payment Status</code></strong></a></h1>
+<h2 id="string-2"><a class="header" href="#string-2"><code>String</code></a></h2>
+<p>The payment status of the pledge. One of:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>valid</code></th></tr></thead><tbody>
+<tr><td><code>queued</code></td></tr>
+<tr><td><code>pending</code></td></tr>
+<tr><td><code>declined</code></td></tr>
+<tr><td><code>fraud</code></td></tr>
+<tr><td><code>disabled</code></td></tr>
+<tr><td><code>&lt;empty&gt;</code></td></tr>
+</tbody></table>
+</div></li>
+<li>
+<h1 id="tier-id"><a class="header" href="#tier-id"><strong><code>Tier ID</code></strong></a></h1>
+<h2 id="string-3"><a class="header" href="#string-3"><code>String</code></a></h2>
+<p>ID of the tier associated with this pledge. May be empty.</p>
+</li>
+<li>
+<h1 id="tier-title"><a class="header" href="#tier-title"><strong><code>Tier Title</code></strong></a></h1>
+<h2 id="string-4"><a class="header" href="#string-4"><code>String</code></a></h2>
+<p>Title of the tier associated with this pledge. May be empty.</p>
+</li>
+<li>
+<h1 id="type"><a class="header" href="#type"><strong><code>Type</code></strong></a></h1>
 <h2 id="string-5"><a class="header" href="#string-5"><code>String</code></a></h2>
-<p>The total amount of money this user has ever contributed to this campaign, in cents.</p>
-<p>Can be used to unlock content for users only after reaching specific subscription thresholds. NOTE: Gifted subscriptions will not increase this value!</p>
-</li>
+<p>Event type. One of:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>pledge_start</code></th></tr></thead><tbody>
+<tr><td><code>pledge_upgrade</code></td></tr>
+<tr><td><code>pledge_downgrade</code></td></tr>
+<tr><td><code>pledge_delete</code></td></tr>
+<tr><td><code>subscription</code></td></tr>
+</tbody></table>
+</div></li>
 <li>
-<h1 id="currently-entitled-amount-cents"><a class="header" href="#currently-entitled-amount-cents"><strong><code>Currently Entitled Amount Cents</code></strong></a></h1>
-<h2 id="string-6"><a class="header" href="#string-6"><code>String</code></a></h2>
-<p>The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.</p>
-<p>This can be used to unlock content based on how much money they are contributing rather than checking which tier they belong to.</p>
-</li>
-<li>
-<h1 id="tiers"><a class="header" href="#tiers"><strong><code>Tiers</code></strong></a></h1>
-<h2 id="array-of-patreon-tier-info-imgs"><a class="header" href="#array-of-patreon-tier-info-imgs">Array of <a href="./PatreonTierInfoImgs.html"><code>Patreon Tier Info Imgs</code></a></a></h2>
-<p>A list of all the tiers this user is currently entitled to with their subscription. This will often include multiple
-entries even if they have only pledged to a single tier, as pledging to a higher tier can include all tiers below it.</p>
-</li>
-<li>
-<h1 id="can-see-nsfw"><a class="header" href="#can-see-nsfw"><strong><code>Can See NSFW</code></strong></a></h1>
-<h2 id="bool"><a class="header" href="#bool"><code>Bool</code></a></h2>
-<p>If <code>true</code>, then this user has enabled NSFW content in their Patreon account.</p>
-</li>
-<li>
-<h1 id="is-creator"><a class="header" href="#is-creator"><strong><code>Is Creator</code></strong></a></h1>
-<h2 id="bool-1"><a class="header" href="#bool-1"><code>Bool</code></a></h2>
-<p>If <code>true</code>, then this user is also the creator of the campaign!</p>
-<p>If you are testing this plugin with your creator account, then this will always be <code>true</code>, and you may see some other
-differences when using that account vs. a regular subscriber account (e.g., the creator typically has no entitled tiers,
-the scopes enabled on your access token after logging in may be different, etc.).</p>
-<p>This property is mainly here to allow for a sanity check in cases like that, but you could also use it to make a
-'creator-only' test mode, for example if you are unlocking certain content at certain tiers you could set ALL content
-to unlock for the creator account to let you test the unlocked behavior of everything everywhere all at once.</p>
-</li>
-</ul>
-<h1 id="functions"><a class="header" href="#functions"><strong>Functions</strong></a></h1>
-<ul>
-<li>
-<h1 id="has-benefit"><a class="header" href="#has-benefit"><strong><code>Has Benefit</code></strong></a></h1>
-<p><img src="../../assets/bpapi_patreonuserinfo_hasbenefit_node.png" alt="Has Benefit" /></p>
-<hr />
-<p>Checks if a given user is entitled to a specific benefit/reward.</p>
-<p>Will search all benefits of all tiers a user is entitled to.</p>
-<hr />
-<h2 id="inputs"><a class="header" href="#inputs">Inputs</a></h2>
-<ul>
-<li>
-<h2 id="user-info"><a class="header" href="#user-info"><strong><code>User Info</code></strong></a></h2>
-<h3 id="patreon-user-info"><a class="header" href="#patreon-user-info"><a href="./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
-<p>The user to check</p>
-</li>
-<li>
-<h2 id="benefit-name"><a class="header" href="#benefit-name"><strong><code>Benefit Name</code></strong></a></h2>
-<h3 id="string-7"><a class="header" href="#string-7"><code>String</code></a></h3>
-<p>The name/title of the benefit/reward to check for.</p>
-<p>Case-insensitive.</p>
-</li>
-</ul>
-<h2 id="returns"><a class="header" href="#returns">Returns</a></h2>
-<p><code>True</code>, if any tier the user is entitled to includes the specified benefit. Otherwise, <code>False</code>.</p>
-</li>
-<li>
-<h1 id="has-tier"><a class="header" href="#has-tier"><strong><code>Has Tier</code></strong></a></h1>
-<p><img src="../../assets/bpapi_patreonuserinfo_hastier_node.png" alt="Has Tier" /></p>
-<hr />
-<p>Checks if a given user is entitled to a specific <strong>tier</strong>.</p>
-<hr />
-<h2 id="inputs-1"><a class="header" href="#inputs-1">Inputs</a></h2>
-<ul>
-<li>
-<h2 id="user-info-1"><a class="header" href="#user-info-1"><strong><code>User Info</code></strong></a></h2>
-<h3 id="patreon-user-info-1"><a class="header" href="#patreon-user-info-1"><a href="/blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
-<p>The user to check</p>
-</li>
-<li>
-<h2 id="tier-name"><a class="header" href="#tier-name"><strong><code>Tier Name</code></strong></a></h2>
-<h3 id="string-8"><a class="header" href="#string-8"><code>String</code></a></h3>
-<p>The name/title of the tier to check for.</p>
-<p>Case-insensitive.</p>
-</li>
-</ul>
-<h2 id="returns-1"><a class="header" href="#returns-1">Returns</a></h2>
-<p><code>True</code>, if any tier matches the name specified. Otherwise, <code>False</code>.</p>
+<h1 id="benefits"><a class="header" href="#benefits"><strong><code>Benefits</code></strong></a></h1>
+<h2 id="array-of-string"><a class="header" href="#array-of-string">Array of <code>String</code></a></h2>
+<p>If any benefits are associated with this tier, their Titles are included here.</p>
 </li>
 </ul>
 <p><br/><br/>
@@ -298,11 +249,11 @@ to unlock for the creator account to let you test the unlocked behavior of every
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../blueprint-api/structs/PatreonUserInfo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../blueprint-api/structs/APITokenInfo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../blueprint-api/structs/PatreonTierInfo.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../blueprint-api/structs/PatreonPledgeHistory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -312,11 +263,11 @@ to unlock for the creator account to let you test the unlocked behavior of every
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../blueprint-api/structs/PatreonUserInfo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../blueprint-api/structs/APITokenInfo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../blueprint-api/structs/PatreonTierInfo.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../blueprint-api/structs/PatreonPledgeHistory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

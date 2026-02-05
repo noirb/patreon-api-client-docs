@@ -202,6 +202,18 @@
 </tbody></table>
 </div></li>
 <li>
+<h1 id="campaign-lifetime-support-cents"><a class="header" href="#campaign-lifetime-support-cents"><strong><code>Campaign Lifetime Support Cents</code></strong></a></h1>
+<h2 id="string-6"><a class="header" href="#string-6"><code>String</code></a></h2>
+<p>The total amount of money this user has ever contributed to this campaign, in cents.</p>
+<p>Can be used to unlock content for users only after reaching specific subscription thresholds. NOTE: Gifted subscriptions will not increase this value!</p>
+</li>
+<li>
+<h1 id="currently-entitled-amount-cents"><a class="header" href="#currently-entitled-amount-cents"><strong><code>Currently Entitled Amount Cents</code></strong></a></h1>
+<h2 id="string-7"><a class="header" href="#string-7"><code>String</code></a></h2>
+<p>The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.</p>
+<p>This can be used to unlock content based on how much money they are contributing rather than checking which tier they belong to.</p>
+</li>
+<li>
 <h1 id="tiers"><a class="header" href="#tiers"><strong><code>Tiers</code></strong></a></h1>
 <h2 id="array-of-patreon-tier-info"><a class="header" href="#array-of-patreon-tier-info">Array of <a href="./PatreonTierInfo.html"><code>Patreon Tier Info</code></a></a></h2>
 <p>A list of all the tiers this user is currently entitled to with their subscription. This will often include multiple
@@ -242,7 +254,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </li>
 <li>
 <h2 id="benefit-name"><a class="header" href="#benefit-name"><strong><code>Benefit Name</code></strong></a></h2>
-<h3 id="string-6"><a class="header" href="#string-6"><code>String</code></a></h3>
+<h3 id="string-8"><a class="header" href="#string-8"><code>String</code></a></h3>
 <p>The name/title of the benefit/reward to check for.</p>
 <p>Case-insensitive.</p>
 </li>
@@ -251,7 +263,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p><code>True</code>, if any tier the user is entitled to includes the specified benefit. Otherwise, <code>False</code>.</p>
 </li>
 <li>
-<h1 id="has-tier"><a class="header" href="#has-tier"><strong><code>Has Tier</code></strong></a></h1>
+<h1 id="has-tier-by-title"><a class="header" href="#has-tier-by-title"><strong><code>Has Tier (By Title)</code></strong></a></h1>
 <p><img src="../../assets/bpapi_patreonuserinfo_hastier_node.png" alt="Has Tier" /></p>
 <hr />
 <p>Checks if a given user is entitled to a specific <strong>tier</strong>.</p>
@@ -265,12 +277,35 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </li>
 <li>
 <h2 id="tier-name"><a class="header" href="#tier-name"><strong><code>Tier Name</code></strong></a></h2>
-<h3 id="string-7"><a class="header" href="#string-7"><code>String</code></a></h3>
+<h3 id="string-9"><a class="header" href="#string-9"><code>String</code></a></h3>
 <p>The name/title of the tier to check for.</p>
 <p>Case-insensitive.</p>
 </li>
 </ul>
 <h2 id="returns-1"><a class="header" href="#returns-1">Returns</a></h2>
+<p><code>True</code>, if any tier matches the name specified. Otherwise, <code>False</code>.</p>
+</li>
+<li>
+<h1 id="has-tier-by-id"><a class="header" href="#has-tier-by-id"><strong><code>Has Tier (By ID)</code></strong></a></h1>
+<p><img src="../../assets/bpapi_patreonuserinfo_hastierid_node.png" alt="Has Tier" /></p>
+<hr />
+<p>Checks if a given user is entitled to a specific <strong>tier</strong>.</p>
+<hr />
+<h2 id="inputs-2"><a class="header" href="#inputs-2">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="user-info-2"><a class="header" href="#user-info-2"><strong><code>User Info</code></strong></a></h2>
+<h3 id="patreon-user-info-2"><a class="header" href="#patreon-user-info-2"><a href="./PatreonUserInfo.html"><code>Patreon User Info</code></a></a></h3>
+<p>The user to check</p>
+</li>
+<li>
+<h2 id="tier-id"><a class="header" href="#tier-id"><strong><code>Tier Id</code></strong></a></h2>
+<h3 id="string-10"><a class="header" href="#string-10"><code>String</code></a></h3>
+<p>The ID of the tier to check for.</p>
+<p>Case-sensitive.</p>
+</li>
+</ul>
+<h2 id="returns-2"><a class="header" href="#returns-2">Returns</a></h2>
 <p><code>True</code>, if any tier matches the name specified. Otherwise, <code>False</code>.</p>
 </li>
 </ul>
@@ -285,7 +320,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../blueprint-api/structs/APITokenInfo.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../blueprint-api/structs/PatreonPledgeHistory.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
@@ -299,7 +334,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../blueprint-api/structs/APITokenInfo.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../blueprint-api/structs/PatreonPledgeHistory.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
