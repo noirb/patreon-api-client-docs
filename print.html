@@ -203,6 +203,8 @@ when signed in with your regular creator account.</p>
 <li><a href="how-to//how-to/ClientSecret.html">Client Secrets</a></li>
 <li><a href="how-to//how-to/SimpleSetup.html">Simple Setup &amp; Usage</a></li>
 <li><a href="how-to//how-to/CustomSetup.html">Custom Setup</a></li>
+<li><a href="how-to//how-to/Utilities.html">Utilities</a></li>
+<li><a href="how-to//how-to/PledgeHistory.html">Using Pledge History</a></li>
 <li><a href="how-to//how-to/Troubleshooting.html">Troubleshooting</a></li>
 </ul>
 <p><br/><br/>
@@ -393,6 +395,40 @@ asking for their access token, passing the same Id so the server can look it up 
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="extra-utilities"><a class="header" href="#extra-utilities">Extra Utilities</a></h1>
+<h2 id="campaign-information"><a class="header" href="#campaign-information">Campaign Information</a></h2>
+<p>Sometimes it's useful (or necessary) to know your Campaign ID or the IDs of the tiers associated with your campaign. Patreon doesn't expose this information in an easy location, so an editor utility is provided to make it more accessible.</p>
+<p>You can launch the utility from <strong>Tools &gt; Get Campaign Info</strong></p>
+<p>Paste your <code>Client ID</code> into the field at the top of the form, set the <code>CallbackRoute</code> and <code>CallbackPort</code> to match the values you use for authentication, and then click the <strong>Fetch Campaign Info</strong> button. You will be asked to sign into Patreon, and you <em>must</em> use the account which owns the campaign (if you use another account you will see an error in the console log).</p>
+<p>This willd download some information about your campaign and display it with buttons to easily copy the IDs to your clipboard:</p>
+<p><img src="how-to/../assets/tutorial/euw_campaign_info.png" alt="" /></p>
+<h3 id="what-can-i-use-this-for"><a class="header" href="#what-can-i-use-this-for">What can I use this for?</a></h3>
+<p>The most common use is to be able to pass your <code>Campaign ID</code> to <a href="how-to/../blueprint-api/functions/GetUserInfo.html">Get User Info</a> or <a href="how-to/../blueprint-api/functions/GetPledgeHistory.html">Get Pledge History</a>. If you ever perform a request against the API which returns information about multiple campaigns, providing your own <code>Campaign ID</code> to these functions will ensure that you only get data related to <em>your</em> campaign in their outputs, which greatly simplifies the number of details you need to handle.</p>
+<p>Additionally, it is possible to query for Tiers both <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/structs/PatreonUserInfo.html#has-tier-by-title">by name</a> and <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/structs/PatreonUserInfo.html#has-tier-by-id">by ID</a>. Querying by ID has the advantage that if you ever change the name of a tier you do not need to update your application--the ID will remain the same.</p>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="using-pledge-histories"><a class="header" href="#using-pledge-histories">Using Pledge Histories</a></h1>
+<p>In some cases, you might need to know not just whether a user is pledged to a particular tier <em>right now</em> but whether they have <em>ever</em> pledged to a tier, or if they were pledged during a specific time period in which you ran an event, etc. For example, you may decide to give a permanent reward to everyone who pledges during January, then even if someone unsubscribes and launches the game in April you want to be able to ensure they are still able to receive that reward.</p>
+<p>These scenarios can be supported by fetching the user's pledge history (the history of changes to their pledge status) and searching through it to discover when they were pledged to a given tier.</p>
+<h2 id="scope-notes"><a class="header" href="#scope-notes">Scope Notes</a></h2>
+<p>In order to request a user's pledge history, it is necessary to to request the <code>identity.memberships</code> scope. By default, when performing authentication only the <code>identity</code> scope is requested, so you must provide the complete list of scopes you need in the <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/functions/PerformAuthentication.html#scope-overrides">Scope Overrides</a> parameter. This is most likely: <code>identity identity.memberships</code></p>
+<p><strong>An important side-effect</strong> of enabling the <code>identity.memberships</code> scope is that many API queries will begin returning data not only about <em>your</em> campaign but about all campaigns the user is pledged to! To deal with this, you should pass your <code>Campaign ID</code> to any node which accepts it (e.g. <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/functions/GetUserInfo.html#campaign-id">Get Usre Info</a>). This will allow the plugin to filter the data received from Patreon for you and extract only the data relevant to your campaign. <a href="how-to/./Utilities.html">An editor utility is provided to make getting your Campaign ID easier</a>.</p>
+<p>For more information on the scopes supported by the API, see here: <a href="https://docs.patreon.com/#scopes">https://docs.patreon.com/#scopes</a></p>
+<p>It is important to note that once a user has authorized the use of a scope, Patreon's API will <em>always</em> process API requests for this user as having this scope (even if in the future you reduce the scopes you request). This means that if you enable the <code>identity.memberships</code> scope then later decide that you don't need it, Patreon will still process requests as if you have requested it. The only way to <em>reduce</em> the scopes the API uses is to <a href="https://www.patreon.com/portal/registration/register-clients">create a new API client</a> and migrate your application to the new <code>Client ID</code>.</p>
+<h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<p>It is important to be aware that not all actions a subscriber takes which may affect their eligibility for a particular tier or reward are captured in their pledge history. For example, a gifted subscription <strong>does not</strong> show up in the user's pledge history. This means that if your goal is to answer the question, "Was this user entitled to <code>Tier A</code> during the month of January?", the information in the pledge history cannot give you a definitive answer in all cases. If the user <em>paid</em> for a subscription during January you will be able to see that in their history, but if they were on a gifted subscription, a free member, etc., their pledge history may be empty.</p>
+<p>For this reason, to ensure the widest range of cases are covered, it is recommended to always first check the user's current entitlements and only fall back on checking their pledge history if they aren't currently pledged to the tier you're looking for.</p>
+<p><img src="how-to/../assets/tutorial/bp_check_pledgehistory_simple.png" alt="Pledge History Usage Example" /></p>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h1>
 <h2 id="logs"><a class="header" href="#logs">Logs</a></h2>
 <p>All logs produced by this plugin are created under the <code>PatreonAPIClient</code> log category</p>
@@ -458,6 +494,8 @@ asking for their access token, passing the same Id so the server can look it up 
 <li><a href="blueprint-api/functions//blueprint-api/functions/RefreshAPIToken.html">Refresh API Token</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/GetUserInfo.html">Get User Info</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/GetUserInfoImgs.html">Get User Info (w/ images)</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/GetPledgeHistory.html">Get Pledge History</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/GetPledgeHistoryAfter.html">Get Pledge History After</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/HTTPRequest.html">HTTP Request</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/HTTPRequestBearer.html">HTTP Request (with bearer token)</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/HTTPGET.html">HTTP GET</a></li>
@@ -465,6 +503,8 @@ asking for their access token, passing the same Id so the server can look it up 
 <li><a href="blueprint-api/functions//blueprint-api/functions/MakePatreonAuthURI.html">Make Patreon Auth URI</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/OpenURL.html">Open URL</a></li>
 <li><a href="blueprint-api/functions//blueprint-api/functions/ParseAPITokenInfo.html">Parse API Token Info</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/ParseCampaignInfo.html">Parse Campaign Info</a></li>
+<li><a href="blueprint-api/functions//blueprint-api/functions/CopyToClipboard.html">Copy To Clipboard</a></li>
 </ul>
 <p><br/><br/>
 <br/><br/></p>
@@ -505,6 +545,11 @@ user and their pledges to determine if specific in-game content should be unlock
 <h1 id="callback-port"><a class="header" href="#callback-port"><strong><code>Callback Port</code></strong></a></h1>
 <h2 id="int"><a class="header" href="#int"><code>int</code></a></h2>
 <p><code>[optional]</code> The port to listen on for the authentication callback. Must match the redirect URI you set in your patreon app config.</p>
+</li>
+<li>
+<h1 id="scope-overrides"><a class="header" href="#scope-overrides"><strong><code>Scope Overrides</code></strong></a></h1>
+<h2 id="string-3"><a class="header" href="#string-3"><code>String</code></a></h2>
+<p><code>[optional]</code> By default only the <code>identity</code> scope will be requested. If you need more specify them here. <a href="https://docs.patreon.com/#scopes">See here for more details</a></p>
 </li>
 </ul>
 <h1 id="outputs"><a class="header" href="#outputs"><strong>Outputs</strong></a></h1>
@@ -564,24 +609,29 @@ user and their pledges to determine if specific in-game content should be unlock
 </li>
 <li>
 <h1 id="client-id-1"><a class="header" href="#client-id-1"><strong><code>Client ID</code></strong></a></h1>
-<h2 id="string-3"><a class="header" href="#string-3"><code>String</code></a></h2>
+<h2 id="string-4"><a class="header" href="#string-4"><code>String</code></a></h2>
 <p>Your Patreon app <code>client_id</code>.</p>
 </li>
 <li>
 <h1 id="client-secret-1"><a class="header" href="#client-secret-1"><strong><code>Client Secret</code></strong></a></h1>
-<h2 id="string-4"><a class="header" href="#string-4"><code>String</code></a></h2>
+<h2 id="string-5"><a class="header" href="#string-5"><code>String</code></a></h2>
 <p>Patreon app <code>client-secret</code>.</p>
 <p><strong><a href="blueprint-api/functions/../../how-to/ClientSecret.html">OPTIONAL</a></strong>, leave empty if not using a <code>client_secret</code>.</p>
 </li>
 <li>
 <h1 id="callback-route-1"><a class="header" href="#callback-route-1"><strong><code>Callback Route</code></strong></a></h1>
-<h2 id="string-5"><a class="header" href="#string-5"><code>String</code></a></h2>
+<h2 id="string-6"><a class="header" href="#string-6"><code>String</code></a></h2>
 <p><code>[optional]</code> The URL to request the authentication callback at. Must match the redirect URI you set in your patreon app config.</p>
 </li>
 <li>
 <h1 id="callback-port-1"><a class="header" href="#callback-port-1"><strong><code>Callback Port</code></strong></a></h1>
 <h2 id="integer"><a class="header" href="#integer"><code>Integer</code></a></h2>
 <p><code>[optional]</code> The port to listen on for the authentication callback. Must match the redirect URI you set in your patreon app config.</p>
+</li>
+<li>
+<h1 id="scope-overrides-1"><a class="header" href="#scope-overrides-1"><strong><code>Scope Overrides</code></strong></a></h1>
+<h2 id="string-7"><a class="header" href="#string-7"><code>String</code></a></h2>
+<p><code>[optional]</code> By default only the <code>identity</code> scope will be requested. If you need more specify them here. <a href="https://docs.patreon.com/#scopes">See here for more details</a></p>
 </li>
 </ul>
 <h1 id="outputs-1"><a class="header" href="#outputs-1"><strong>Outputs</strong></a></h1>
@@ -639,12 +689,12 @@ obtained along with the original access token.</p>
 </li>
 <li>
 <h1 id="client-id-2"><a class="header" href="#client-id-2"><strong><code>Client ID</code></strong></a></h1>
-<h2 id="string-6"><a class="header" href="#string-6"><code>String</code></a></h2>
+<h2 id="string-8"><a class="header" href="#string-8"><code>String</code></a></h2>
 <p>Your Patreon app <code>client_id</code>.</p>
 </li>
 <li>
 <h1 id="client-secret-2"><a class="header" href="#client-secret-2"><strong><code>Client Secret</code></strong></a></h1>
-<h2 id="string-7"><a class="header" href="#string-7"><code>String</code></a></h2>
+<h2 id="string-9"><a class="header" href="#string-9"><code>String</code></a></h2>
 <p>Patreon app <code>client-secret</code>.</p>
 <p><strong><a href="blueprint-api/functions/../../how-to/ClientSecret.html">OPTIONAL</a></strong>, leave empty if not using a <code>client_secret</code>.</p>
 </li>
@@ -700,6 +750,14 @@ an error to the user, prompt them to login to Patreon again, etc.</p>
 <h1 id="token-info-4"><a class="header" href="#token-info-4"><strong><code>Token Info</code></strong></a></h1>
 <h2 id="api-token-info-4"><a class="header" href="#api-token-info-4"><a href="blueprint-api/functions/../structs/APITokenInfo.html"><code>API Token Info</code></a></a></h2>
 <p>The user's API access token. Usually obtained via oauth.</p>
+</li>
+<li>
+<h1 id="campaign-id"><a class="header" href="#campaign-id"><strong><code>Campaign ID</code></strong></a></h1>
+<h2 id="string-10"><a class="header" href="#string-10"><code>String</code></a></h2>
+<p>[<code>OPTIONAL</code>]  If set, results will be filtered to only include data associated with the specified campaign ID.
+If you override the default <a href="https://docs.patreon.com/#scopes">Scopes</a> passed to <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/functions/PerformAuthentication.html">PerformAuthentication</a>
+then you may receive information about multiple campaigns the user has pledged to. Setting this parameter to <strong>your</strong>
+campaign ID will ensure all unrelated data is automatically ignored and discarded.</p>
 </li>
 </ul>
 <h1 id="outputs-3"><a class="header" href="#outputs-3"><strong>Outputs</strong></a></h1>
@@ -759,6 +817,14 @@ we will not make any additional requests for them and the textures will be <code
 <h2 id="api-token-info-5"><a class="header" href="#api-token-info-5"><a href="blueprint-api/functions/../structs/APITokenInfo.html"><code>API Token Info</code></a></a></h2>
 <p>The user's API access token. Usually obtained via oauth.</p>
 </li>
+<li>
+<h1 id="campaign-id-1"><a class="header" href="#campaign-id-1"><strong><code>Campaign ID</code></strong></a></h1>
+<h2 id="string-11"><a class="header" href="#string-11"><code>String</code></a></h2>
+<p>[<code>OPTIONAL</code>]  If set, results will be filtered to only include data associated with the specified campaign ID.
+If you override the default <a href="https://docs.patreon.com/#scopes">Scopes</a> passed to <a href="https://noirb.github.io/patreon-api-client-docs/blueprint-api/functions/PerformAuthentication.html">PerformAuthentication</a>
+then you may receive information about multiple campaigns the user has pledged to. Setting this parameter to <strong>your</strong>
+campaign ID will ensure all unrelated data is automatically ignored and discarded.</p>
+</li>
 </ul>
 <h1 id="outputs-4"><a class="header" href="#outputs-4"><strong>Outputs</strong></a></h1>
 <ul>
@@ -795,6 +861,135 @@ an error to the user, prompt them to try again, etc.</p>
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-get-pledge-history"><a class="header" href="#bp-function-get-pledge-history"><strong>BP Function: <code>Get Pledge History</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UGetPatreonUserPledgesAsyncAction.html"><code>UGetPatreonUserPledgesAsyncAction</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+<img alt="Get Pledge History Node" src="blueprint-api/functions/../../assets/bpapi_getpledgehistory_node.png" />
+</p>
+<hr />
+<p>Fetches a user's pledge history. This can be used to check if they were previously pledged to a tier (even if they may have since unsubscribed), find out when they started their subscription to their current tier, etc.</p>
+<hr />
+<h1 id="inputs-5"><a class="header" href="#inputs-5"><strong>Inputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="token-info-6"><a class="header" href="#token-info-6"><strong><code>Token Info</code></strong></a></h1>
+<h2 id="api-token-info-6"><a class="header" href="#api-token-info-6"><a href="blueprint-api/functions/../structs/APITokenInfo.html"><code>API Token Info</code></a></a></h2>
+<p>The user's API access token. Usually obtained via oauth.</p>
+</li>
+<li>
+<h1 id="discard-unpaid"><a class="header" href="#discard-unpaid"><strong><code>Discard Unpaid</code></strong></a></h1>
+<h2 id="bool"><a class="header" href="#bool"><code>Bool</code></a></h2>
+<p>If true, pledge events with invalid payment states (e.g. declined payments) will not be included in the results</p>
+</li>
+<li>
+<h1 id="campaign-id-2"><a class="header" href="#campaign-id-2"><strong><code>Campaign ID</code></strong></a></h1>
+<h2 id="string-12"><a class="header" href="#string-12"><code>String</code></a></h2>
+<p>If not empty, will only process pledge events with a matching campaign ID and discard others</p>
+</li>
+</ul>
+<h1 id="outputs-5"><a class="header" href="#outputs-5"><strong>Outputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="main-execution-pin-at-the-top-5"><a class="header" href="#main-execution-pin-at-the-top-5">Main Execution Pin (at the top)</a></h1>
+<p>Execution will immediately continue from this pin while the request is processing in the background.
+Do not use execution flowing from this pin to check for the results, they aren't ready yet!</p>
+</li>
+<li>
+<h1 id="async-action-5"><a class="header" href="#async-action-5"><strong><code>Async Action</code></strong></a></h1>
+<p>This is a reference to the action running in the background. You can use this to cancel the async action if you
+decide you actually don't need the results before it has completed.</p>
+</li>
+<li>
+<h1 id="on-complete-5"><a class="header" href="#on-complete-5"><strong>On Complete</strong></a></h1>
+<p>When the user's data has been <strong>successfully</strong> fetched, execution will flow from this pin.</p>
+<p><code>Pledge History</code> should be valid and can be used at this point.</p>
+</li>
+<li>
+<h1 id="on-fail-5"><a class="header" href="#on-fail-5"><strong>On Fail</strong></a></h1>
+<p>If the process fails for any reason, execution will flow from this pin. You can use this to display
+an error to the user, prompt them to try again, etc.</p>
+<p><code>Pledge History</code> will be <strong>invalid</strong> and should not be used!</p>
+</li>
+<li>
+<h1 id="pledge-history"><a class="header" href="#pledge-history"><strong><code>Pledge History</code></strong></a></h1>
+<h2 id="patreon-pledge-history"><a class="header" href="#patreon-pledge-history"><a href="blueprint-api/functions/../structs/PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h2>
+<p>The user's pledge history</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-get-pledge-history-after"><a class="header" href="#bp-function-get-pledge-history-after"><strong>BP Function: <code>Get Pledge History After</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UGetPatreonUserPledgesAsyncAction.html"><code>UGetPatreonUserPledgesAsyncAction</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+<img alt="Get Pledge History After Node" src="blueprint-api/functions/../../assets/bpapi_getpledgehistoryafter_node.png" />
+</p>
+<hr />
+<p>Fetches a user's pledge history after a specified date. If you are only interested in a small recent time range you may want to use this to avoid processing unneeded pledge history entries later (e.g. when searching for a previously-pledged tier). It is recommended to still request a little more than you need (e.g. if you are only interested in pledges in June you may want to request pledges starting in May to capture cases where a user started their pledge on May 30 and was entitled to that tier during June).</p>
+<hr />
+<h1 id="inputs-6"><a class="header" href="#inputs-6"><strong>Inputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="token-info-7"><a class="header" href="#token-info-7"><strong><code>Token Info</code></strong></a></h1>
+<h2 id="api-token-info-7"><a class="header" href="#api-token-info-7"><a href="blueprint-api/functions/../structs/APITokenInfo.html"><code>API Token Info</code></a></a></h2>
+<p>The user's API access token. Usually obtained via oauth.</p>
+</li>
+<li>
+<h1 id="start-date"><a class="header" href="#start-date"><strong><code>Start Date</code></strong></a></h1>
+<h2 id="date-time"><a class="header" href="#date-time"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>Date Time</code></a></a></h2>
+<p>Pledge events with timestamps earlier than this date will not be included in the results</p>
+</li>
+<li>
+<h1 id="discard-unpaid-1"><a class="header" href="#discard-unpaid-1"><strong><code>Discard Unpaid</code></strong></a></h1>
+<h2 id="bool-1"><a class="header" href="#bool-1"><code>Bool</code></a></h2>
+<p>If true, pledge events with invalid payment states (e.g. declined payments) will not be included in the results</p>
+</li>
+<li>
+<h1 id="campaign-id-3"><a class="header" href="#campaign-id-3"><strong><code>Campaign ID</code></strong></a></h1>
+<h2 id="string-13"><a class="header" href="#string-13"><code>String</code></a></h2>
+<p>If not empty, will only process pledge events with a matching campaign ID and discard others</p>
+</li>
+</ul>
+<h1 id="outputs-6"><a class="header" href="#outputs-6"><strong>Outputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="main-execution-pin-at-the-top-6"><a class="header" href="#main-execution-pin-at-the-top-6">Main Execution Pin (at the top)</a></h1>
+<p>Execution will immediately continue from this pin while the request is processing in the background.
+Do not use execution flowing from this pin to check for the results, they aren't ready yet!</p>
+</li>
+<li>
+<h1 id="async-action-6"><a class="header" href="#async-action-6"><strong><code>Async Action</code></strong></a></h1>
+<p>This is a reference to the action running in the background. You can use this to cancel the async action if you
+decide you actually don't need the results before it has completed.</p>
+</li>
+<li>
+<h1 id="on-complete-6"><a class="header" href="#on-complete-6"><strong>On Complete</strong></a></h1>
+<p>When the user's data has been <strong>successfully</strong> fetched, execution will flow from this pin.</p>
+<p><code>Pledge History</code> should be valid and can be used at this point.</p>
+</li>
+<li>
+<h1 id="on-fail-6"><a class="header" href="#on-fail-6"><strong>On Fail</strong></a></h1>
+<p>If the process fails for any reason, execution will flow from this pin. You can use this to display
+an error to the user, prompt them to try again, etc.</p>
+<p><code>Pledge History</code> will be <strong>invalid</strong> and should not be used!</p>
+</li>
+<li>
+<h1 id="pledge-history-1"><a class="header" href="#pledge-history-1"><strong><code>Pledge History</code></strong></a></h1>
+<h2 id="patreon-pledge-history-1"><a class="header" href="#patreon-pledge-history-1"><a href="blueprint-api/functions/../structs/PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h2>
+<p>The user's pledge history</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-request"><a class="header" href="#bp-function-http-request"><strong>BP Function: <code>HTTP Request</code></strong></a></h1>
 <div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></th></tr></thead><tbody>
 </tbody></table>
@@ -805,21 +1000,21 @@ an error to the user, prompt them to try again, etc.</p>
 <p>A generic HTTP request. Can be used to fetch web pages, content from REST APIs (e.g. to obtain Patreon data not
 currently supported by the other nodes), etc.</p>
 <hr />
-<h1 id="inputs-5"><a class="header" href="#inputs-5"><strong>Inputs</strong></a></h1>
+<h1 id="inputs-7"><a class="header" href="#inputs-7"><strong>Inputs</strong></a></h1>
 <ul>
 <li>
 <h1 id="uri"><a class="header" href="#uri"><strong><code>URI</code></strong></a></h1>
-<h2 id="string-8"><a class="header" href="#string-8"><code>String</code></a></h2>
+<h2 id="string-14"><a class="header" href="#string-14"><code>String</code></a></h2>
 <p>URI to request.</p>
 </li>
 <li>
 <h1 id="verb"><a class="header" href="#verb"><strong><code>Verb</code></strong></a></h1>
-<h2 id="string-9"><a class="header" href="#string-9"><code>String</code></a></h2>
+<h2 id="string-15"><a class="header" href="#string-15"><code>String</code></a></h2>
 <p>HTTP method, e.g. <code>GET</code>, <code>POST</code>, <code>PUT</code>, etc.</p>
 </li>
 <li>
 <h1 id="payload"><a class="header" href="#payload"><strong><code>Payload</code></strong></a></h1>
-<h2 id="string-10"><a class="header" href="#string-10"><code>String</code></a></h2>
+<h2 id="string-16"><a class="header" href="#string-16"><code>String</code></a></h2>
 <p>Additional payload data to include with the request. How this is handled depends on <strong><code>Verb</code></strong>.</p>
 <p>For example, if <code>Verb</code> is <code>GET</code>, then the payload will be appended to the URI as URL params. If the <code>Verb</code> is <code>POST</code>,
 the payload will be included in the request body.</p>
@@ -828,139 +1023,6 @@ the payload will be included in the request body.</p>
 <h1 id="headers"><a class="header" href="#headers"><strong><code>Headers</code></strong></a></h1>
 <h2 id="map-of-strings-to-strings"><a class="header" href="#map-of-strings-to-strings">Map of <code>Strings</code> to <code>Strings</code></a></h2>
 <p><strong>Optional</strong>. Any entries included here will be added to the headers of the request.</p>
-</li>
-</ul>
-<h1 id="outputs-5"><a class="header" href="#outputs-5"><strong>Outputs</strong></a></h1>
-<ul>
-<li>
-<h1 id="main-execution-pin-at-the-top-5"><a class="header" href="#main-execution-pin-at-the-top-5">Main Execution Pin (at the top)</a></h1>
-<p>Execution will immediately continue from this pin while the authentication process continues in the background.
-Do not use execution flowing from this pin to check for the results, they aren't ready yet!</p>
-</li>
-<li>
-<h1 id="async-action-5"><a class="header" href="#async-action-5"><strong><code>Async Action</code></strong></a></h1>
-<p>This is a reference to the action running in the background. You can use this to cancel the request if you
-decide you actually don't need the results before it has completed.</p>
-</li>
-<li>
-<h1 id="on-complete-5"><a class="header" href="#on-complete-5"><strong>On Complete</strong></a></h1>
-<p>When the request has completed <strong>successfully</strong>, execution will flow from this pin.</p>
-</li>
-<li>
-<h1 id="on-fail-5"><a class="header" href="#on-fail-5"><strong>On Fail</strong></a></h1>
-<p>If the authentication process fails for any reason, execution will flow from this pin.</p>
-</li>
-<li>
-<h1 id="response-code"><a class="header" href="#response-code"><strong><code>Response Code</code></strong></a></h1>
-<h2 id="integer-1"><a class="header" href="#integer-1"><code>Integer</code></a></h2>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP response code</a> the request returned.</p>
-</li>
-<li>
-<h1 id="response-string"><a class="header" href="#response-string"><strong><code>Response String</code></strong></a></h1>
-<h2 id="string-11"><a class="header" href="#string-11"><code>String</code></a></h2>
-<p>The response content as a string.</p>
-</li>
-</ul>
-<p><br/><br/>
-<br/><br/></p>
-<hr />
-<blockquote>
-<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
-</blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-request-with-bearer-token"><a class="header" href="#bp-function-http-request-with-bearer-token"><strong>BP Function: <code>HTTP Request (with bearer token)</code></strong></a></h1>
-<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></th></tr></thead><tbody>
-</tbody></table>
-</div><p align="center">
-  <img alt="Perform Authentication (UMG Browser) Node" src="blueprint-api/functions/../../assets/bpapi_httprequestbearer_node.png" />
-</p>
-<hr />
-<p>This is equivalent to the basic <a href="blueprint-api/functions/./HTTPRequest.html">HTTP Request</a>, but it will automatically add the <code>Authorization</code> header
-required for requests with a bearer token (e.g., the requests to the Patreon API). It's a small convenience compared to
-always including this header in your requests.</p>
-<hr />
-<h1 id="inputs-6"><a class="header" href="#inputs-6"><strong>Inputs</strong></a></h1>
-<ul>
-<li>
-<h1 id="uri-1"><a class="header" href="#uri-1"><strong><code>URI</code></strong></a></h1>
-<h2 id="string-12"><a class="header" href="#string-12"><code>String</code></a></h2>
-<p>URI to request.</p>
-</li>
-<li>
-<h1 id="verb-1"><a class="header" href="#verb-1"><strong><code>Verb</code></strong></a></h1>
-<h2 id="string-13"><a class="header" href="#string-13"><code>String</code></a></h2>
-<p>HTTP method, e.g. <code>GET</code>, <code>POST</code>, <code>PUT</code>, etc.</p>
-</li>
-<li>
-<h1 id="payload-1"><a class="header" href="#payload-1"><strong><code>Payload</code></strong></a></h1>
-<h2 id="string-14"><a class="header" href="#string-14"><code>String</code></a></h2>
-<p>Additional payload data to include with the request. How this is handled depends on <strong><code>Verb</code></strong>.</p>
-<p>For example, if <code>Verb</code> is <code>GET</code>, then the payload will be appended to the URI as URL params. If the <code>Verb</code> is <code>POST</code>,
-the payload will be included in the request body.</p>
-</li>
-<li>
-<h1 id="access-token"><a class="header" href="#access-token"><strong><code>Access Token</code></strong></a></h1>
-<h2 id="string-15"><a class="header" href="#string-15"><code>String</code></a></h2>
-<p>The access token to use for request authorization, e.g. the <code>Access Token</code> from <a href="blueprint-api/functions/../structs/APITokenInfo.html">API Token Info</a>.</p>
-</li>
-<li>
-<h1 id="headers-1"><a class="header" href="#headers-1"><strong><code>Headers</code></strong></a></h1>
-<h2 id="map-of-strings-to-strings-1"><a class="header" href="#map-of-strings-to-strings-1">Map of <code>Strings</code> to <code>Strings</code></a></h2>
-<p><strong>Optional</strong>. Any entries included here will be added to the headers of the request. Including additional headers here will
-not affect the <code>Authorization</code> header automatically added to the request.</p>
-</li>
-</ul>
-<h1 id="outputs-6"><a class="header" href="#outputs-6"><strong>Outputs</strong></a></h1>
-<ul>
-<li>
-<h1 id="main-execution-pin-at-the-top-6"><a class="header" href="#main-execution-pin-at-the-top-6">Main Execution Pin (at the top)</a></h1>
-<p>Execution will immediately continue from this pin while the authentication process continues in the background.
-Do not use execution flowing from this pin to check for the results, they aren't ready yet!</p>
-</li>
-<li>
-<h1 id="async-action-6"><a class="header" href="#async-action-6"><strong><code>Async Action</code></strong></a></h1>
-<p>This is a reference to the action running in the background. You can use this to cancel the request if you
-decide you actually don't need the results before it has completed.</p>
-</li>
-<li>
-<h1 id="on-complete-6"><a class="header" href="#on-complete-6"><strong>On Complete</strong></a></h1>
-<p>When the request has completed <strong>successfully</strong>, execution will flow from this pin.</p>
-</li>
-<li>
-<h1 id="on-fail-6"><a class="header" href="#on-fail-6"><strong>On Fail</strong></a></h1>
-<p>If the authentication process fails for any reason, execution will flow from this pin.</p>
-</li>
-<li>
-<h1 id="response-code-1"><a class="header" href="#response-code-1"><strong><code>Response Code</code></strong></a></h1>
-<h2 id="integer-2"><a class="header" href="#integer-2"><code>Integer</code></a></h2>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP response code</a> the request returned.</p>
-</li>
-<li>
-<h1 id="response-string-1"><a class="header" href="#response-string-1"><strong><code>Response String</code></strong></a></h1>
-<h2 id="string-16"><a class="header" href="#string-16"><code>String</code></a></h2>
-<p>The response content as a string.</p>
-</li>
-</ul>
-<p><br/><br/>
-<br/><br/></p>
-<hr />
-<blockquote>
-<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
-</blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-get"><a class="header" href="#bp-function-http-get"><strong>BP Function: <code>HTTP GET</code></strong></a></h1>
-<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></th></tr></thead><tbody>
-</tbody></table>
-</div><p align="center">
-  <img alt="Perform Authentication (UMG Browser) Node" src="blueprint-api/functions/../../assets/bpapi_httpget_node.png" />
-</p>
-<hr />
-<p>Performs a basic HTTP GET request without any other options.</p>
-<hr />
-<h1 id="inputs-7"><a class="header" href="#inputs-7"><strong>Inputs</strong></a></h1>
-<ul>
-<li>
-<h1 id="uri-2"><a class="header" href="#uri-2"><strong><code>URI</code></strong></a></h1>
-<h2 id="string-17"><a class="header" href="#string-17"><code>String</code></a></h2>
-<p>URI to request.</p>
 </li>
 </ul>
 <h1 id="outputs-7"><a class="header" href="#outputs-7"><strong>Outputs</strong></a></h1>
@@ -984,13 +1046,13 @@ decide you actually don't need the results before it has completed.</p>
 <p>If the authentication process fails for any reason, execution will flow from this pin.</p>
 </li>
 <li>
-<h1 id="response-code-2"><a class="header" href="#response-code-2"><strong><code>Response Code</code></strong></a></h1>
-<h2 id="integer-3"><a class="header" href="#integer-3"><code>Integer</code></a></h2>
+<h1 id="response-code"><a class="header" href="#response-code"><strong><code>Response Code</code></strong></a></h1>
+<h2 id="integer-1"><a class="header" href="#integer-1"><code>Integer</code></a></h2>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP response code</a> the request returned.</p>
 </li>
 <li>
-<h1 id="response-string-2"><a class="header" href="#response-string-2"><strong><code>Response String</code></strong></a></h1>
-<h2 id="string-18"><a class="header" href="#string-18"><code>String</code></a></h2>
+<h1 id="response-string"><a class="header" href="#response-string"><strong><code>Response String</code></strong></a></h1>
+<h2 id="string-17"><a class="header" href="#string-17"><code>String</code></a></h2>
 <p>The response content as a string.</p>
 </li>
 </ul>
@@ -1000,31 +1062,46 @@ decide you actually don't need the results before it has completed.</p>
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-post"><a class="header" href="#bp-function-http-post"><strong>BP Function: <code>HTTP POST</code></strong></a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-request-with-bearer-token"><a class="header" href="#bp-function-http-request-with-bearer-token"><strong>BP Function: <code>HTTP Request (with bearer token)</code></strong></a></h1>
 <div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></th></tr></thead><tbody>
 </tbody></table>
 </div><p align="center">
-  <img alt="Perform Authentication (UMG Browser) Node" src="blueprint-api/functions/../../assets/bpapi_httppost_node.png" />
+  <img alt="Perform Authentication (UMG Browser) Node" src="blueprint-api/functions/../../assets/bpapi_httprequestbearer_node.png" />
 </p>
 <hr />
-<p>Performs an HTTP POST request.</p>
+<p>This is equivalent to the basic <a href="blueprint-api/functions/./HTTPRequest.html">HTTP Request</a>, but it will automatically add the <code>Authorization</code> header
+required for requests with a bearer token (e.g., the requests to the Patreon API). It's a small convenience compared to
+always including this header in your requests.</p>
 <hr />
 <h1 id="inputs-8"><a class="header" href="#inputs-8"><strong>Inputs</strong></a></h1>
 <ul>
 <li>
-<h1 id="uri-3"><a class="header" href="#uri-3"><strong><code>URI</code></strong></a></h1>
-<h2 id="string-19"><a class="header" href="#string-19"><code>String</code></a></h2>
+<h1 id="uri-1"><a class="header" href="#uri-1"><strong><code>URI</code></strong></a></h1>
+<h2 id="string-18"><a class="header" href="#string-18"><code>String</code></a></h2>
 <p>URI to request.</p>
 </li>
 <li>
-<h1 id="payload-2"><a class="header" href="#payload-2"><strong><code>Payload</code></strong></a></h1>
-<h2 id="string-20"><a class="header" href="#string-20"><code>String</code></a></h2>
-<p><strong>Optional</strong>. Additional POST data to include in the request.</p>
+<h1 id="verb-1"><a class="header" href="#verb-1"><strong><code>Verb</code></strong></a></h1>
+<h2 id="string-19"><a class="header" href="#string-19"><code>String</code></a></h2>
+<p>HTTP method, e.g. <code>GET</code>, <code>POST</code>, <code>PUT</code>, etc.</p>
 </li>
 <li>
-<h1 id="headers-2"><a class="header" href="#headers-2"><strong><code>Headers</code></strong></a></h1>
-<h2 id="map-of-strings-to-strings-2"><a class="header" href="#map-of-strings-to-strings-2">Map of <code>Strings</code> to <code>Strings</code></a></h2>
-<p><strong>Optional</strong>. Additional HTTP headers to include in the request.</p>
+<h1 id="payload-1"><a class="header" href="#payload-1"><strong><code>Payload</code></strong></a></h1>
+<h2 id="string-20"><a class="header" href="#string-20"><code>String</code></a></h2>
+<p>Additional payload data to include with the request. How this is handled depends on <strong><code>Verb</code></strong>.</p>
+<p>For example, if <code>Verb</code> is <code>GET</code>, then the payload will be appended to the URI as URL params. If the <code>Verb</code> is <code>POST</code>,
+the payload will be included in the request body.</p>
+</li>
+<li>
+<h1 id="access-token"><a class="header" href="#access-token"><strong><code>Access Token</code></strong></a></h1>
+<h2 id="string-21"><a class="header" href="#string-21"><code>String</code></a></h2>
+<p>The access token to use for request authorization, e.g. the <code>Access Token</code> from <a href="blueprint-api/functions/../structs/APITokenInfo.html">API Token Info</a>.</p>
+</li>
+<li>
+<h1 id="headers-1"><a class="header" href="#headers-1"><strong><code>Headers</code></strong></a></h1>
+<h2 id="map-of-strings-to-strings-1"><a class="header" href="#map-of-strings-to-strings-1">Map of <code>Strings</code> to <code>Strings</code></a></h2>
+<p><strong>Optional</strong>. Any entries included here will be added to the headers of the request. Including additional headers here will
+not affect the <code>Authorization</code> header automatically added to the request.</p>
 </li>
 </ul>
 <h1 id="outputs-8"><a class="header" href="#outputs-8"><strong>Outputs</strong></a></h1>
@@ -1048,13 +1125,131 @@ decide you actually don't need the results before it has completed.</p>
 <p>If the authentication process fails for any reason, execution will flow from this pin.</p>
 </li>
 <li>
+<h1 id="response-code-1"><a class="header" href="#response-code-1"><strong><code>Response Code</code></strong></a></h1>
+<h2 id="integer-2"><a class="header" href="#integer-2"><code>Integer</code></a></h2>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP response code</a> the request returned.</p>
+</li>
+<li>
+<h1 id="response-string-1"><a class="header" href="#response-string-1"><strong><code>Response String</code></strong></a></h1>
+<h2 id="string-22"><a class="header" href="#string-22"><code>String</code></a></h2>
+<p>The response content as a string.</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-get"><a class="header" href="#bp-function-http-get"><strong>BP Function: <code>HTTP GET</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+  <img alt="Perform Authentication (UMG Browser) Node" src="blueprint-api/functions/../../assets/bpapi_httpget_node.png" />
+</p>
+<hr />
+<p>Performs a basic HTTP GET request without any other options.</p>
+<hr />
+<h1 id="inputs-9"><a class="header" href="#inputs-9"><strong>Inputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="uri-2"><a class="header" href="#uri-2"><strong><code>URI</code></strong></a></h1>
+<h2 id="string-23"><a class="header" href="#string-23"><code>String</code></a></h2>
+<p>URI to request.</p>
+</li>
+</ul>
+<h1 id="outputs-9"><a class="header" href="#outputs-9"><strong>Outputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="main-execution-pin-at-the-top-9"><a class="header" href="#main-execution-pin-at-the-top-9">Main Execution Pin (at the top)</a></h1>
+<p>Execution will immediately continue from this pin while the authentication process continues in the background.
+Do not use execution flowing from this pin to check for the results, they aren't ready yet!</p>
+</li>
+<li>
+<h1 id="async-action-9"><a class="header" href="#async-action-9"><strong><code>Async Action</code></strong></a></h1>
+<p>This is a reference to the action running in the background. You can use this to cancel the request if you
+decide you actually don't need the results before it has completed.</p>
+</li>
+<li>
+<h1 id="on-complete-9"><a class="header" href="#on-complete-9"><strong>On Complete</strong></a></h1>
+<p>When the request has completed <strong>successfully</strong>, execution will flow from this pin.</p>
+</li>
+<li>
+<h1 id="on-fail-9"><a class="header" href="#on-fail-9"><strong>On Fail</strong></a></h1>
+<p>If the authentication process fails for any reason, execution will flow from this pin.</p>
+</li>
+<li>
+<h1 id="response-code-2"><a class="header" href="#response-code-2"><strong><code>Response Code</code></strong></a></h1>
+<h2 id="integer-3"><a class="header" href="#integer-3"><code>Integer</code></a></h2>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP response code</a> the request returned.</p>
+</li>
+<li>
+<h1 id="response-string-2"><a class="header" href="#response-string-2"><strong><code>Response String</code></strong></a></h1>
+<h2 id="string-24"><a class="header" href="#string-24"><code>String</code></a></h2>
+<p>The response content as a string.</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-http-post"><a class="header" href="#bp-function-http-post"><strong>BP Function: <code>HTTP POST</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UHTTPRequestAction.html"><code>UHTTPRequestAction</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+  <img alt="Perform Authentication (UMG Browser) Node" src="blueprint-api/functions/../../assets/bpapi_httppost_node.png" />
+</p>
+<hr />
+<p>Performs an HTTP POST request.</p>
+<hr />
+<h1 id="inputs-10"><a class="header" href="#inputs-10"><strong>Inputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="uri-3"><a class="header" href="#uri-3"><strong><code>URI</code></strong></a></h1>
+<h2 id="string-25"><a class="header" href="#string-25"><code>String</code></a></h2>
+<p>URI to request.</p>
+</li>
+<li>
+<h1 id="payload-2"><a class="header" href="#payload-2"><strong><code>Payload</code></strong></a></h1>
+<h2 id="string-26"><a class="header" href="#string-26"><code>String</code></a></h2>
+<p><strong>Optional</strong>. Additional POST data to include in the request.</p>
+</li>
+<li>
+<h1 id="headers-2"><a class="header" href="#headers-2"><strong><code>Headers</code></strong></a></h1>
+<h2 id="map-of-strings-to-strings-2"><a class="header" href="#map-of-strings-to-strings-2">Map of <code>Strings</code> to <code>Strings</code></a></h2>
+<p><strong>Optional</strong>. Additional HTTP headers to include in the request.</p>
+</li>
+</ul>
+<h1 id="outputs-10"><a class="header" href="#outputs-10"><strong>Outputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="main-execution-pin-at-the-top-10"><a class="header" href="#main-execution-pin-at-the-top-10">Main Execution Pin (at the top)</a></h1>
+<p>Execution will immediately continue from this pin while the authentication process continues in the background.
+Do not use execution flowing from this pin to check for the results, they aren't ready yet!</p>
+</li>
+<li>
+<h1 id="async-action-10"><a class="header" href="#async-action-10"><strong><code>Async Action</code></strong></a></h1>
+<p>This is a reference to the action running in the background. You can use this to cancel the request if you
+decide you actually don't need the results before it has completed.</p>
+</li>
+<li>
+<h1 id="on-complete-10"><a class="header" href="#on-complete-10"><strong>On Complete</strong></a></h1>
+<p>When the request has completed <strong>successfully</strong>, execution will flow from this pin.</p>
+</li>
+<li>
+<h1 id="on-fail-10"><a class="header" href="#on-fail-10"><strong>On Fail</strong></a></h1>
+<p>If the authentication process fails for any reason, execution will flow from this pin.</p>
+</li>
+<li>
 <h1 id="response-code-3"><a class="header" href="#response-code-3"><strong><code>Response Code</code></strong></a></h1>
 <h2 id="integer-4"><a class="header" href="#integer-4"><code>Integer</code></a></h2>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP response code</a> the request returned.</p>
 </li>
 <li>
 <h1 id="response-string-3"><a class="header" href="#response-string-3"><strong><code>Response String</code></strong></a></h1>
-<h2 id="string-21"><a class="header" href="#string-21"><code>String</code></a></h2>
+<h2 id="string-27"><a class="header" href="#string-27"><code>String</code></a></h2>
 <p>The response content as a string.</p>
 </li>
 </ul>
@@ -1074,32 +1269,39 @@ decide you actually don't need the results before it has completed.</p>
 <p>Constructs a URI to the Patreon login/consent page.</p>
 <p>This is the page the user must visit in order to authenticate with Patreon and generate a new access token.</p>
 <hr />
-<h1 id="inputs-9"><a class="header" href="#inputs-9"><strong>Inputs</strong></a></h1>
+<h1 id="inputs-11"><a class="header" href="#inputs-11"><strong>Inputs</strong></a></h1>
 <ul>
 <li>
 <h1 id="client-id-3"><a class="header" href="#client-id-3"><strong><code>Client ID</code></strong></a></h1>
-<h2 id="string-22"><a class="header" href="#string-22"><code>String</code></a></h2>
+<h2 id="string-28"><a class="header" href="#string-28"><code>String</code></a></h2>
 <p>You patreon app <code>Client ID</code></p>
 </li>
 <li>
 <h1 id="callback-uri"><a class="header" href="#callback-uri"><strong><code>Callback URI</code></strong></a></h1>
-<h2 id="string-23"><a class="header" href="#string-23"><code>String</code></a></h2>
+<h2 id="string-29"><a class="header" href="#string-29"><code>String</code></a></h2>
 <p>The URI the user's browser should redirect to after authenticating with Patreon.
 This must match the <code>Redirect URI</code> set in your Patreon app settings.</p>
 </li>
 <li>
+<h1 id="custom-scopes"><a class="header" href="#custom-scopes"><strong><code>Custom Scopes</code></strong></a></h1>
+<h2 id="string-30"><a class="header" href="#string-30"><code>String</code></a></h2>
+<p>[<code>OPTIONAL</code>] If set, will override the <a href="https://docs.patreon.com/#scopes">Scopes</a> requested during authentication.
+By default, only the <code>identity</code> scope is requested. This is sufficient for most use cases, but if you need additional
+information or plan to perform your own custom queries against the API, you can set the scopes you need here.</p>
+</li>
+<li>
 <h1 id="id"><a class="header" href="#id"><strong><code>Id</code></strong></a></h1>
-<h2 id="string-24"><a class="header" href="#string-24"><code>String</code></a></h2>
+<h2 id="string-31"><a class="header" href="#string-31"><code>String</code></a></h2>
 <p>An optional string which will be appended to the login URI. After authentication, this string will be included in the callback
 to <code>Callback URI</code>. This can be used to match the response to a specific request, associate a non-Patreon user ID with a new user's
 access token, etc.</p>
 </li>
 </ul>
-<h1 id="outputs-9"><a class="header" href="#outputs-9"><strong>Outputs</strong></a></h1>
+<h1 id="outputs-11"><a class="header" href="#outputs-11"><strong>Outputs</strong></a></h1>
 <ul>
 <li>
 <h1 id="uri-4"><a class="header" href="#uri-4"><strong><code>URI</code></strong></a></h1>
-<h2 id="string-25"><a class="header" href="#string-25"><code>String</code></a></h2>
+<h2 id="string-32"><a class="header" href="#string-32"><code>String</code></a></h2>
 <p>The complete authentication URI</p>
 </li>
 </ul>
@@ -1118,15 +1320,15 @@ access token, etc.</p>
 <hr />
 <p>Opens a given URL in the user's default web browser.</p>
 <hr />
-<h1 id="inputs-10"><a class="header" href="#inputs-10"><strong>Inputs</strong></a></h1>
+<h1 id="inputs-12"><a class="header" href="#inputs-12"><strong>Inputs</strong></a></h1>
 <ul>
 <li>
 <h1 id="url"><a class="header" href="#url"><strong><code>URL</code></strong></a></h1>
-<h2 id="string-26"><a class="header" href="#string-26"><code>String</code></a></h2>
+<h2 id="string-33"><a class="header" href="#string-33"><code>String</code></a></h2>
 <p>The URL to open</p>
 </li>
 </ul>
-<h1 id="outputs-10"><a class="header" href="#outputs-10"><strong>Outputs</strong></a></h1>
+<h1 id="outputs-12"><a class="header" href="#outputs-12"><strong>Outputs</strong></a></h1>
 <p><br/><br/>
 <br/><br/></p>
 <hr />
@@ -1151,24 +1353,24 @@ access token, etc.</p>
 }
 </code></pre>
 <hr />
-<h1 id="inputs-11"><a class="header" href="#inputs-11"><strong>Inputs</strong></a></h1>
+<h1 id="inputs-13"><a class="header" href="#inputs-13"><strong>Inputs</strong></a></h1>
 <ul>
 <li>
 <h1 id="json-str"><a class="header" href="#json-str"><strong><code>Json Str</code></strong></a></h1>
-<h2 id="string-27"><a class="header" href="#string-27"><code>String</code></a></h2>
+<h2 id="string-34"><a class="header" href="#string-34"><code>String</code></a></h2>
 <p>The JSON String to parse</p>
 </li>
 </ul>
-<h1 id="outputs-11"><a class="header" href="#outputs-11"><strong>Outputs</strong></a></h1>
+<h1 id="outputs-13"><a class="header" href="#outputs-13"><strong>Outputs</strong></a></h1>
 <ul>
 <li>
-<h1 id="token-info-6"><a class="header" href="#token-info-6"><strong><code>Token Info</code></strong></a></h1>
-<h2 id="api-token-info-6"><a class="header" href="#api-token-info-6"><a href="blueprint-api/functions/../structs/APITokenInfo.html"><code>API Token Info</code></a></a></h2>
+<h1 id="token-info-8"><a class="header" href="#token-info-8"><strong><code>Token Info</code></strong></a></h1>
+<h2 id="api-token-info-8"><a class="header" href="#api-token-info-8"><a href="blueprint-api/functions/../structs/APITokenInfo.html"><code>API Token Info</code></a></a></h2>
 <p>The parsed token, if the input string could be parsed.</p>
 </li>
 <li>
 <h1 id="success"><a class="header" href="#success"><strong><code>Success</code></strong></a></h1>
-<h2 id="bool"><a class="header" href="#bool"><code>bool</code></a></h2>
+<h2 id="bool-2"><a class="header" href="#bool-2"><code>bool</code></a></h2>
 <p><code>True</code> if the parsing was successful, otherwise <code>False</code>. If this value is <code>False</code>, <code>Token Info</code> should not be used and will be invalid.</p>
 </li>
 </ul>
@@ -1178,9 +1380,76 @@ access token, etc.</p>
 <blockquote>
 <p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
 </blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-parse-campaign-info"><a class="header" href="#bp-function-parse-campaign-info"><strong>BP Function: <code>Parse Campaign Info</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UNBPatreonAPIClientBPLibrary.html#parsecampaigninfo"><code>UNBPatreonAPIClientBPLibrary</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+  <img alt="Get User Info Node" src="blueprint-api/functions/../../assets/bpapi_parsecampaigninfo_node.png" />
+</p>
+<hr />
+<p>Parses a JSON string containing information about a creator's campaign (as returned from <a href="https://docs.patreon.com/#get-api-oauth2-v2-campaigns">the <code>/campaigns</code> endpoint</a>)</p>
+<hr />
+<h1 id="inputs-14"><a class="header" href="#inputs-14"><strong>Inputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="json-str-1"><a class="header" href="#json-str-1"><strong><code>Json Str</code></strong></a></h1>
+<h2 id="string-35"><a class="header" href="#string-35"><code>String</code></a></h2>
+<p>The JSON String to parse</p>
+</li>
+</ul>
+<h1 id="outputs-14"><a class="header" href="#outputs-14"><strong>Outputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="campaign-id-4"><a class="header" href="#campaign-id-4"><strong><code>Campaign ID</code></strong></a></h1>
+<h2 id="string-36"><a class="header" href="#string-36"><code>String</code></a></h2>
+<p>The ID of the parsed campaign</p>
+</li>
+<li>
+<h1 id="tiers"><a class="header" href="#tiers"><strong><code>Tiers</code></strong></a></h1>
+<h2 id="array-of-patreon-tier-info"><a class="header" href="#array-of-patreon-tier-info">Array of <a href="blueprint-api/functions/../structs/PatreonTierInfo.html"><code>Patreon Tier Info</code></a></a></h2>
+<p>All of the tiers associated with the campaign.</p>
+</li>
+<li>
+<h1 id="success-1"><a class="header" href="#success-1"><strong><code>Success</code></strong></a></h1>
+<h2 id="bool-3"><a class="header" href="#bool-3"><code>bool</code></a></h2>
+<p><code>True</code> if the parsing was successful, otherwise <code>False</code>. If this value is <code>False</code>, <code>Campaign ID</code> and <code>Tiers</code> should not be used and will be invalid.</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-function-copy-to-clipboard"><a class="header" href="#bp-function-copy-to-clipboard"><strong>BP Function: <code>Copy to Clipboard</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Impl</th><th><a href="blueprint-api/functions/../../reference/classes/UNBPatreonAPIClientBPLibrary.html#copytoclipboard"><code>UNBPatreonAPIClientBPLibrary</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+  <img alt="Open URL Node" src="blueprint-api/functions/../../assets/bpapi_copytoclipboard_node.png" />
+</p>
+<hr />
+<p>Copies the given string to the user's clipboard</p>
+<hr />
+<h1 id="inputs-15"><a class="header" href="#inputs-15"><strong>Inputs</strong></a></h1>
+<ul>
+<li>
+<h1 id="str"><a class="header" href="#str"><strong><code>Str</code></strong></a></h1>
+<h2 id="string-37"><a class="header" href="#string-37"><code>String</code></a></h2>
+<p>The string to put on the user's clipboard</p>
+</li>
+</ul>
+<h1 id="outputs-15"><a class="header" href="#outputs-15"><strong>Outputs</strong></a></h1>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pages-3"><a class="header" href="#pages-3">Pages</a></h1>
 <ul>
 <li><a href="blueprint-api/structs//blueprint-api/structs/APITokenInfo.html">API Token Info</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/PatreonPledgeEvent.html">Patreon Pledge Event</a></li>
+<li><a href="blueprint-api/structs//blueprint-api/structs/PatreonPledgeHistory.html">Patreon Pledge History</a></li>
 <li><a href="blueprint-api/structs//blueprint-api/structs/PatreonUserInfo.html">Patreon User Info</a></li>
 <li><a href="blueprint-api/structs//blueprint-api/structs/PatreonUserInfoImgs.html">Patreon User Info Imgs</a></li>
 <li><a href="blueprint-api/structs//blueprint-api/structs/PatreonTierInfo.html">Patreon Tier Info</a></li>
@@ -1205,19 +1474,19 @@ access token, etc.</p>
 <ul>
 <li>
 <h1 id="access-token-1"><a class="header" href="#access-token-1"><strong><code>Access Token</code></strong></a></h1>
-<h2 id="string-28"><a class="header" href="#string-28"><code>String</code></a></h2>
+<h2 id="string-38"><a class="header" href="#string-38"><code>String</code></a></h2>
 <p>Access token used to make authenticated requests (e.g. retrieve user identity info).
 This is usually obtained via oath.</p>
 </li>
 <li>
 <h1 id="refreshtoken"><a class="header" href="#refreshtoken"><strong><code>RefreshToken</code></strong></a></h1>
-<h2 id="string-29"><a class="header" href="#string-29"><code>String</code></a></h2>
+<h2 id="string-39"><a class="header" href="#string-39"><code>String</code></a></h2>
 <p>When the <strong><code>Access Token</code></strong> expires, this token can be used to request a new access
 token without requiring the user to login again.</p>
 </li>
 <li>
 <h1 id="scopes"><a class="header" href="#scopes"><strong><code>Scopes</code></strong></a></h1>
-<h2 id="string-30"><a class="header" href="#string-30"><code>String</code></a></h2>
+<h2 id="string-40"><a class="header" href="#string-40"><code>String</code></a></h2>
 <p>The scopes <strong><code>Access Token</code></strong> is allowed to access.
 This may differ from the scopes which were requested during authentication.</p>
 </li>
@@ -1242,11 +1511,11 @@ This is used to check if the <strong><code>Access Token</code></strong> is still
 <p>Checks if an API token is valid.</p>
 <p>This verifies that the <code>Access Token</code> field is set, and that the token has not yet expired.</p>
 <hr />
-<h2 id="inputs-12"><a class="header" href="#inputs-12">Inputs</a></h2>
+<h2 id="inputs-16"><a class="header" href="#inputs-16">Inputs</a></h2>
 <ul>
 <li>
 <h2 id="token"><a class="header" href="#token"><strong><code>Token</code></strong></a></h2>
-<h3 id="api-token-info-7"><a class="header" href="#api-token-info-7"><a href="blueprint-api/structs/./APITokenInfo.html"><code>API Token Info</code></a></a></h3>
+<h3 id="api-token-info-9"><a class="header" href="#api-token-info-9"><a href="blueprint-api/structs/./APITokenInfo.html"><code>API Token Info</code></a></a></h3>
 <p>The token to check</p>
 </li>
 </ul>
@@ -1260,16 +1529,355 @@ This is used to check if the <strong><code>Access Token</code></strong> is still
 <p>Checks if an API token has expired.</p>
 <p>Compares the current time to the time the token was received + the token's lifetime. Tokens are typically valid for ~30 days.</p>
 <hr />
-<h2 id="inputs-13"><a class="header" href="#inputs-13">Inputs</a></h2>
+<h2 id="inputs-17"><a class="header" href="#inputs-17">Inputs</a></h2>
 <ul>
 <li>
 <h2 id="token-1"><a class="header" href="#token-1"><strong><code>Token</code></strong></a></h2>
-<h3 id="api-token-info-8"><a class="header" href="#api-token-info-8"><a href="blueprint-api/structs/./APITokenInfo.html"><code>API Token Info</code></a></a></h3>
+<h3 id="api-token-info-10"><a class="header" href="#api-token-info-10"><a href="blueprint-api/structs/./APITokenInfo.html"><code>API Token Info</code></a></a></h3>
 <p>The token to check</p>
 </li>
 </ul>
 <h2 id="returns-1"><a class="header" href="#returns-1">Returns</a></h2>
 <p><code>True</code> if the token is expired and needs to be replaced/refreshed, otherwise, <code>False</code>.</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-struct-patreon-pledge-event"><a class="header" href="#bp-struct-patreon-pledge-event"><strong>BP Struct: <code>Patreon Pledge Event</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Struct</th><th><a href="blueprint-api/structs/../../reference/structs/FPatreonPledgeEvent.html"><code>FPatreonPledgeEvent</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+  <img alt="Patreon Pledge Event Node" src="blueprint-api/structs/../../assets/bpapi_patreonpledgeevent_node.png" />
+</p>
+<hr />
+<p>Contains information about when a user changed their pledge status.</p>
+<p>See: <a href="https://docs.patreon.com/#pledge-event">https://docs.patreon.com/#pledge-event</a></p>
+<hr />
+<h1 id="properties-1"><a class="header" href="#properties-1"><strong>Properties</strong></a></h1>
+<ul>
+<li>
+<h1 id="amount-cents"><a class="header" href="#amount-cents"><strong><code>Amount Cents</code></strong></a></h1>
+<h2 id="int64"><a class="header" href="#int64"><code>Int64</code></a></h2>
+<p>Amount (in the currency with which the user paid) of the underlying event.</p>
+</li>
+<li>
+<h1 id="currency-code"><a class="header" href="#currency-code"><strong><code>Currency Code</code></strong></a></h1>
+<h2 id="string-41"><a class="header" href="#string-41"><code>String</code></a></h2>
+<p>ISO code of the currency of the event (may not be the same currency as your campaign)</p>
+</li>
+<li>
+<h1 id="date"><a class="header" href="#date"><strong><code>Date</code></strong></a></h1>
+<h2 id="datetime-1"><a class="header" href="#datetime-1"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h2>
+<p>The timestamp at which the event occurred</p>
+</li>
+<li>
+<h1 id="payment-status"><a class="header" href="#payment-status"><strong><code>Payment Status</code></strong></a></h1>
+<h2 id="string-42"><a class="header" href="#string-42"><code>String</code></a></h2>
+<p>Status of underlying payment. One of:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>Paid</code></th></tr></thead><tbody>
+<tr><td><code>Declined</code></td></tr>
+<tr><td><code>Deleted</code></td></tr>
+<tr><td><code>Pending</code></td></tr>
+<tr><td><code>Refunded</code></td></tr>
+<tr><td><code>Fraud</code></td></tr>
+<tr><td><code>Refunded by Patreon</code></td></tr>
+<tr><td><code>Other</code></td></tr>
+<tr><td><code>Partially Refunded</code></td></tr>
+<tr><td><code>Free Trial</code></td></tr>
+<tr><td><code>&lt;empty&gt;</code></td></tr>
+</tbody></table>
+</div></li>
+<li>
+<h1 id="pledge-payment-status"><a class="header" href="#pledge-payment-status"><strong><code>Pledge Payment Status</code></strong></a></h1>
+<h2 id="string-43"><a class="header" href="#string-43"><code>String</code></a></h2>
+<p>The payment status of the pledge. One of:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>valid</code></th></tr></thead><tbody>
+<tr><td><code>queued</code></td></tr>
+<tr><td><code>pending</code></td></tr>
+<tr><td><code>declined</code></td></tr>
+<tr><td><code>fraud</code></td></tr>
+<tr><td><code>disabled</code></td></tr>
+<tr><td><code>&lt;empty&gt;</code></td></tr>
+</tbody></table>
+</div></li>
+<li>
+<h1 id="tier-id"><a class="header" href="#tier-id"><strong><code>Tier ID</code></strong></a></h1>
+<h2 id="string-44"><a class="header" href="#string-44"><code>String</code></a></h2>
+<p>ID of the tier associated with this pledge. May be empty.</p>
+</li>
+<li>
+<h1 id="tier-title"><a class="header" href="#tier-title"><strong><code>Tier Title</code></strong></a></h1>
+<h2 id="string-45"><a class="header" href="#string-45"><code>String</code></a></h2>
+<p>Title of the tier associated with this pledge. May be empty.</p>
+</li>
+<li>
+<h1 id="type"><a class="header" href="#type"><strong><code>Type</code></strong></a></h1>
+<h2 id="string-46"><a class="header" href="#string-46"><code>String</code></a></h2>
+<p>Event type. One of:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>pledge_start</code></th></tr></thead><tbody>
+<tr><td><code>pledge_upgrade</code></td></tr>
+<tr><td><code>pledge_downgrade</code></td></tr>
+<tr><td><code>pledge_delete</code></td></tr>
+<tr><td><code>subscription</code></td></tr>
+</tbody></table>
+</div></li>
+<li>
+<h1 id="benefits"><a class="header" href="#benefits"><strong><code>Benefits</code></strong></a></h1>
+<h2 id="array-of-string"><a class="header" href="#array-of-string">Array of <code>String</code></a></h2>
+<p>If any benefits are associated with this tier, their Titles are included here.</p>
+</li>
+</ul>
+<p><br/><br/>
+<br/><br/></p>
+<hr />
+<blockquote>
+<p>For any questions, help, suggestions or feature requests, please feel free to contact me at <a href="mailto:nbpsup@gmail.com">nbpsup@gmail.com</a></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bp-struct-patreon-pledge-history"><a class="header" href="#bp-struct-patreon-pledge-history"><strong>BP Struct: <code>Patreon Pledge History</code></strong></a></h1>
+<div class="table-wrapper"><table><thead><tr><th>C++ Struct</th><th><a href="blueprint-api/structs/../../reference/structs/FPatreonPledgeHistory.html"><code>FPatreonPledgeHistory</code></a></th></tr></thead><tbody>
+</tbody></table>
+</div><p align="center">
+  <img alt="Patreon Pledge History Node" src="blueprint-api/structs/../../assets/bpapi_patreonpledgehistory_node.png" />
+</p>
+<hr />
+<p>Contains information about when a user changed their pledge status.</p>
+<hr />
+<h1 id="properties-2"><a class="header" href="#properties-2"><strong>Properties</strong></a></h1>
+<ul>
+<li>
+<h1 id="pledge-history-2"><a class="header" href="#pledge-history-2"><strong><code>Pledge History</code></strong></a></h1>
+<h2 id="array-of-patreon-pledge-event"><a class="header" href="#array-of-patreon-pledge-event">Array of <a href="blueprint-api/structs/./PatreonPledgeEvent.html"><code>Patreon Pledge Event</code></a></a></h2>
+<p>Collection of pledge events for a single user. Expected to be sorted according to date.</p>
+</li>
+</ul>
+<h1 id="functions-2"><a class="header" href="#functions-2"><strong>Functions</strong></a></h1>
+<ul>
+<li>
+<h1 id="pledged-to-tier-after-by-id"><a class="header" href="#pledged-to-tier-after-by-id"><strong><code>Pledged To Tier After (by ID)</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotierafter_id_node.png" alt="Pledged to Tier After" /></p>
+<hr />
+<p>Checks if the user was pledged to the specified tier at any time after a provided date.</p>
+<hr />
+<h2 id="inputs-18"><a class="header" href="#inputs-18">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="pledge-history-3"><a class="header" href="#pledge-history-3"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-2"><a class="header" href="#patreon-pledge-history-2"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tier-id-1"><a class="header" href="#tier-id-1"><strong><code>Tier Id</code></strong></a></h2>
+<h3 id="string-47"><a class="header" href="#string-47"><code>String</code></a></h3>
+<p>The ID of the tier to check</p>
+</li>
+<li>
+<h2 id="date-1"><a class="header" href="#date-1"><strong><code>Date</code></strong></a></h2>
+<h3 id="datetime-2"><a class="header" href="#datetime-2"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h3>
+<p>The minimum date that should be considered.</p>
+</li>
+</ul>
+<h2 id="outputs-16"><a class="header" href="#outputs-16">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value"><a class="header" href="#return-value"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="bool-4"><a class="header" href="#bool-4"><code>Bool</code></a></h3>
+<p>True if the user was pledged to the specified tier after the given date.</p>
+</li>
+</ul>
+</li>
+<li>
+<h1 id="pledged-to-tier-after-by-title"><a class="header" href="#pledged-to-tier-after-by-title"><strong><code>Pledged To Tier After (by Title)</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotierafter_title_node.png" alt="Pledged to Tier After" /></p>
+<hr />
+<p>Checks if the user was pledged to the specified tier at any time after a provided date.</p>
+<hr />
+<ul>
+<li>
+<h2 id="pledge-history-4"><a class="header" href="#pledge-history-4"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-3"><a class="header" href="#patreon-pledge-history-3"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+</ul>
+<h2 id="inputs-19"><a class="header" href="#inputs-19">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="tier-name"><a class="header" href="#tier-name"><strong><code>Tier Name</code></strong></a></h2>
+<h3 id="string-48"><a class="header" href="#string-48"><code>String</code></a></h3>
+<p>The Title of the tier to check</p>
+</li>
+<li>
+<h2 id="date-2"><a class="header" href="#date-2"><strong><code>Date</code></strong></a></h2>
+<h3 id="datetime-3"><a class="header" href="#datetime-3"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h3>
+<p>The minimum date that should be considered.</p>
+</li>
+</ul>
+<h2 id="outputs-17"><a class="header" href="#outputs-17">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value-1"><a class="header" href="#return-value-1"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="bool-5"><a class="header" href="#bool-5"><code>Bool</code></a></h3>
+<p>True if the user was pledged to the specified tier after the given date.</p>
+</li>
+</ul>
+</li>
+<li>
+<h1 id="pledged-to-tier-before-by-id"><a class="header" href="#pledged-to-tier-before-by-id"><strong><code>Pledged To Tier Before (by ID)</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotierbefore_id_node.png" alt="Pledged to Tier Before" /></p>
+<hr />
+<p>Checks if the user was pledged to the specified tier at any time before a provided date.</p>
+<hr />
+<h2 id="inputs-20"><a class="header" href="#inputs-20">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="pledge-history-5"><a class="header" href="#pledge-history-5"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-4"><a class="header" href="#patreon-pledge-history-4"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tier-id-2"><a class="header" href="#tier-id-2"><strong><code>Tier Id</code></strong></a></h2>
+<h3 id="string-49"><a class="header" href="#string-49"><code>String</code></a></h3>
+<p>The ID of the tier to check</p>
+</li>
+<li>
+<h2 id="date-3"><a class="header" href="#date-3"><strong><code>Date</code></strong></a></h2>
+<h3 id="datetime-4"><a class="header" href="#datetime-4"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h3>
+<p>The maximum date that should be considered.</p>
+</li>
+</ul>
+<h2 id="outputs-18"><a class="header" href="#outputs-18">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value-2"><a class="header" href="#return-value-2"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="bool-6"><a class="header" href="#bool-6"><code>Bool</code></a></h3>
+<p>True if the user was pledged to the specified tier before the given date.</p>
+</li>
+</ul>
+</li>
+<li>
+<h1 id="pledged-to-tier-before-by-title"><a class="header" href="#pledged-to-tier-before-by-title"><strong><code>Pledged To Tier Before (by Title)</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotierbefore_title_node.png" alt="Pledged to Tier Before" /></p>
+<hr />
+<p>Checks if the user was pledged to the specified tier at any time before a provided date.</p>
+<hr />
+<h2 id="inputs-21"><a class="header" href="#inputs-21">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="pledge-history-6"><a class="header" href="#pledge-history-6"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-5"><a class="header" href="#patreon-pledge-history-5"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="tier-name-1"><a class="header" href="#tier-name-1"><strong><code>Tier Name</code></strong></a></h2>
+<h3 id="string-50"><a class="header" href="#string-50"><code>String</code></a></h3>
+<p>The Title of the tier to check</p>
+</li>
+<li>
+<h2 id="date-4"><a class="header" href="#date-4"><strong><code>Date</code></strong></a></h2>
+<h3 id="datetime-5"><a class="header" href="#datetime-5"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h3>
+<p>The minimum date that should be considered.</p>
+</li>
+</ul>
+<h2 id="outputs-19"><a class="header" href="#outputs-19">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value-3"><a class="header" href="#return-value-3"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="bool-7"><a class="header" href="#bool-7"><code>Bool</code></a></h3>
+<p>True if the user was pledged to the specified tier before the given date.</p>
+</li>
+</ul>
+</li>
+<li>
+<h1 id="pledged-to-tiers-after"><a class="header" href="#pledged-to-tiers-after"><strong><code>Pledged To Tiers After</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotiersafter_node.png" alt="Pledged to Tiers After" /></p>
+<hr />
+<p>Returns the titles of the tier(s) the user was pledged to after the given date.</p>
+<hr />
+<h2 id="inputs-22"><a class="header" href="#inputs-22">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="pledge-history-7"><a class="header" href="#pledge-history-7"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-6"><a class="header" href="#patreon-pledge-history-6"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="date-5"><a class="header" href="#date-5"><strong><code>Date</code></strong></a></h2>
+<h3 id="datetime-6"><a class="header" href="#datetime-6"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h3>
+<p>The minimum date that should be considered.</p>
+</li>
+</ul>
+<h2 id="outputs-20"><a class="header" href="#outputs-20">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value-4"><a class="header" href="#return-value-4"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="array-of-string-1"><a class="header" href="#array-of-string-1">Array of <code>String</code></a></h3>
+<p>All of the titles of the tiers the user was pledged to after the given date.</p>
+</li>
+</ul>
+</li>
+<li>
+<h1 id="pledged-to-tiers-before"><a class="header" href="#pledged-to-tiers-before"><strong><code>Pledged To Tiers Before</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotiersbefore_node.png" alt="Pledged to Tiers Before" /></p>
+<hr />
+<p>Returns the titles of the tier(s) the user was pledged to before a given date.</p>
+<hr />
+<h2 id="inputs-23"><a class="header" href="#inputs-23">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="pledge-history-8"><a class="header" href="#pledge-history-8"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-7"><a class="header" href="#patreon-pledge-history-7"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="date-6"><a class="header" href="#date-6"><strong><code>Date</code></strong></a></h2>
+<h3 id="datetime-7"><a class="header" href="#datetime-7"><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Math/DateTime"><code>DateTime</code></a></a></h3>
+<p>The maximum date that should be considered.</p>
+</li>
+</ul>
+<h2 id="outputs-21"><a class="header" href="#outputs-21">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value-5"><a class="header" href="#return-value-5"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="array-of-string-2"><a class="header" href="#array-of-string-2">Array of <code>String</code></a></h3>
+<p>All of the titles of the tiers the user was pledged to before the given date.</p>
+</li>
+</ul>
+</li>
+<li>
+<h1 id="pledged-to-tiers-during"><a class="header" href="#pledged-to-tiers-during"><strong><code>Pledged To Tiers During</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_pledgedtotiersduring_node.png" alt="Pledged to Tiers During" /></p>
+<hr />
+<p>Returns the titles of the tier(s) the user was pledged to during the given month, if any. If the user did not have a subscription during the given month, returns an empty list.</p>
+<hr />
+<h2 id="inputs-24"><a class="header" href="#inputs-24">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="pledge-history-9"><a class="header" href="#pledge-history-9"><strong><code>Pledge History</code></strong></a></h2>
+<h3 id="patreon-pledge-history-8"><a class="header" href="#patreon-pledge-history-8"><a href="blueprint-api/structs/./PatreonPledgeHistory.html"><code>Patreon Pledge History</code></a></a></h3>
+<p>The pledge history to search</p>
+</li>
+<li>
+<h2 id="year"><a class="header" href="#year"><strong><code>Year</code></strong></a></h2>
+<h3 id="integer-5"><a class="header" href="#integer-5"><code>Integer</code></a></h3>
+<p>The year to check</p>
+</li>
+<li>
+<h2 id="month"><a class="header" href="#month"><strong><code>Month</code></strong></a></h2>
+<h3 id="integer-6"><a class="header" href="#integer-6"><code>Integer</code></a></h3>
+<p>The the month in <code>Year</code> to check</p>
+</li>
+</ul>
+<h2 id="outputs-22"><a class="header" href="#outputs-22">Outputs</a></h2>
+<ul>
+<li>
+<h2 id="return-value-6"><a class="header" href="#return-value-6"><strong><code>Return Value</code></strong></a></h2>
+<h3 id="array-of-string-3"><a class="header" href="#array-of-string-3">Array of <code>String</code></a></h3>
+<p>All of the titles of the tiers the user was pledged to during the given month.</p>
+</li>
+</ul>
 </li>
 </ul>
 <p><br/><br/>
@@ -1287,36 +1895,36 @@ This is used to check if the <strong><code>Access Token</code></strong> is still
 <hr />
 <p>Stores information related to a user and their subscription(s).</p>
 <hr />
-<h1 id="properties-1"><a class="header" href="#properties-1"><strong>Properties</strong></a></h1>
+<h1 id="properties-3"><a class="header" href="#properties-3"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="first-name"><a class="header" href="#first-name"><strong><code>First Name</code></strong></a></h1>
-<h2 id="string-31"><a class="header" href="#string-31"><code>String</code></a></h2>
+<h2 id="string-51"><a class="header" href="#string-51"><code>String</code></a></h2>
 <p>Ther user's first name (may be empty).</p>
 </li>
 <li>
 <h1 id="last-name"><a class="header" href="#last-name"><strong><code>Last Name</code></strong></a></h1>
-<h2 id="string-32"><a class="header" href="#string-32"><code>String</code></a></h2>
+<h2 id="string-52"><a class="header" href="#string-52"><code>String</code></a></h2>
 <p>Ther user's last name (may be empty).</p>
 </li>
 <li>
 <h1 id="full-name"><a class="header" href="#full-name"><strong><code>Full Name</code></strong></a></h1>
-<h2 id="string-33"><a class="header" href="#string-33"><code>String</code></a></h2>
+<h2 id="string-53"><a class="header" href="#string-53"><code>String</code></a></h2>
 <p>The user's full name (usually the combination of <code>First Name</code> and <code>Last Name</code> but may be different).</p>
 </li>
 <li>
 <h1 id="vanity-name"><a class="header" href="#vanity-name"><strong><code>Vanity Name</code></strong></a></h1>
-<h2 id="string-34"><a class="header" href="#string-34"><code>String</code></a></h2>
+<h2 id="string-54"><a class="header" href="#string-54"><code>String</code></a></h2>
 <p>The user's preferred nickname, if they have set one (may be empty).</p>
 </li>
 <li>
 <h1 id="image-url"><a class="header" href="#image-url"><strong><code>Image URL</code></strong></a></h1>
-<h2 id="string-35"><a class="header" href="#string-35"><code>String</code></a></h2>
+<h2 id="string-55"><a class="header" href="#string-55"><code>String</code></a></h2>
 <p>A URL pointing to the user's avatar image</p>
 </li>
 <li>
 <h1 id="patron-status"><a class="header" href="#patron-status"><strong><code>Patron Status</code></strong></a></h1>
-<h2 id="string-36"><a class="header" href="#string-36"><code>String</code></a></h2>
+<h2 id="string-56"><a class="header" href="#string-56"><code>String</code></a></h2>
 <p>Indicates the user's current pledge status for your campaign.</p>
 <div class="table-wrapper"><table><thead><tr><th>Value</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>active_patron</code></td><td>They are currently subscribed to your campaign</td></tr>
@@ -1326,19 +1934,31 @@ This is used to check if the <strong><code>Access Token</code></strong> is still
 </tbody></table>
 </div></li>
 <li>
-<h1 id="tiers"><a class="header" href="#tiers"><strong><code>Tiers</code></strong></a></h1>
-<h2 id="array-of-patreon-tier-info"><a class="header" href="#array-of-patreon-tier-info">Array of <a href="blueprint-api/structs/./PatreonTierInfo.html"><code>Patreon Tier Info</code></a></a></h2>
+<h1 id="campaign-lifetime-support-cents"><a class="header" href="#campaign-lifetime-support-cents"><strong><code>Campaign Lifetime Support Cents</code></strong></a></h1>
+<h2 id="string-57"><a class="header" href="#string-57"><code>String</code></a></h2>
+<p>The total amount of money this user has ever contributed to this campaign, in cents.</p>
+<p>Can be used to unlock content for users only after reaching specific subscription thresholds. NOTE: Gifted subscriptions will not increase this value!</p>
+</li>
+<li>
+<h1 id="currently-entitled-amount-cents"><a class="header" href="#currently-entitled-amount-cents"><strong><code>Currently Entitled Amount Cents</code></strong></a></h1>
+<h2 id="string-58"><a class="header" href="#string-58"><code>String</code></a></h2>
+<p>The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.</p>
+<p>This can be used to unlock content based on how much money they are contributing rather than checking which tier they belong to.</p>
+</li>
+<li>
+<h1 id="tiers-1"><a class="header" href="#tiers-1"><strong><code>Tiers</code></strong></a></h1>
+<h2 id="array-of-patreon-tier-info-1"><a class="header" href="#array-of-patreon-tier-info-1">Array of <a href="blueprint-api/structs/./PatreonTierInfo.html"><code>Patreon Tier Info</code></a></a></h2>
 <p>A list of all the tiers this user is currently entitled to with their subscription. This will often include multiple
 entries even if they have only pledged to a single tier, as pledging to a higher tier can include all tiers below it.</p>
 </li>
 <li>
 <h1 id="can-see-nsfw"><a class="header" href="#can-see-nsfw"><strong><code>Can See NSFW</code></strong></a></h1>
-<h2 id="bool-1"><a class="header" href="#bool-1"><code>Bool</code></a></h2>
+<h2 id="bool-8"><a class="header" href="#bool-8"><code>Bool</code></a></h2>
 <p>If <code>true</code>, then this user has enabled NSFW content in their Patreon account.</p>
 </li>
 <li>
 <h1 id="is-creator"><a class="header" href="#is-creator"><strong><code>Is Creator</code></strong></a></h1>
-<h2 id="bool-2"><a class="header" href="#bool-2"><code>Bool</code></a></h2>
+<h2 id="bool-9"><a class="header" href="#bool-9"><code>Bool</code></a></h2>
 <p>If <code>true</code>, then this user is also the creator of the campaign!</p>
 <p>If you are testing this plugin with your creator account, then this will always be <code>true</code>, and you may see some other
 differences when using that account vs. a regular subscriber account (e.g., the creator typically has no entitled tiers,
@@ -1348,7 +1968,7 @@ the scopes enabled on your access token after logging in may be different, etc.)
 to unlock for the creator account to let you test the unlocked behavior of everything everywhere all at once.</p>
 </li>
 </ul>
-<h1 id="functions-2"><a class="header" href="#functions-2"><strong>Functions</strong></a></h1>
+<h1 id="functions-3"><a class="header" href="#functions-3"><strong>Functions</strong></a></h1>
 <ul>
 <li>
 <h1 id="has-benefit"><a class="header" href="#has-benefit"><strong><code>Has Benefit</code></strong></a></h1>
@@ -1357,7 +1977,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p>Checks if a given user is entitled to a specific benefit/reward.</p>
 <p>Will search all benefits of all tiers a user is entitled to.</p>
 <hr />
-<h2 id="inputs-14"><a class="header" href="#inputs-14">Inputs</a></h2>
+<h2 id="inputs-25"><a class="header" href="#inputs-25">Inputs</a></h2>
 <ul>
 <li>
 <h2 id="user-info-2"><a class="header" href="#user-info-2"><strong><code>User Info</code></strong></a></h2>
@@ -1366,7 +1986,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </li>
 <li>
 <h2 id="benefit-name"><a class="header" href="#benefit-name"><strong><code>Benefit Name</code></strong></a></h2>
-<h3 id="string-37"><a class="header" href="#string-37"><code>String</code></a></h3>
+<h3 id="string-59"><a class="header" href="#string-59"><code>String</code></a></h3>
 <p>The name/title of the benefit/reward to check for.</p>
 <p>Case-insensitive.</p>
 </li>
@@ -1375,12 +1995,12 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p><code>True</code>, if any tier the user is entitled to includes the specified benefit. Otherwise, <code>False</code>.</p>
 </li>
 <li>
-<h1 id="has-tier"><a class="header" href="#has-tier"><strong><code>Has Tier</code></strong></a></h1>
+<h1 id="has-tier-by-title"><a class="header" href="#has-tier-by-title"><strong><code>Has Tier (By Title)</code></strong></a></h1>
 <p><img src="blueprint-api/structs/../../assets/bpapi_patreonuserinfo_hastier_node.png" alt="Has Tier" /></p>
 <hr />
 <p>Checks if a given user is entitled to a specific <strong>tier</strong>.</p>
 <hr />
-<h2 id="inputs-15"><a class="header" href="#inputs-15">Inputs</a></h2>
+<h2 id="inputs-26"><a class="header" href="#inputs-26">Inputs</a></h2>
 <ul>
 <li>
 <h2 id="user-info-3"><a class="header" href="#user-info-3"><strong><code>User Info</code></strong></a></h2>
@@ -1388,13 +2008,36 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p>The user to check</p>
 </li>
 <li>
-<h2 id="tier-name"><a class="header" href="#tier-name"><strong><code>Tier Name</code></strong></a></h2>
-<h3 id="string-38"><a class="header" href="#string-38"><code>String</code></a></h3>
+<h2 id="tier-name-2"><a class="header" href="#tier-name-2"><strong><code>Tier Name</code></strong></a></h2>
+<h3 id="string-60"><a class="header" href="#string-60"><code>String</code></a></h3>
 <p>The name/title of the tier to check for.</p>
 <p>Case-insensitive.</p>
 </li>
 </ul>
 <h2 id="returns-3"><a class="header" href="#returns-3">Returns</a></h2>
+<p><code>True</code>, if any tier matches the name specified. Otherwise, <code>False</code>.</p>
+</li>
+<li>
+<h1 id="has-tier-by-id"><a class="header" href="#has-tier-by-id"><strong><code>Has Tier (By ID)</code></strong></a></h1>
+<p><img src="blueprint-api/structs/../../assets/bpapi_patreonuserinfo_hastierid_node.png" alt="Has Tier" /></p>
+<hr />
+<p>Checks if a given user is entitled to a specific <strong>tier</strong>.</p>
+<hr />
+<h2 id="inputs-27"><a class="header" href="#inputs-27">Inputs</a></h2>
+<ul>
+<li>
+<h2 id="user-info-4"><a class="header" href="#user-info-4"><strong><code>User Info</code></strong></a></h2>
+<h3 id="patreon-user-info-3"><a class="header" href="#patreon-user-info-3"><a href="blueprint-api/structs/./PatreonUserInfo.html"><code>Patreon User Info</code></a></a></h3>
+<p>The user to check</p>
+</li>
+<li>
+<h2 id="tier-id-3"><a class="header" href="#tier-id-3"><strong><code>Tier Id</code></strong></a></h2>
+<h3 id="string-61"><a class="header" href="#string-61"><code>String</code></a></h3>
+<p>The ID of the tier to check for.</p>
+<p>Case-sensitive.</p>
+</li>
+</ul>
+<h2 id="returns-4"><a class="header" href="#returns-4">Returns</a></h2>
 <p><code>True</code>, if any tier matches the name specified. Otherwise, <code>False</code>.</p>
 </li>
 </ul>
@@ -1414,26 +2057,26 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p>Stores information related to a user and their subscription(s).</p>
 <p>Includes images (e.g. the user's avatar) as usable textures rather than URLs, so they can be directly added to the UI.</p>
 <hr />
-<h1 id="properties-2"><a class="header" href="#properties-2"><strong>Properties</strong></a></h1>
+<h1 id="properties-4"><a class="header" href="#properties-4"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="first-name-1"><a class="header" href="#first-name-1"><strong><code>First Name</code></strong></a></h1>
-<h2 id="string-39"><a class="header" href="#string-39"><code>String</code></a></h2>
+<h2 id="string-62"><a class="header" href="#string-62"><code>String</code></a></h2>
 <p>Ther user's first name (may be empty).</p>
 </li>
 <li>
 <h1 id="last-name-1"><a class="header" href="#last-name-1"><strong><code>Last Name</code></strong></a></h1>
-<h2 id="string-40"><a class="header" href="#string-40"><code>String</code></a></h2>
+<h2 id="string-63"><a class="header" href="#string-63"><code>String</code></a></h2>
 <p>Ther user's last name (may be empty).</p>
 </li>
 <li>
 <h1 id="full-name-1"><a class="header" href="#full-name-1"><strong><code>Full Name</code></strong></a></h1>
-<h2 id="string-41"><a class="header" href="#string-41"><code>String</code></a></h2>
+<h2 id="string-64"><a class="header" href="#string-64"><code>String</code></a></h2>
 <p>The user's full name (usually the combination of <code>First Name</code> and <code>Last Name</code> but may be different).</p>
 </li>
 <li>
 <h1 id="vanity-name-1"><a class="header" href="#vanity-name-1"><strong><code>Vanity Name</code></strong></a></h1>
-<h2 id="string-42"><a class="header" href="#string-42"><code>String</code></a></h2>
+<h2 id="string-65"><a class="header" href="#string-65"><code>String</code></a></h2>
 <p>The user's preferred nickname, if they have set one (may be empty).</p>
 </li>
 <li>
@@ -1443,7 +2086,7 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </li>
 <li>
 <h1 id="patron-status-1"><a class="header" href="#patron-status-1"><strong><code>Patron Status</code></strong></a></h1>
-<h2 id="string-43"><a class="header" href="#string-43"><code>String</code></a></h2>
+<h2 id="string-66"><a class="header" href="#string-66"><code>String</code></a></h2>
 <p>Indicates the user's current pledge status for your campaign.</p>
 <div class="table-wrapper"><table><thead><tr><th>Value</th><th>Meaning</th></tr></thead><tbody>
 <tr><td><code>active_patron</code></td><td>They are currently subscribed to your campaign</td></tr>
@@ -1453,19 +2096,31 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </tbody></table>
 </div></li>
 <li>
-<h1 id="tiers-1"><a class="header" href="#tiers-1"><strong><code>Tiers</code></strong></a></h1>
+<h1 id="campaign-lifetime-support-cents-1"><a class="header" href="#campaign-lifetime-support-cents-1"><strong><code>Campaign Lifetime Support Cents</code></strong></a></h1>
+<h2 id="string-67"><a class="header" href="#string-67"><code>String</code></a></h2>
+<p>The total amount of money this user has ever contributed to this campaign, in cents.</p>
+<p>Can be used to unlock content for users only after reaching specific subscription thresholds. NOTE: Gifted subscriptions will not increase this value!</p>
+</li>
+<li>
+<h1 id="currently-entitled-amount-cents-1"><a class="header" href="#currently-entitled-amount-cents-1"><strong><code>Currently Entitled Amount Cents</code></strong></a></h1>
+<h2 id="string-68"><a class="header" href="#string-68"><code>String</code></a></h2>
+<p>The amount of money this user is currently entitled to, e.g. their current pledge amount, in cents.</p>
+<p>This can be used to unlock content based on how much money they are contributing rather than checking which tier they belong to.</p>
+</li>
+<li>
+<h1 id="tiers-2"><a class="header" href="#tiers-2"><strong><code>Tiers</code></strong></a></h1>
 <h2 id="array-of-patreon-tier-info-imgs"><a class="header" href="#array-of-patreon-tier-info-imgs">Array of <a href="blueprint-api/structs/./PatreonTierInfoImgs.html"><code>Patreon Tier Info Imgs</code></a></a></h2>
 <p>A list of all the tiers this user is currently entitled to with their subscription. This will often include multiple
 entries even if they have only pledged to a single tier, as pledging to a higher tier can include all tiers below it.</p>
 </li>
 <li>
 <h1 id="can-see-nsfw-1"><a class="header" href="#can-see-nsfw-1"><strong><code>Can See NSFW</code></strong></a></h1>
-<h2 id="bool-3"><a class="header" href="#bool-3"><code>Bool</code></a></h2>
+<h2 id="bool-10"><a class="header" href="#bool-10"><code>Bool</code></a></h2>
 <p>If <code>true</code>, then this user has enabled NSFW content in their Patreon account.</p>
 </li>
 <li>
 <h1 id="is-creator-1"><a class="header" href="#is-creator-1"><strong><code>Is Creator</code></strong></a></h1>
-<h2 id="bool-4"><a class="header" href="#bool-4"><code>Bool</code></a></h2>
+<h2 id="bool-11"><a class="header" href="#bool-11"><code>Bool</code></a></h2>
 <p>If <code>true</code>, then this user is also the creator of the campaign!</p>
 <p>If you are testing this plugin with your creator account, then this will always be <code>true</code>, and you may see some other
 differences when using that account vs. a regular subscriber account (e.g., the creator typically has no entitled tiers,
@@ -1475,7 +2130,7 @@ the scopes enabled on your access token after logging in may be different, etc.)
 to unlock for the creator account to let you test the unlocked behavior of everything everywhere all at once.</p>
 </li>
 </ul>
-<h1 id="functions-3"><a class="header" href="#functions-3"><strong>Functions</strong></a></h1>
+<h1 id="functions-4"><a class="header" href="#functions-4"><strong>Functions</strong></a></h1>
 <ul>
 <li>
 <h1 id="has-benefit-1"><a class="header" href="#has-benefit-1"><strong><code>Has Benefit</code></strong></a></h1>
@@ -1484,44 +2139,44 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p>Checks if a given user is entitled to a specific benefit/reward.</p>
 <p>Will search all benefits of all tiers a user is entitled to.</p>
 <hr />
-<h2 id="inputs-16"><a class="header" href="#inputs-16">Inputs</a></h2>
+<h2 id="inputs-28"><a class="header" href="#inputs-28">Inputs</a></h2>
 <ul>
 <li>
-<h2 id="user-info-4"><a class="header" href="#user-info-4"><strong><code>User Info</code></strong></a></h2>
-<h3 id="patreon-user-info-3"><a class="header" href="#patreon-user-info-3"><a href="blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
+<h2 id="user-info-5"><a class="header" href="#user-info-5"><strong><code>User Info</code></strong></a></h2>
+<h3 id="patreon-user-info-4"><a class="header" href="#patreon-user-info-4"><a href="blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
 <p>The user to check</p>
 </li>
 <li>
 <h2 id="benefit-name-1"><a class="header" href="#benefit-name-1"><strong><code>Benefit Name</code></strong></a></h2>
-<h3 id="string-44"><a class="header" href="#string-44"><code>String</code></a></h3>
+<h3 id="string-69"><a class="header" href="#string-69"><code>String</code></a></h3>
 <p>The name/title of the benefit/reward to check for.</p>
 <p>Case-insensitive.</p>
 </li>
 </ul>
-<h2 id="returns-4"><a class="header" href="#returns-4">Returns</a></h2>
+<h2 id="returns-5"><a class="header" href="#returns-5">Returns</a></h2>
 <p><code>True</code>, if any tier the user is entitled to includes the specified benefit. Otherwise, <code>False</code>.</p>
 </li>
 <li>
-<h1 id="has-tier-1"><a class="header" href="#has-tier-1"><strong><code>Has Tier</code></strong></a></h1>
+<h1 id="has-tier"><a class="header" href="#has-tier"><strong><code>Has Tier</code></strong></a></h1>
 <p><img src="blueprint-api/structs/../../assets/bpapi_patreonuserinfo_hastier_node.png" alt="Has Tier" /></p>
 <hr />
 <p>Checks if a given user is entitled to a specific <strong>tier</strong>.</p>
 <hr />
-<h2 id="inputs-17"><a class="header" href="#inputs-17">Inputs</a></h2>
+<h2 id="inputs-29"><a class="header" href="#inputs-29">Inputs</a></h2>
 <ul>
 <li>
-<h2 id="user-info-5"><a class="header" href="#user-info-5"><strong><code>User Info</code></strong></a></h2>
-<h3 id="patreon-user-info-4"><a class="header" href="#patreon-user-info-4"><a href="blueprint-api/structs//blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
+<h2 id="user-info-6"><a class="header" href="#user-info-6"><strong><code>User Info</code></strong></a></h2>
+<h3 id="patreon-user-info-5"><a class="header" href="#patreon-user-info-5"><a href="blueprint-api/structs//blueprint-api/structs/./PatreonUserInfoImgs.html"><code>Patreon User Info</code></a></a></h3>
 <p>The user to check</p>
 </li>
 <li>
-<h2 id="tier-name-1"><a class="header" href="#tier-name-1"><strong><code>Tier Name</code></strong></a></h2>
-<h3 id="string-45"><a class="header" href="#string-45"><code>String</code></a></h3>
+<h2 id="tier-name-3"><a class="header" href="#tier-name-3"><strong><code>Tier Name</code></strong></a></h2>
+<h3 id="string-70"><a class="header" href="#string-70"><code>String</code></a></h3>
 <p>The name/title of the tier to check for.</p>
 <p>Case-insensitive.</p>
 </li>
 </ul>
-<h2 id="returns-5"><a class="header" href="#returns-5">Returns</a></h2>
+<h2 id="returns-6"><a class="header" href="#returns-6">Returns</a></h2>
 <p><code>True</code>, if any tier matches the name specified. Otherwise, <code>False</code>.</p>
 </li>
 </ul>
@@ -1540,31 +2195,41 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <hr />
 <p>Stores information about a specific pledge tier.</p>
 <hr />
-<h1 id="properties-3"><a class="header" href="#properties-3"><strong>Properties</strong></a></h1>
+<h1 id="properties-5"><a class="header" href="#properties-5"><strong>Properties</strong></a></h1>
 <ul>
 <li>
+<h1 id="amount-cents-1"><a class="header" href="#amount-cents-1"><strong><code>Amount Cents</code></strong></a></h1>
+<h2 id="int64-1"><a class="header" href="#int64-1"><code>Int64</code></a></h2>
+<p>The price of this tier, in USD cents</p>
+</li>
+<li>
+<h1 id="id-1"><a class="header" href="#id-1"><strong><code>Id</code></strong></a></h1>
+<h2 id="string-71"><a class="header" href="#string-71"><code>String</code></a></h2>
+<p>The ID of this tier</p>
+</li>
+<li>
 <h1 id="title"><a class="header" href="#title"><strong><code>Title</code></strong></a></h1>
-<h2 id="string-46"><a class="header" href="#string-46"><code>String</code></a></h2>
+<h2 id="string-72"><a class="header" href="#string-72"><code>String</code></a></h2>
 <p>The tier title you set in Patreon</p>
 </li>
 <li>
 <h1 id="description"><a class="header" href="#description"><strong><code>Description</code></strong></a></h1>
-<h2 id="string-47"><a class="header" href="#string-47"><code>String</code></a></h2>
+<h2 id="string-73"><a class="header" href="#string-73"><code>String</code></a></h2>
 <p>The tier description you set in Patreon</p>
 </li>
 <li>
 <h1 id="image-url-1"><a class="header" href="#image-url-1"><strong><code>Image URL</code></strong></a></h1>
-<h2 id="string-48"><a class="header" href="#string-48"><code>String</code></a></h2>
+<h2 id="string-74"><a class="header" href="#string-74"><code>String</code></a></h2>
 <p>If the tier has a header image set in Patreon, this will contain the URL to that image.</p>
 </li>
 <li>
 <h1 id="url-1"><a class="header" href="#url-1"><strong><code>URL</code></strong></a></h1>
-<h2 id="string-49"><a class="header" href="#string-49"><code>String</code></a></h2>
+<h2 id="string-75"><a class="header" href="#string-75"><code>String</code></a></h2>
 <p>The URL of the tier, itself. Can be used to link to the pledge page.</p>
 </li>
 <li>
-<h1 id="benefits"><a class="header" href="#benefits"><strong><code>Benefits</code></strong></a></h1>
-<h2 id="array-of-string"><a class="header" href="#array-of-string">Array of <code>String</code></a></h2>
+<h1 id="benefits-1"><a class="header" href="#benefits-1"><strong><code>Benefits</code></strong></a></h1>
+<h2 id="array-of-string-4"><a class="header" href="#array-of-string-4">Array of <code>String</code></a></h2>
 <p>If any benefits are associated with this tier, their Titles are included here.</p>
 </li>
 </ul>
@@ -1584,16 +2249,26 @@ to unlock for the creator account to let you test the unlocked behavior of every
 <p>Stores information about a specific pledge tier.</p>
 <p>Includes tier header images as textures ready to use in UMG.</p>
 <hr />
-<h1 id="properties-4"><a class="header" href="#properties-4"><strong>Properties</strong></a></h1>
+<h1 id="properties-6"><a class="header" href="#properties-6"><strong>Properties</strong></a></h1>
 <ul>
 <li>
+<h1 id="amount-cents-2"><a class="header" href="#amount-cents-2"><strong><code>Amount Cents</code></strong></a></h1>
+<h2 id="int64-2"><a class="header" href="#int64-2"><code>Int64</code></a></h2>
+<p>The price of this tier, in USD cents</p>
+</li>
+<li>
+<h1 id="id-2"><a class="header" href="#id-2"><strong><code>Id</code></strong></a></h1>
+<h2 id="string-76"><a class="header" href="#string-76"><code>String</code></a></h2>
+<p>The ID of this tier</p>
+</li>
+<li>
 <h1 id="title-1"><a class="header" href="#title-1"><strong><code>Title</code></strong></a></h1>
-<h2 id="string-50"><a class="header" href="#string-50"><code>String</code></a></h2>
+<h2 id="string-77"><a class="header" href="#string-77"><code>String</code></a></h2>
 <p>The tier title you set in Patreon</p>
 </li>
 <li>
 <h1 id="description-1"><a class="header" href="#description-1"><strong><code>Description</code></strong></a></h1>
-<h2 id="string-51"><a class="header" href="#string-51"><code>String</code></a></h2>
+<h2 id="string-78"><a class="header" href="#string-78"><code>String</code></a></h2>
 <p>The tier description you set in Patreon</p>
 </li>
 <li>
@@ -1604,12 +2279,12 @@ to unlock for the creator account to let you test the unlocked behavior of every
 </li>
 <li>
 <h1 id="url-2"><a class="header" href="#url-2"><strong><code>URL</code></strong></a></h1>
-<h2 id="string-52"><a class="header" href="#string-52"><code>String</code></a></h2>
+<h2 id="string-79"><a class="header" href="#string-79"><code>String</code></a></h2>
 <p>The URL of the tier, itself. Can be used to link to the pledge page.</p>
 </li>
 <li>
-<h1 id="benefits-1"><a class="header" href="#benefits-1"><strong><code>Benefits</code></strong></a></h1>
-<h2 id="array-of-string-1"><a class="header" href="#array-of-string-1">Array of <code>String</code></a></h2>
+<h1 id="benefits-2"><a class="header" href="#benefits-2"><strong><code>Benefits</code></strong></a></h1>
+<h2 id="array-of-string-5"><a class="header" href="#array-of-string-5">Array of <code>String</code></a></h2>
 <p>If any benefits are associated with this tier, their Titles are included here.</p>
 </li>
 </ul>
@@ -1691,7 +2366,7 @@ struct NBPATREONAPICLIENT_API FAPITokenInfo;
 <hr />
 <p>Stores an API access token and related information.</p>
 <hr />
-<h1 id="properties-5"><a class="header" href="#properties-5"><strong>Properties</strong></a></h1>
+<h1 id="properties-7"><a class="header" href="#properties-7"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="accesstoken"><a class="header" href="#accesstoken"><strong><code>AccessToken</code></strong></a></h1>
@@ -1857,7 +2532,7 @@ bool HasTokenExpired() const;
 <p>Checks if a token's lifetime has expired.</p>
   </summary>
 <hr />
-<h1 id="returns-6"><a class="header" href="#returns-6"><strong>Returns</strong></a></h1>
+<h1 id="returns-7"><a class="header" href="#returns-7"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -1879,7 +2554,7 @@ bool IsValid() const;
 Does not check the refresh token.</p>
   </summary>
 <hr />
-<h1 id="returns-7"><a class="header" href="#returns-7"><strong>Returns</strong></a></h1>
+<h1 id="returns-8"><a class="header" href="#returns-8"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -1900,7 +2575,7 @@ FTimespan RemainingLifetime() const;
 <p>Computes the time remaining (from now) before the token expires.</p>
   </summary>
 <hr />
-<h1 id="returns-8"><a class="header" href="#returns-8"><strong>Returns</strong></a></h1>
+<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FTimespan
@@ -1931,7 +2606,7 @@ struct NBPATREONAPICLIENT_API FPatreonPledgeEvent;
 <p>Contains information about when a user changed their pledge status.</p>
 <p>See: https://docs.patreon.com/#pledge-event</p>
 <hr />
-<h1 id="properties-6"><a class="header" href="#properties-6"><strong>Properties</strong></a></h1>
+<h1 id="properties-8"><a class="header" href="#properties-8"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="amountcents"><a class="header" href="#amountcents"><strong><code>AmountCents</code></strong></a></h1>
@@ -1970,7 +2645,7 @@ FString CurrencyCode;
   </summary>
 </li>
 <li>
-<h1 id="date"><a class="header" href="#date"><strong><code>Date</code></strong></a></h1>
+<h1 id="date-7"><a class="header" href="#date-7"><strong><code>Date</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FDateTime Date;
 </code></pre>
@@ -2078,7 +2753,7 @@ FString TierTitle;
   </summary>
 </li>
 <li>
-<h1 id="type"><a class="header" href="#type"><strong><code>Type</code></strong></a></h1>
+<h1 id="type-1"><a class="header" href="#type-1"><strong><code>Type</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FString Type;
 </code></pre>
@@ -2157,7 +2832,7 @@ bool IsPaid() const;
 <p>Checks if payment for this event is valid (not failed, declined, etc).</p>
   </summary>
 <hr />
-<h1 id="returns-9"><a class="header" href="#returns-9"><strong>Returns</strong></a></h1>
+<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2186,7 +2861,7 @@ bool operator &lt;(
 </li>
 </ul>
 <hr />
-<h1 id="returns-10"><a class="header" href="#returns-10"><strong>Returns</strong></a></h1>
+<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2216,7 +2891,7 @@ struct NBPATREONAPICLIENT_API FPatreonPledgeHistory;
 <hr />
 <p>Contains information about when a user changed their pledge status.</p>
 <hr />
-<h1 id="properties-7"><a class="header" href="#properties-7"><strong>Properties</strong></a></h1>
+<h1 id="properties-9"><a class="header" href="#properties-9"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="pledgehistory"><a class="header" href="#pledgehistory"><strong><code>PledgeHistory</code></strong></a></h1>
@@ -2329,7 +3004,7 @@ bool PledgedToTierAfter(
 <p>The tier to search for</p>
 </li>
 <li>
-<h2 id="date-1"><a class="header" href="#date-1"><strong><code>date</code></strong></a></h2>
+<h2 id="date-8"><a class="header" href="#date-8"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The minimum date that should be considered</p>
@@ -2342,7 +3017,7 @@ bool PledgedToTierAfter(
 </li>
 </ul>
 <hr />
-<h1 id="returns-11"><a class="header" href="#returns-11"><strong>Returns</strong></a></h1>
+<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2376,7 +3051,7 @@ bool PledgedToTierBefore(
 <p>The tier to search for</p>
 </li>
 <li>
-<h2 id="date-2"><a class="header" href="#date-2"><strong><code>date</code></strong></a></h2>
+<h2 id="date-9"><a class="header" href="#date-9"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The maximum date that should be considered</p>
@@ -2389,7 +3064,7 @@ bool PledgedToTierBefore(
 </li>
 </ul>
 <hr />
-<h1 id="returns-12"><a class="header" href="#returns-12"><strong>Returns</strong></a></h1>
+<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -2415,13 +3090,13 @@ TArray&lt;FString&gt; PledgedToTiersAfter(
 <h1 id="arguments-6"><a class="header" href="#arguments-6"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="date-3"><a class="header" href="#date-3"><strong><code>date</code></strong></a></h2>
+<h2 id="date-10"><a class="header" href="#date-10"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 </li>
 </ul>
 <hr />
-<h1 id="returns-13"><a class="header" href="#returns-13"><strong>Returns</strong></a></h1>
+<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">TArray&lt;FString&gt;
@@ -2447,13 +3122,13 @@ TArray&lt;FString&gt; PledgedToTiersBefore(
 <h1 id="arguments-7"><a class="header" href="#arguments-7"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="date-4"><a class="header" href="#date-4"><strong><code>date</code></strong></a></h2>
+<h2 id="date-11"><a class="header" href="#date-11"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 </li>
 </ul>
 <hr />
-<h1 id="returns-14"><a class="header" href="#returns-14"><strong>Returns</strong></a></h1>
+<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">TArray&lt;FString&gt;
@@ -2481,18 +3156,18 @@ If the user did not have a subscription during the given month, returns an empty
 <h1 id="arguments-8"><a class="header" href="#arguments-8"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="year"><a class="header" href="#year"><strong><code>year</code></strong></a></h2>
+<h2 id="year-1"><a class="header" href="#year-1"><strong><code>year</code></strong></a></h2>
 <pre><code class="language-cpp">const int32 year
 </code></pre>
 </li>
 <li>
-<h2 id="month"><a class="header" href="#month"><strong><code>month</code></strong></a></h2>
+<h2 id="month-1"><a class="header" href="#month-1"><strong><code>month</code></strong></a></h2>
 <pre><code class="language-cpp">const int32 month
 </code></pre>
 </li>
 </ul>
 <hr />
-<h1 id="returns-15"><a class="header" href="#returns-15"><strong>Returns</strong></a></h1>
+<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">TArray&lt;FString&gt;
@@ -2525,7 +3200,7 @@ struct NBPATREONAPICLIENT_API FPatreonTierInfo;
 or content they are now able to unlock, or just to check which
 content should be unlocked behind the scenes.</p>
 <hr />
-<h1 id="properties-8"><a class="header" href="#properties-8"><strong>Properties</strong></a></h1>
+<h1 id="properties-10"><a class="header" href="#properties-10"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="amountcents-1"><a class="header" href="#amountcents-1"><strong><code>AmountCents</code></strong></a></h1>
@@ -2546,7 +3221,7 @@ int64 AmountCents;
   </summary>
 </li>
 <li>
-<h1 id="benefits-2"><a class="header" href="#benefits-2"><strong><code>Benefits</code></strong></a></h1>
+<h1 id="benefits-3"><a class="header" href="#benefits-3"><strong><code>Benefits</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 TArray&lt;FString&gt; Benefits;
 </code></pre>
@@ -2585,7 +3260,7 @@ FString Description;
   </summary>
 </li>
 <li>
-<h1 id="id-1"><a class="header" href="#id-1"><strong><code>Id</code></strong></a></h1>
+<h1 id="id-3"><a class="header" href="#id-3"><strong><code>Id</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FString Id;
 </code></pre>
@@ -2694,7 +3369,7 @@ struct NBPATREONAPICLIENT_API FPatreonTierInfoImgs;
 <p>Provides the same information as <a href="reference/structs//reference/structs/FPatreonTierInfo.html"><strong><code>FPatreonTierInfo</code></strong></a>, but rather than containing
 URLs to images the images are stored directly as Textures.</p>
 <hr />
-<h1 id="properties-9"><a class="header" href="#properties-9"><strong>Properties</strong></a></h1>
+<h1 id="properties-11"><a class="header" href="#properties-11"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="amountcents-2"><a class="header" href="#amountcents-2"><strong><code>AmountCents</code></strong></a></h1>
@@ -2715,7 +3390,7 @@ int64 AmountCents;
   </summary>
 </li>
 <li>
-<h1 id="benefits-3"><a class="header" href="#benefits-3"><strong><code>Benefits</code></strong></a></h1>
+<h1 id="benefits-4"><a class="header" href="#benefits-4"><strong><code>Benefits</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 TArray&lt;FString&gt; Benefits;
 </code></pre>
@@ -2754,7 +3429,7 @@ FString Description;
   </summary>
 </li>
 <li>
-<h1 id="id-2"><a class="header" href="#id-2"><strong><code>Id</code></strong></a></h1>
+<h1 id="id-4"><a class="header" href="#id-4"><strong><code>Id</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 FString Id;
 </code></pre>
@@ -2890,7 +3565,7 @@ If any information you need about a user is not included here, you can still
 extract that information manually from an API request or submit a feature
 request for this plugin to nbpsup@gmail.com</p>
 <hr />
-<h1 id="properties-10"><a class="header" href="#properties-10"><strong>Properties</strong></a></h1>
+<h1 id="properties-12"><a class="header" href="#properties-12"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="campaignlifetimesupportcents"><a class="header" href="#campaignlifetimesupportcents"><strong><code>CampaignLifetimeSupportCents</code></strong></a></h1>
@@ -3056,7 +3731,7 @@ FString PatronStatus;
   </summary>
 </li>
 <li>
-<h1 id="tiers-2"><a class="header" href="#tiers-2"><strong><code>Tiers</code></strong></a></h1>
+<h1 id="tiers-3"><a class="header" href="#tiers-3"><strong><code>Tiers</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 TArray&lt;FPatreonTierInfo&gt; Tiers;
 </code></pre>
@@ -3189,7 +3864,7 @@ static FString GetCampaignID(
 </li>
 </ul>
 <hr />
-<h1 id="returns-16"><a class="header" href="#returns-16"><strong>Returns</strong></a></h1>
+<h1 id="returns-17"><a class="header" href="#returns-17"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FString
@@ -3224,7 +3899,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-17"><a class="header" href="#returns-17"><strong>Returns</strong></a></h1>
+<h1 id="returns-18"><a class="header" href="#returns-18"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3258,7 +3933,7 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-18"><a class="header" href="#returns-18"><strong>Returns</strong></a></h1>
+<h1 id="returns-19"><a class="header" href="#returns-19"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3292,7 +3967,7 @@ bool HasTierId(
 </li>
 </ul>
 <hr />
-<h1 id="returns-19"><a class="header" href="#returns-19"><strong>Returns</strong></a></h1>
+<h1 id="returns-20"><a class="header" href="#returns-20"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3331,7 +4006,7 @@ static FPatreonTierInfo ParseTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-20"><a class="header" href="#returns-20"><strong>Returns</strong></a></h1>
+<h1 id="returns-21"><a class="header" href="#returns-21"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FPatreonTierInfo
@@ -3362,7 +4037,7 @@ struct NBPATREONAPICLIENT_API FPatreonUserInfoImgs;
 <p>Contains the same information as <a href="reference/structs//reference/structs/FPatreonUserInfo.html"><strong><code>FPatreonUserInfo</code></strong></a>, but instead of including
 URLs to images will include the actual images as a Texture2D.</p>
 <hr />
-<h1 id="properties-11"><a class="header" href="#properties-11"><strong>Properties</strong></a></h1>
+<h1 id="properties-13"><a class="header" href="#properties-13"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="avatarimage"><a class="header" href="#avatarimage"><strong><code>AvatarImage</code></strong></a></h1>
@@ -3528,7 +4203,7 @@ FString PatronStatus;
   </summary>
 </li>
 <li>
-<h1 id="tiers-3"><a class="header" href="#tiers-3"><strong><code>Tiers</code></strong></a></h1>
+<h1 id="tiers-4"><a class="header" href="#tiers-4"><strong><code>Tiers</code></strong></a></h1>
 <pre><code class="language-cpp">public:
 TArray&lt;FPatreonTierInfoImgs&gt; Tiers;
 </code></pre>
@@ -3647,7 +4322,7 @@ Will check all tiers the user is pledged to.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-21"><a class="header" href="#returns-21"><strong>Returns</strong></a></h1>
+<h1 id="returns-22"><a class="header" href="#returns-22"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3681,7 +4356,7 @@ bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-22"><a class="header" href="#returns-22"><strong>Returns</strong></a></h1>
+<h1 id="returns-23"><a class="header" href="#returns-23"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3715,7 +4390,7 @@ bool HasTierId(
 </li>
 </ul>
 <hr />
-<h1 id="returns-23"><a class="header" href="#returns-23"><strong>Returns</strong></a></h1>
+<h1 id="returns-24"><a class="header" href="#returns-24"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -3799,7 +4474,7 @@ class NBPATREONAPICLIENT_API UGetPatreonUserInfoAsyncAction
 specific tier in order to unlock content, display information about their subscription, etc.</p>
 <p>Requires an access token obtained by some authentication method.</p>
 <hr />
-<h1 id="properties-12"><a class="header" href="#properties-12"><strong>Properties</strong></a></h1>
+<h1 id="properties-14"><a class="header" href="#properties-14"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete"><a class="header" href="#oncomplete"><strong><code>OnComplete</code></strong></a></h1>
@@ -3915,7 +4590,7 @@ static UGetPatreonUserInfoAsyncAction* GetPatreonUserInfoAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-24"><a class="header" href="#returns-24"><strong>Returns</strong></a></h1>
+<h1 id="returns-25"><a class="header" href="#returns-25"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserInfoAsyncAction*
@@ -3946,7 +4621,7 @@ their pledged tiers.</p>
 display information about their subscription, etc.</p>
 <p>Requires an access token obtained by some authentication method.</p>
 <hr />
-<h1 id="properties-13"><a class="header" href="#properties-13"><strong>Properties</strong></a></h1>
+<h1 id="properties-15"><a class="header" href="#properties-15"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-1"><a class="header" href="#oncomplete-1"><strong><code>OnComplete</code></strong></a></h1>
@@ -4063,7 +4738,7 @@ any relevant images, e.g. their avatar and images from any pledged tiers.</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-25"><a class="header" href="#returns-25"><strong>Returns</strong></a></h1>
+<h1 id="returns-26"><a class="header" href="#returns-26"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserInfoImgAsyncAction*
@@ -4089,7 +4764,7 @@ class NBPATREONAPICLIENT_API UGetPatreonUserPledgesAsyncAction
 <p><strong><em>Reflection-enabled</em></strong></p>
 <hr />
 <hr />
-<h1 id="properties-14"><a class="header" href="#properties-14"><strong>Properties</strong></a></h1>
+<h1 id="properties-16"><a class="header" href="#properties-16"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-2"><a class="header" href="#oncomplete-2"><strong><code>OnComplete</code></strong></a></h1>
@@ -4223,7 +4898,7 @@ on May 30 and was entitled to that tier during June).</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-26"><a class="header" href="#returns-26"><strong>Returns</strong></a></h1>
+<h1 id="returns-27"><a class="header" href="#returns-27"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserPledgesAsyncAction*
@@ -4291,7 +4966,7 @@ if they may have since unsubscribed), find out when they started their subscript
 </li>
 </ul>
 <hr />
-<h1 id="returns-27"><a class="header" href="#returns-27"><strong>Returns</strong></a></h1>
+<h1 id="returns-28"><a class="header" href="#returns-28"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UGetPatreonUserPledgesAsyncAction*
@@ -4318,7 +4993,7 @@ class NBPATREONAPICLIENT_API UHTTPRequestAction
 <hr />
 <p>Helper to make common HTTP requests a little easier and expose them to blueprints.</p>
 <hr />
-<h1 id="properties-15"><a class="header" href="#properties-15"><strong>Properties</strong></a></h1>
+<h1 id="properties-17"><a class="header" href="#properties-17"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-3"><a class="header" href="#oncomplete-3"><strong><code>OnComplete</code></strong></a></h1>
@@ -4426,7 +5101,7 @@ static UHTTPRequestAction* HTTPGetAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-28"><a class="header" href="#returns-28"><strong>Returns</strong></a></h1>
+<h1 id="returns-29"><a class="header" href="#returns-29"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -4493,7 +5168,7 @@ static UHTTPRequestAction* HTTPPostAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-29"><a class="header" href="#returns-29"><strong>Returns</strong></a></h1>
+<h1 id="returns-30"><a class="header" href="#returns-30"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -4567,7 +5242,7 @@ static UHTTPRequestAction* HTTPRequestAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-30"><a class="header" href="#returns-30"><strong>Returns</strong></a></h1>
+<h1 id="returns-31"><a class="header" href="#returns-31"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -4649,7 +5324,7 @@ static UHTTPRequestAction* HTTPRequestWithTokenAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-31"><a class="header" href="#returns-31"><strong>Returns</strong></a></h1>
+<h1 id="returns-32"><a class="header" href="#returns-32"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UHTTPRequestAction*
@@ -4706,7 +5381,7 @@ static void CopyToClipboard(
 <h1 id="arguments-28"><a class="header" href="#arguments-28"><strong>Arguments</strong></a></h1>
 <ul>
 <li>
-<h2 id="str"><a class="header" href="#str"><strong><code>str</code></strong></a></h2>
+<h2 id="str-1"><a class="header" href="#str-1"><strong><code>str</code></strong></a></h2>
 <pre><code class="language-cpp">const FString str
 </code></pre>
 </li>
@@ -4756,7 +5431,7 @@ static bool HasBenefit(
 </li>
 </ul>
 <hr />
-<h1 id="returns-32"><a class="header" href="#returns-32"><strong>Returns</strong></a></h1>
+<h1 id="returns-33"><a class="header" href="#returns-33"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -4808,7 +5483,7 @@ static bool HasBenefit2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-33"><a class="header" href="#returns-33"><strong>Returns</strong></a></h1>
+<h1 id="returns-34"><a class="header" href="#returns-34"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -4861,7 +5536,7 @@ static bool HasTier(
 </li>
 </ul>
 <hr />
-<h1 id="returns-34"><a class="header" href="#returns-34"><strong>Returns</strong></a></h1>
+<h1 id="returns-35"><a class="header" href="#returns-35"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -4914,7 +5589,7 @@ static bool HasTier2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-35"><a class="header" href="#returns-35"><strong>Returns</strong></a></h1>
+<h1 id="returns-36"><a class="header" href="#returns-36"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -4967,7 +5642,7 @@ static bool HasTierById(
 </li>
 </ul>
 <hr />
-<h1 id="returns-36"><a class="header" href="#returns-36"><strong>Returns</strong></a></h1>
+<h1 id="returns-37"><a class="header" href="#returns-37"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5020,7 +5695,7 @@ static bool HasTierById2(
 </li>
 </ul>
 <hr />
-<h1 id="returns-37"><a class="header" href="#returns-37"><strong>Returns</strong></a></h1>
+<h1 id="returns-38"><a class="header" href="#returns-38"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5065,7 +5740,7 @@ static bool HasTokenExpired(
 </li>
 </ul>
 <hr />
-<h1 id="returns-38"><a class="header" href="#returns-38"><strong>Returns</strong></a></h1>
+<h1 id="returns-39"><a class="header" href="#returns-39"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5110,7 +5785,7 @@ static bool IsTokenValid(
 </li>
 </ul>
 <hr />
-<h1 id="returns-39"><a class="header" href="#returns-39"><strong>Returns</strong></a></h1>
+<h1 id="returns-40"><a class="header" href="#returns-40"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5198,13 +5873,13 @@ static bool ParseCampaignInfo(
 <p>The creator's campaign ID</p>
 </li>
 <li>
-<h2 id="tiers-4"><a class="header" href="#tiers-4"><strong><code>Tiers</code></strong></a></h2>
+<h2 id="tiers-5"><a class="header" href="#tiers-5"><strong><code>Tiers</code></strong></a></h2>
 <pre><code class="language-cpp">TArray&lt;FPatreonTierInfo&gt;&amp; Tiers
 </code></pre>
 </li>
 </ul>
 <hr />
-<h1 id="returns-40"><a class="header" href="#returns-40"><strong>Returns</strong></a></h1>
+<h1 id="returns-41"><a class="header" href="#returns-41"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5265,7 +5940,7 @@ static bool ParseTokenInfo(
 </li>
 </ul>
 <hr />
-<h1 id="returns-41"><a class="header" href="#returns-41"><strong>Returns</strong></a></h1>
+<h1 id="returns-42"><a class="header" href="#returns-42"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5318,14 +5993,14 @@ static bool PledgedToTierAfter(
 <p>The Title of the Tier to search for</p>
 </li>
 <li>
-<h2 id="date-5"><a class="header" href="#date-5"><strong><code>date</code></strong></a></h2>
+<h2 id="date-12"><a class="header" href="#date-12"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The minimum date to consider</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-42"><a class="header" href="#returns-42"><strong>Returns</strong></a></h1>
+<h1 id="returns-43"><a class="header" href="#returns-43"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5378,14 +6053,14 @@ static bool PledgedToTierAfter2(
 <p>The ID of the Tier to search for</p>
 </li>
 <li>
-<h2 id="date-6"><a class="header" href="#date-6"><strong><code>date</code></strong></a></h2>
+<h2 id="date-13"><a class="header" href="#date-13"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The minimum date to consider</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-43"><a class="header" href="#returns-43"><strong>Returns</strong></a></h1>
+<h1 id="returns-44"><a class="header" href="#returns-44"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5438,14 +6113,14 @@ static bool PledgedToTierBefore(
 <p>The Title of the Tier to search for</p>
 </li>
 <li>
-<h2 id="date-7"><a class="header" href="#date-7"><strong><code>date</code></strong></a></h2>
+<h2 id="date-14"><a class="header" href="#date-14"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The maximum date to consider</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-44"><a class="header" href="#returns-44"><strong>Returns</strong></a></h1>
+<h1 id="returns-45"><a class="header" href="#returns-45"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5498,14 +6173,14 @@ static bool PledgedToTierBefore2(
 <p>The ID of the Tier to search for</p>
 </li>
 <li>
-<h2 id="date-8"><a class="header" href="#date-8"><strong><code>date</code></strong></a></h2>
+<h2 id="date-15"><a class="header" href="#date-15"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The maximum date to consider</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-45"><a class="header" href="#returns-45"><strong>Returns</strong></a></h1>
+<h1 id="returns-46"><a class="header" href="#returns-46"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">bool
@@ -5551,14 +6226,14 @@ static TArray&lt;FString&gt; PledgedToTiersAfter(
 <p>The pledge history to search</p>
 </li>
 <li>
-<h2 id="date-9"><a class="header" href="#date-9"><strong><code>date</code></strong></a></h2>
+<h2 id="date-16"><a class="header" href="#date-16"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The minimum date to include results for</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-46"><a class="header" href="#returns-46"><strong>Returns</strong></a></h1>
+<h1 id="returns-47"><a class="header" href="#returns-47"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">TArray&lt;FString&gt;
@@ -5603,14 +6278,14 @@ static TArray&lt;FString&gt; PledgedToTiersBefore(
 <p>The pledge history to search</p>
 </li>
 <li>
-<h2 id="date-10"><a class="header" href="#date-10"><strong><code>date</code></strong></a></h2>
+<h2 id="date-17"><a class="header" href="#date-17"><strong><code>date</code></strong></a></h2>
 <pre><code class="language-cpp">const FDateTime&amp; date
 </code></pre>
 <p>The maximum date to include results for</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-47"><a class="header" href="#returns-47"><strong>Returns</strong></a></h1>
+<h1 id="returns-48"><a class="header" href="#returns-48"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">TArray&lt;FString&gt;
@@ -5656,20 +6331,20 @@ static TArray&lt;FString&gt; PledgedToTiersDuring(
 <p>The pledge history to search</p>
 </li>
 <li>
-<h2 id="year-1"><a class="header" href="#year-1"><strong><code>year</code></strong></a></h2>
+<h2 id="year-2"><a class="header" href="#year-2"><strong><code>year</code></strong></a></h2>
 <pre><code class="language-cpp">const int32 year
 </code></pre>
 <p>The year to match</p>
 </li>
 <li>
-<h2 id="month-1"><a class="header" href="#month-1"><strong><code>month</code></strong></a></h2>
+<h2 id="month-2"><a class="header" href="#month-2"><strong><code>month</code></strong></a></h2>
 <pre><code class="language-cpp">const int32 month
 </code></pre>
 <p>The month in the year to match</p>
 </li>
 </ul>
 <hr />
-<h1 id="returns-48"><a class="header" href="#returns-48"><strong>Returns</strong></a></h1>
+<h1 id="returns-49"><a class="header" href="#returns-49"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">TArray&lt;FString&gt;
@@ -5714,7 +6389,7 @@ analyzing their network traffic during the authentication process.</p>
 </blockquote>
 <p>NEVER use your creator token here!</p>
 <hr />
-<h1 id="properties-16"><a class="header" href="#properties-16"><strong>Properties</strong></a></h1>
+<h1 id="properties-18"><a class="header" href="#properties-18"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-4"><a class="header" href="#oncomplete-4"><strong><code>OnComplete</code></strong></a></h1>
@@ -5830,7 +6505,7 @@ This should be used to allow the user to authenticate with Patreon in a web brow
 If you need additional scopes, specify them here. <a href="https://docs.patreon.com/#scopes">See here for more information</a></p>
 </li>
 <li>
-<h2 id="id-3"><a class="header" href="#id-3"><strong><code>id</code></strong></a></h2>
+<h2 id="id-5"><a class="header" href="#id-5"><strong><code>id</code></strong></a></h2>
 <pre><code class="language-cpp">FString id = TEXT("")
 </code></pre>
 <p>Optional session/state/id value which will be passed back to the CallbackURI after authentication.
@@ -5838,7 +6513,7 @@ This can be used to match a specific request to a specific response if necessary
 </li>
 </ul>
 <hr />
-<h1 id="returns-49"><a class="header" href="#returns-49"><strong>Returns</strong></a></h1>
+<h1 id="returns-50"><a class="header" href="#returns-50"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">FString
@@ -5919,7 +6594,7 @@ static UPerformAuthenticationAsyncAction* PerformAuthenticationAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-50"><a class="header" href="#returns-50"><strong>Returns</strong></a></h1>
+<h1 id="returns-51"><a class="header" href="#returns-51"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UPerformAuthenticationAsyncAction*
@@ -6013,7 +6688,7 @@ SSO methods like "Sign in with Google" will fail because these rely on opening a
 </li>
 </ul>
 <hr />
-<h1 id="returns-51"><a class="header" href="#returns-51"><strong>Returns</strong></a></h1>
+<h1 id="returns-52"><a class="header" href="#returns-52"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">UPerformAuthenticationAsyncAction*
@@ -6040,7 +6715,7 @@ class NBPATREONAPICLIENT_API URefreshAPITokenAsyncAction
 <hr />
 <p>Refreshes an existing API access token</p>
 <hr />
-<h1 id="properties-17"><a class="header" href="#properties-17"><strong>Properties</strong></a></h1>
+<h1 id="properties-19"><a class="header" href="#properties-19"><strong>Properties</strong></a></h1>
 <ul>
 <li>
 <h1 id="oncomplete-5"><a class="header" href="#oncomplete-5"><strong><code>OnComplete</code></strong></a></h1>
@@ -6159,7 +6834,7 @@ static URefreshAPITokenAsyncAction* RefreshAPITokenAsyncAction(
 </li>
 </ul>
 <hr />
-<h1 id="returns-52"><a class="header" href="#returns-52"><strong>Returns</strong></a></h1>
+<h1 id="returns-53"><a class="header" href="#returns-53"><strong>Returns</strong></a></h1>
 <ul>
 <li>
 <pre><code class="language-cpp">URefreshAPITokenAsyncAction*
