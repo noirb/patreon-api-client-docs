@@ -159,7 +159,7 @@
 <p>Sometimes it's useful (or necessary) to know your Campaign ID or the IDs of the tiers associated with your campaign. Patreon doesn't expose this information in an easy location, so an editor utility is provided to make it more accessible.</p>
 <p>You can launch the utility from <strong>Tools &gt; Get Campaign Info</strong></p>
 <p>Paste your <code>Client ID</code> into the field at the top of the form, set the <code>CallbackRoute</code> and <code>CallbackPort</code> to match the values you use for authentication, and then click the <strong>Fetch Campaign Info</strong> button. You will be asked to sign into Patreon, and you <em>must</em> use the account which owns the campaign (if you use another account you will see an error in the console log).</p>
-<p>This willd download some information about your campaign and display it with buttons to easily copy the IDs to your clipboard:</p>
+<p>This will download some information about your campaign and display it with buttons to easily copy the IDs to your clipboard:</p>
 <p><img src="../assets/tutorial/euw_campaign_info.png" alt="" /></p>
 <h3 id="what-can-i-use-this-for"><a class="header" href="#what-can-i-use-this-for">What can I use this for?</a></h3>
 <p>The most common use is to be able to pass your <code>Campaign ID</code> to <a href="../blueprint-api/functions/GetUserInfo.html">Get User Info</a> or <a href="../blueprint-api/functions/GetPledgeHistory.html">Get Pledge History</a>. If you ever perform a request against the API which returns information about multiple campaigns, providing your own <code>Campaign ID</code> to these functions will ensure that you only get data related to <em>your</em> campaign in their outputs, which greatly simplifies the number of details you need to handle.</p>
